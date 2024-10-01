@@ -1,2 +1,3 @@
 # ignore obj folder
 /TodoApi/obj/
+/TodoApi/bin/
