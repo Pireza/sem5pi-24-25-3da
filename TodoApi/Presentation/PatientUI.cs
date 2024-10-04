@@ -51,13 +51,12 @@ namespace TodoApi.Presentation
         {
                         lastActivityTime = DateTime.Now;
 
-            Console.WriteLine(lastActivityTime);
-            Console.WriteLine((DateTime.Now - lastActivityTime).TotalMinutes);
+           
         }
 
         private static bool IsSessionExpired()
         {
-                        Console.WriteLine((DateTime.Now - lastActivityTime).TotalMinutes);
+                       
 
             return (DateTime.Now - lastActivityTime).TotalMinutes > sessionTimeoutMinutes;
         }
