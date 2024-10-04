@@ -1,3 +1,108 @@
-@startuml Hello
+@startuml Domain Model
+skinparam style strictuml
+skinparam DefaultFontName Arial
+skinparam DefaultFontSize 16
+skinparam DefaultFontStyle bold
+skinparam ArrowThickness 2.2
+skinparam ArrowColor #gray
+hide empty members
+
+package "User Aggregate" {
+
+class User <<entity root>> {
+}
+
+class Username <<value object>> {
+
+}
+
+class Email <<value object>> {
+
+}
+
+class Role <<enum>>{
+    admin
+    doctor
+    nurse
+    technician
+    patient
+}
+
+}
+class Staff <<entity>> {
+    licenseNumber : ID
+    phone : ID
+    firstName
+    lastName 
+    fullName 
+    availableSlots
+}
+
+
+class Doctor <<entity>> {
+
+}
+
+ class Patient <<entity>> {
+    medicalNumber : ID
+    phone : ID
+    firstName
+    lastName
+    fullName
+    birthday
+    gender
+    medicalConditions
+    emergecyContact
+ }
+
+package "Operation Aggregate"{
+
+ class OperationType <<entity>> {
+        id : ID
+        name
+        duration
+ }
+
+ class OperationRequest <<entity root>> {
+        id : ID
+        deadline
+        priority
+ }
+ class Specialization <<value object>> {
+
+ }
+
+}
+
+User "1" ---> "1" Username : has 
+User "1" ---> "1" Email : has 
+User "1" -left-> "1" Role : has
+
+
+
+User "1" --right--> "1" Staff : can be
+User "1" -up-> "1" Patient : can be
+
+
+Staff "1" -down-> "1" Doctor : can be
+Staff "*" -up-> "1" Specialization : has
+
+
+OperationRequest "1" -> "1" OperationType : has
+OperationRequest "1" -> "1" Patient : has
+OperationRequest "1" -> "1" Doctor : has
+
+OperationType "*" -> "*" Specialization : needs
+
+
+note left of User {
+    Devemos colocar uma referência ao
+    serviço externo de autenticação IAM?
+}
+
+note left of Doctor {
+    necessidade de especificar
+    que é um doutor?
+}
 
 @enduml
