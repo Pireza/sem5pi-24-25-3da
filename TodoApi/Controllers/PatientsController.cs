@@ -36,6 +36,23 @@ namespace TodoApi.Controllers
             return patient;
         }
 
+        // GET: api/Patients/email/{email}
+[HttpGet("email/{email}")]
+public async Task<ActionResult<Patient>> GetPatientByEmail(string email)
+{
+    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+
+    if (patient == null)
+    {
+        return NotFound();
+    }
+
+    return Ok(patient);
+}
+
+
+        
+
         // POST: api/Patients
         [HttpPost]
         public async Task<ActionResult<Patient>> PostPatient(Patient patient)

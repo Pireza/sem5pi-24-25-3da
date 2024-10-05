@@ -61,6 +61,8 @@ static async Task StartProgram(WebApplication app)
 
     using (var dbContext = new UserContext(optionsBuilder.Options))
     {
+            PatientUI patientUI = new PatientUI(dbContext);
+
     dbContext.Database.Migrate();
 
         Console.WriteLine("What do you wish to do?");

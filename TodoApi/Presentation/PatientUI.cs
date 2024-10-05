@@ -6,26 +6,36 @@ using TodoApi.Models;
 using TodoApi.Controllers;
 using TodoApi.Data;
 using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoApi.Presentation
 {
     public class PatientUI
     {
         private static DateTime lastActivityTime;
+        private UserContext dbContext;
         private const int sessionTimeoutMinutes = 1; // Set session timeout duration
+
+        
+        public PatientUI(UserContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
 
         public static async Task loginPatient(UserContext dbContext)
         {
+             PatientController controller= new PatientController(dbContext);
             Console.WriteLine("Authenticating via Auth0...");
             var email = await PatientController.LoginPatient();
+            Console.WriteLine(email);
 
             if (email != null)
             {
                 // Reset last activity time on successful login
                 ResetLastActivity();
-
                 // Check if the patient already exists in the database
-                var patient = await PatientRepository.CheckPatientExists(dbContext, email);
+                var patient = await PatientController.CheckPatientExists( email);
+
                 if (patient != null)
                 {
                     Console.WriteLine($"Welcome back, {patient.FirstName} {patient.LastName}!");
@@ -36,7 +46,7 @@ namespace TodoApi.Presentation
                     // New patient - request additional details
                     Console.WriteLine("New patient detected. Please provide the following details:");
                     var newPatient = await GetNewPatientDetails(email);
-                    await PatientRepository.AddPatient(dbContext, newPatient);
+                    await PatientController.AddPatient( newPatient);
                     Console.WriteLine($"Welcome, {newPatient.FirstName} {newPatient.LastName}! Your account has been successfully created.");
                     await HandlePatientOptions(dbContext, newPatient);
                 }
