@@ -51,10 +51,7 @@ namespace TodoApi.Presentation
                     await HandlePatientOptions(dbContext, newPatient);
                 }
             }
-            else
-            {
-                Console.WriteLine("Authentication failed.");
-            }
+            
         }
 
         private static void ResetLastActivity()

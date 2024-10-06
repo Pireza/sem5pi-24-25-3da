@@ -36,7 +36,7 @@ namespace TodoApi.Services
             });
 
             // Wait for the callback and get the authorization code
-            var code = await WaitForCodeAsync();
+            string? code = await WaitForCodeAsync();
 
             if (!string.IsNullOrEmpty(code))
             {
@@ -71,7 +71,6 @@ namespace TodoApi.Services
                 else
                 {
                     Console.WriteLine($"Error obtaining token: {response.StatusCode}");
-                    // Consider throwing an exception or returning a more informative error message
                 }
             }
 
@@ -81,30 +80,32 @@ namespace TodoApi.Services
         // WaitForCodeAsync method
         private async Task<string> WaitForCodeAsync()
         {
-            var listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:5000/callback/");
-            listener.Start();
-            Console.WriteLine("Waiting for authentication...");
-
-            var context = await listener.GetContextAsync();
-            var code = context.Request.QueryString["code"];
-
-            // If the authorization code is null or empty, throw an exception
-            if (string.IsNullOrEmpty(code))
+            using (var listener = new HttpListener()) // Create a new listener instance here
             {
-                throw new Exception("Error: Authorization code not received.");
-            }
+                listener.Prefixes.Add("http://localhost:5000/callback/");
+                listener.Start();
+                Console.WriteLine("Waiting for authentication...");
 
-            // Send a response to the browser after the login is completed
-            using (var writer = new StreamWriter(context.Response.OutputStream))
-            {
-                context.Response.StatusCode = 200;
-                writer.WriteLine("Authentication completed. You can close this window.");
-                writer.Flush(); // Ensure the response is sent to the browser
-            }
+                var context = await listener.GetContextAsync();
+                var code = context.Request.QueryString["code"];
 
-            listener.Stop();
-            return code;
+                // If the authorization code is null or empty, throw an exception
+                if (string.IsNullOrEmpty(code))
+                {
+                    Console.WriteLine("Verification on your email necessary to continue");
+                    return null;
+                }
+
+                // Send a response to the browser after the login is completed
+                using (var writer = new StreamWriter(context.Response.OutputStream))
+                {
+                    context.Response.StatusCode = 200;
+                    writer.WriteLine("Authentication completed. You can close this window.");
+                    writer.Flush(); // Ensure the response is sent to the browser
+                }
+
+                return code;
+            }
         }
 
         // ExtractEmailFromIdToken method
