@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using TodoApi.Services; // Ensure to include this namespace
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TodoApi.Controllers
 {
@@ -9,10 +13,12 @@ namespace TodoApi.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly UserContext _context;
+        private readonly AuthServicePatient _authServicePatient;
 
-        public PatientsController(UserContext context)
+        public PatientsController(UserContext context, AuthServicePatient authServicePatient)
         {
             _context = context;
+            _authServicePatient = authServicePatient; // Inject AuthServicePatient
         }
 
         // GET: api/Patients
@@ -37,21 +43,47 @@ namespace TodoApi.Controllers
         }
 
         // GET: api/Patients/email/{email}
-[HttpGet("email/{email}")]
-public async Task<ActionResult<Patient>> GetPatientByEmail(string email)
-{
-    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+        [HttpGet("email/{email}")]
+        public async Task<ActionResult<Patient>> GetPatientByEmail(string email)
+        {
+            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
 
-    if (patient == null)
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(patient);
+        }
+
+// POST: api/Patients/authenticate
+[HttpPost("authenticate")]
+public async Task<ActionResult> AuthenticateUser()
+{
+    // Call the method from AuthServicePatient
+    var token = await _authServicePatient.AuthenticateUser(); 
+
+    if (string.IsNullOrEmpty(token))
     {
-        return NotFound();
+        return Unauthorized(); // Return Unauthorized if authentication fails
     }
 
-    return Ok(patient);
+    // Set the access token in a cookie
+    var cookieOptions = new CookieOptions
+    {
+        HttpOnly = true, // Prevent client-side access to the cookie
+        Secure = true, // Use Secure cookies in production
+        SameSite = SameSiteMode.Strict, // Prevent CSRF attacks
+        Expires = DateTimeOffset.UtcNow.AddMinutes(10) // Set expiration
+    };
+
+    Response.Cookies.Append("access_token", token, cookieOptions);
+    
+
+    return Ok(); // Return a success response
 }
 
 
-        
 
         // POST: api/Patients
         [HttpPost]
