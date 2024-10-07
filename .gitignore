@@ -1,3 +1,6 @@
 # ignore obj folder
 /TodoApi/obj/
 /TodoApi/bin/
+*.exe
+*.dll
+*.pdb
