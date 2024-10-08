@@ -23,8 +23,66 @@ namespace TodoApi.Controllers
             _authServicePatient = authServicePatient; // Inject AuthServicePatient
         }
 
-        // GET: api/Patients
+         // GET: api/Patients
         [HttpGet]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsByAttributes(
+            [FromQuery] string? name = null,
+            [FromQuery] string? email = null,
+            [FromQuery] string? dateOfBirth = null, // ISO format yyyy-MM-dd
+            [FromQuery] int? medicalNumber = null)
+        {
+            var query = _context.Patients.AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(p => (p.FirstName + " " + p.LastName).Contains(name));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                query = query.Where(p => p.Email == email);
+            }
+
+            if (!string.IsNullOrEmpty(dateOfBirth))
+            {
+                if (DateTime.TryParse(dateOfBirth, out var dob))
+                {
+                    // Compare the DateTime directly without accessing Date on the string
+                    query = query.Where(p => p.Birthday.Date == dob.Date);
+                }
+            }
+
+            if (medicalNumber.HasValue)
+            {
+                query = query.Where(p => p.MedicalNumber == medicalNumber.Value);
+            }
+
+            // Pagination
+            var totalRecords = await query.CountAsync();
+            var patients = await query
+                
+                .ToListAsync();
+
+            var response = new
+            {
+                TotalRecords = totalRecords,
+               
+                Patients = patients.Select(p => new
+                {
+                    p.Id,
+                    p.FirstName,
+                    p.LastName,
+                    p.Email,
+                    p.Birthday
+                })
+            };
+
+            return Ok(response);
+        }
+
+        // GET: api/Patients
+[HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
             return await _context.Patients.ToListAsync();
