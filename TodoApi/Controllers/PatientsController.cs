@@ -48,7 +48,6 @@ namespace TodoApi.Controllers
 
         // GET: api/Patients/email/{email}
         [HttpGet("email/{email}")]
-
         public async Task<ActionResult<Patient>> GetPatientByEmail(string email)
         {
             var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
@@ -63,7 +62,6 @@ namespace TodoApi.Controllers
 
 // POST: api/Patients/authenticate
 [HttpPost("authenticate")]
-
 public async Task<ActionResult<string>> AuthenticateUser()
 {
     // Call the method from AuthServicePatient

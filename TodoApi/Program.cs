@@ -31,9 +31,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(1); // Set the cookie expiration time
 });
 
-// Configure JWT Bearer Authentication
-string domain = builder.Configuration["Auth0:Domain"]; // Auth0 domain from appsettings.json
-string audience = builder.Configuration["Auth0:Audience"]; // Audience from appsettings.json
+string domain = builder.Configuration["Auth0:Domain"];
+string audience = builder.Configuration["Auth0:Audience"];
 
 builder.Services.AddAuthentication(options =>
 {
@@ -42,20 +41,23 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.Authority = domain;
+    options.Authority = $"https://{domain}";
     options.Audience = audience;
 
-    // Optional: Log validation errors
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = $"https://{domain}",
+        ValidateAudience = true,
+        ValidAudience = audience,
+        ValidateLifetime = true
+    };
+
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
         {
             Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            // Here you can inspect the claims and add custom logic if needed
             return Task.CompletedTask;
         }
     };
