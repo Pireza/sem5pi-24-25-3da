@@ -12,7 +12,7 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20241004135011_InitialCreate")]
+    [Migration("20241008181235_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -54,6 +54,23 @@ namespace TodoApi.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("TodoApi.Models.Specialization", b =>
+                {
+                    b.Property<long>("SpecId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("SpecId"));
+
+                    b.Property<string>("SpecDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("SpecId");
+
+                    b.ToTable("Specializations", (string)null);
                 });
 
             modelBuilder.Entity("TodoApi.Models.User", b =>
@@ -115,6 +132,44 @@ namespace TodoApi.Migrations
                     b.ToTable("Patients", (string)null);
                 });
 
+            modelBuilder.Entity("TodoApi.Models.Staff", b =>
+                {
+                    b.HasBaseType("TodoApi.Models.User");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LicenseNumber")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<long>("SpecializationSpecId")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("LicenseNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
+
+                    b.HasIndex("SpecializationSpecId");
+
+                    b.ToTable("Staff", (string)null);
+                });
+
             modelBuilder.Entity("TodoApi.Models.Appointment", b =>
                 {
                     b.HasOne("TodoApi.Models.Patient", null)
@@ -129,6 +184,53 @@ namespace TodoApi.Migrations
                         .HasForeignKey("TodoApi.Models.Patient", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TodoApi.Models.Staff", b =>
+                {
+                    b.HasOne("TodoApi.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("TodoApi.Models.Staff", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TodoApi.Models.Specialization", "Specialization")
+                        .WithMany()
+                        .HasForeignKey("SpecializationSpecId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("TodoApi.Models.AvailabilitySlot", "AvailabilitySlots", b1 =>
+                        {
+                            b1.Property<long>("StaffId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("Date")
+                                .HasColumnType("datetime(6)");
+
+                            b1.Property<TimeSpan>("EndTime")
+                                .HasColumnType("time(6)");
+
+                            b1.Property<TimeSpan>("StartTime")
+                                .HasColumnType("time(6)");
+
+                            b1.HasKey("StaffId", "Id");
+
+                            b1.ToTable("AvailabilitySlot");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StaffId");
+                        });
+
+                    b.Navigation("AvailabilitySlots");
+
+                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>
