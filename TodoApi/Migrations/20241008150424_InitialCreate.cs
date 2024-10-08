@@ -16,12 +16,29 @@ namespace TodoApi.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AuditLog",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PatientId = table.Column<long>(type: "bigint", nullable: false),
+                    ChangeDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ChangeDescription = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLog", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -44,14 +61,14 @@ namespace TodoApi.Migrations
                     Birthday = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Gender = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicalNumber = table.Column<string>(type: "longtext", nullable: false)
+                    MedicalNumber = table.Column<int>(type: "int", nullable: false),
+                    Phone = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Phone = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    MedicalConditions = table.Column<string>(type: "longtext", nullable: false)
+                    MedicalConditions = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EmergencyContact = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PendingDeletionDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,7 +83,7 @@ namespace TodoApi.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Appointments",
+                name: "Appointment",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -80,9 +97,9 @@ namespace TodoApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.PrimaryKey("PK_Appointment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Appointments_Patients_PatientId",
+                        name: "FK_Appointment_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
                         principalColumn: "Id");
@@ -90,16 +107,37 @@ namespace TodoApi.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appointments_PatientId",
-                table: "Appointments",
+                name: "IX_Appointment_PatientId",
+                table: "Appointment",
                 column: "PatientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_MedicalNumber",
+                table: "Patients",
+                column: "MedicalNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Patients_Phone",
+                table: "Patients",
+                column: "Phone",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appointments");
+                name: "Appointment");
+
+            migrationBuilder.DropTable(
+                name: "AuditLog");
 
             migrationBuilder.DropTable(
                 name: "Patients");

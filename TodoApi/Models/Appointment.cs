@@ -7,7 +7,7 @@ namespace TodoApi.Models
         public long RoomId { get; set; } // Foreign key for the room where the appointment takes place
         public DateTime Date { get; set; } // Date of the appointment
         public string Status { get; set; } = null!; // Status of the appointment (e.g., Scheduled, Completed, Canceled)
-
+       
         
     }
 }

@@ -12,8 +12,8 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20241008084554_UpdatePatientModel")]
-    partial class UpdatePatientModel
+    [Migration("20241008150424_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,30 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointment", (string)null);
+                });
+
+            modelBuilder.Entity("TodoApi.Models.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangeDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLog", (string)null);
                 });
 
             modelBuilder.Entity("TodoApi.Models.User", b =>
@@ -65,12 +88,16 @@ namespace TodoApi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
 
@@ -106,12 +133,12 @@ namespace TodoApi.Migrations
                     b.Property<int>("MedicalNumber")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("PendingDeletionDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("MedicalNumber")
                         .IsUnique();
