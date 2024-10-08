@@ -1,6 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 using TodoApi.Services;
 
@@ -18,7 +20,7 @@ builder.Services.AddDbContext<UserContext>(options =>
 );
 
 // Register AuthServicePatient with HttpClient
-builder.Services.AddHttpClient<AuthServicePatient>(); 
+builder.Services.AddHttpClient<AuthServicePatient>();
 
 // Configure cookie authentication
 builder.Services.ConfigureApplicationCookie(options =>
@@ -27,6 +29,42 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always in production
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromHours(1); // Set the cookie expiration time
+});
+
+// Configure JWT Bearer Authentication
+string domain = builder.Configuration["Auth0:Domain"]; // Auth0 domain from appsettings.json
+string audience = builder.Configuration["Auth0:Audience"]; // Audience from appsettings.json
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.Authority = domain;
+    options.Audience = audience;
+
+    // Optional: Log validation errors
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            // Here you can inspect the claims and add custom logic if needed
+            return Task.CompletedTask;
+        }
+    };
+});
+
+// Configure authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
 });
 
 // Add other services
@@ -43,10 +81,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Enable authentication
-app.UseAuthentication(); 
-app.UseAuthorization(); 
+app.UseAuthentication(); // Enable authentication
+app.UseAuthorization(); // Enable authorization
 
 app.MapControllers();
 

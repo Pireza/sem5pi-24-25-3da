@@ -17,65 +17,66 @@ namespace TodoApi.Services
             _httpClient = httpClient;
         }
 
-        // AuthenticateUser method
-        public async Task<string?> AuthenticateUser()
+      public async Task<string?> AuthenticateUser()
+{
+    var clientId = "8gzuRxcChBjycTwEIqcUedN0Mjwy2p2P"; // Auth0 Client ID
+    var domain = "dev-utkrfny6obmuy77m.eu.auth0.com"; // Auth0 Domain
+    var redirectUri = "http://localhost:5000/callback"; // Redirect URI
+
+    // Adding 'prompt=login' to force new login
+    var authorizationUrl = $"https://{domain}/authorize?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&scope=openid profile email&prompt=login";
+    Console.WriteLine($"Redirecting to Auth0 for authentication: {authorizationUrl}");
+
+    // Automatically open the Auth0 login page
+    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+    {
+        FileName = authorizationUrl,
+        UseShellExecute = true
+    });
+
+    // Wait for the callback and get the authorization code
+    string? code = await WaitForCodeAsync();
+
+    if (!string.IsNullOrEmpty(code))
+    {
+        // Exchange the authorization code for an access token and ID token
+        var tokenUrl = $"https://{domain}/oauth/token";
+        var tokenPayload = new
         {
-            var clientId = "8gzuRxcChBjycTwEIqcUedN0Mjwy2p2P"; // Auth0 Client ID
-            var domain = "dev-utkrfny6obmuy77m.eu.auth0.com"; // Auth0 Domain
-            var redirectUri = "http://localhost:5000/callback"; // Redirect URI
+            client_id = clientId,
+            client_secret = "shwt2O56GiaaE511R2YHPEU43SNDlYq1wo307uuKCo50SE9Yay7QOB_onmVUWeU6", // Replace with correct Client Secret
+            code = code,
+            redirect_uri = redirectUri,
+            grant_type = "authorization_code"
+        };
 
-            // Adding 'prompt=login' to force new login
-            var authorizationUrl = $"https://{domain}/authorize?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&scope=openid profile email&prompt=login";
-            Console.WriteLine($"Redirecting to Auth0 for authentication: {authorizationUrl}");
+        var json = JsonSerializer.Serialize(tokenPayload);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Automatically open the Auth0 login page
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = authorizationUrl,
-                UseShellExecute = true
-            });
+        // Send request to Auth0 using the injected HttpClient
+        var response = await _httpClient.PostAsync(tokenUrl, content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadAsStringAsync();
+    Console.WriteLine("Token Response: " + result); // Log the entire response
 
-            // Wait for the callback and get the authorization code
-            string? code = await WaitForCodeAsync();
+    var tokenResponse = JsonSerializer.Deserialize<JsonElement>(result);
+    var accessToken = tokenResponse.GetProperty("access_token").GetString();
+    var idToken = tokenResponse.GetProperty("id_token").GetString(); // Extract ID token
 
-            if (!string.IsNullOrEmpty(code))
-            {
-                // Exchange the authorization code for an access token and ID token
-                var tokenUrl = $"https://{domain}/oauth/token";
-                var tokenPayload = new
-                {
-                    client_id = clientId,
-                    client_secret = "shwt2O56GiaaE511R2YHPEU43SNDlYq1wo307uuKCo50SE9Yay7QOB_onmVUWeU6", // Replace with correct Client Secret
-                    code = code,
-                    redirect_uri = redirectUri,
-                    grant_type = "authorization_code"
-                };
+   
 
-                var json = JsonSerializer.Serialize(tokenPayload);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                // Send request to Auth0 using the injected HttpClient
-                var response = await _httpClient.PostAsync(tokenUrl, content);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsStringAsync();
-                    var tokenResponse = JsonSerializer.Deserialize<JsonElement>(result);
-
-                    // Extract the ID token
-                    var idToken = tokenResponse.GetProperty("id_token").GetString();
-
-                    // Extract the email from the ID token (JWT)
-                    var extractedEmail = ExtractEmailFromIdToken(idToken);
-                    return extractedEmail;
-                }
-                else
-                {
-                    Console.WriteLine($"Error obtaining token: {response.StatusCode}");
-                }
-            }
-
-            return null;
+    return idToken;
         }
+        else
+        {
+            Console.WriteLine($"Error obtaining token: {response.StatusCode}");
+        }
+    }
+
+    return null;
+}
+
 
         // WaitForCodeAsync method
         private async Task<string> WaitForCodeAsync()
