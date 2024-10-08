@@ -5,6 +5,7 @@ using TodoApi.Services; // Ensure to include this namespace
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TodoApi.Controllers
 {
@@ -14,6 +15,7 @@ namespace TodoApi.Controllers
     {
         private readonly UserContext _context;
         private readonly AuthServicePatient _authServicePatient;
+   
 
         public PatientsController(UserContext context, AuthServicePatient authServicePatient)
         {
@@ -27,6 +29,8 @@ namespace TodoApi.Controllers
         {
             return await _context.Patients.ToListAsync();
         }
+
+    
 
         // GET: api/Patients/5
         [HttpGet("{id}")]
@@ -58,7 +62,7 @@ namespace TodoApi.Controllers
 
 // POST: api/Patients/authenticate
 [HttpPost("authenticate")]
-public async Task<ActionResult> AuthenticateUser()
+public async Task<ActionResult<string>> AuthenticateUser()
 {
     // Call the method from AuthServicePatient
     var token = await _authServicePatient.AuthenticateUser(); 
@@ -72,7 +76,7 @@ public async Task<ActionResult> AuthenticateUser()
     var cookieOptions = new CookieOptions
     {
         HttpOnly = true, // Prevent client-side access to the cookie
-        Secure = true, // Use Secure cookies in production
+        Secure = false, // Use Secure cookies in production
         SameSite = SameSiteMode.Strict, // Prevent CSRF attacks
         Expires = DateTimeOffset.UtcNow.AddMinutes(10) // Set expiration
     };
@@ -80,7 +84,7 @@ public async Task<ActionResult> AuthenticateUser()
     Response.Cookies.Append("access_token", token, cookieOptions);
     
 
-    return Ok(); // Return a success response
+    return Ok(new { AccessToken = token }); // Return a success response
 }
 
 
