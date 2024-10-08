@@ -12,7 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
+<<<<<<<< HEAD:TodoApi/Migrations/20241008181235_InitialCreate.Designer.cs
     [Migration("20241008181235_InitialCreate")]
+========
+    [Migration("20241008150424_InitialCreate")]
+>>>>>>>> 21a79ce02e964d38562f591cdbff9374e75579ec:TodoApi/Migrations/20241008150424_InitialCreate.Designer.cs
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,7 +57,30 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointment", (string)null);
+                });
+
+            modelBuilder.Entity("TodoApi.Models.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangeDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLog", (string)null);
                 });
 
             modelBuilder.Entity("TodoApi.Models.Specialization", b =>
@@ -82,12 +109,16 @@ namespace TodoApi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
 
@@ -118,16 +149,23 @@ namespace TodoApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("MedicalConditions")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("MedicalNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("MedicalNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PendingDeletionDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
+
+                    b.HasIndex("MedicalNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
 
                     b.ToTable("Patients", (string)null);
                 });

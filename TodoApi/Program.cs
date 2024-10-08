@@ -62,6 +62,7 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+builder.Services.AddHostedService<DeletionService>();
 
 // Configure authorization policies
 builder.Services.AddAuthorization(options =>
