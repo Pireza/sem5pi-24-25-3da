@@ -1,7 +1,6 @@
-using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 using TodoApi.Services;
@@ -18,6 +17,8 @@ builder.Services.AddDbContext<UserContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 39))
     )
 );
+
+
 
 // Register AuthServicePatient with HttpClient
 builder.Services.AddHttpClient<AuthServicePatient>();

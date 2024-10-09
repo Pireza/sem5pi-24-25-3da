@@ -8,14 +8,14 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 namespace TodoApi.Models;
 [Index(nameof(LicenseNumber), IsUnique = true)]
 [Index(nameof(Phone), IsUnique = true)]
- public class Staff : User
-    {
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public required string FullName {get; set; }
-        public required string LicenseNumber {get; set; }
-        public required Specialization Specialization {get; set;}
-        public required string Phone {get; set;}
-        public List<string>? AvailabilitySlots {get; set;}
+public class Staff : User
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? FullName { get; set; }
+    public string? LicenseNumber { get; set; }
+    public Specialization? Specialization { get; set; }
+    public string? Phone { get; set; }
+    public List<string>? AvailabilitySlots { get; set; }
 
-    }
+}

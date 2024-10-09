@@ -10,6 +10,8 @@
         "dependencies": {
           "AWSSDK.CognitoIdentityProvider": "3.7.403.7",
           "Auth0.AspNetCore.Authentication": "1.4.1",
+          "Auth0.AuthenticationApi": "7.27.0",
+          "Auth0.ManagementApi": "7.27.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "2.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.8",
           "Microsoft.EntityFrameworkCore.Design": "8.0.8",
@@ -34,6 +36,41 @@
           "lib/net8.0/Auth0.AspNetCore.Authentication.dll": {
             "assemblyVersion": "1.4.1.0",
             "fileVersion": "1.4.1.0"
+          }
+        }
+      },
+      "Auth0.AuthenticationApi/7.27.0": {
+        "dependencies": {
+          "Auth0.Core": "7.27.0",
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "7.1.2",
+          "System.IdentityModel.Tokens.Jwt": "7.1.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Auth0.AuthenticationApi.dll": {
+            "assemblyVersion": "7.27.0.0",
+            "fileVersion": "7.27.0.0"
+          }
+        }
+      },
+      "Auth0.Core/7.27.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Auth0.Core.dll": {
+            "assemblyVersion": "7.27.0.0",
+            "fileVersion": "7.27.0.0"
+          }
+        }
+      },
+      "Auth0.ManagementApi/7.27.0": {
+        "dependencies": {
+          "Auth0.Core": "7.27.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Auth0.ManagementApi.dll": {
+            "assemblyVersion": "7.27.0.0",
+            "fileVersion": "7.27.0.0"
           }
         }
       },
@@ -3009,6 +3046,27 @@
       "sha512": "sha512-L7US+1QOruVU19C3a63+SYUqtAQj1ASTreVgab4iUBr0zkmuqWmhp7B5kQZ1v6L4Jr4RJdTR6p4dlY02rlFrvQ==",
       "path": "auth0.aspnetcore.authentication/1.4.1",
       "hashPath": "auth0.aspnetcore.authentication.1.4.1.nupkg.sha512"
+    },
+    "Auth0.AuthenticationApi/7.27.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9ZESFRrM+pn+aWMrryxa+OxWXworF8umNymoC25TSCN177UMwP0x37LRko59uZVztHWrCwsk3FncbfTNny7a/Q==",
+      "path": "auth0.authenticationapi/7.27.0",
+      "hashPath": "auth0.authenticationapi.7.27.0.nupkg.sha512"
+    },
+    "Auth0.Core/7.27.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bIteWJKddD0UGxOnKVhsmhsgcAKlLGqbI3LB814I4W0k7ahPxnfaeoD9mfY8pCar/xRB3hB5YPFU6TykuqhJFA==",
+      "path": "auth0.core/7.27.0",
+      "hashPath": "auth0.core.7.27.0.nupkg.sha512"
+    },
+    "Auth0.ManagementApi/7.27.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OvmtwfW/rohLRwl2Qe6mcBrD4NPqUQhZUaerVJo5Eh7SZ49b41Rf+dmztk3hs8mcHmLi3cFiHDCWim+LRPtq3g==",
+      "path": "auth0.managementapi/7.27.0",
+      "hashPath": "auth0.managementapi.7.27.0.nupkg.sha512"
     },
     "AWSSDK.CognitoIdentityProvider/3.7.403.7": {
       "type": "package",

@@ -12,8 +12,8 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20241008181617_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20241009070917_AddUserRoleColumn")]
+    partial class AddUserRoleColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,30 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointment", (string)null);
+                });
+
+            modelBuilder.Entity("TodoApi.Models.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ChangeDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PatientId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLog", (string)null);
                 });
 
             modelBuilder.Entity("TodoApi.Models.Specialization", b =>
@@ -82,12 +105,19 @@ namespace TodoApi.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Role")
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
 
@@ -118,16 +148,23 @@ namespace TodoApi.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("MedicalConditions")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("MedicalNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("MedicalNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PendingDeletionDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
+
+                    b.HasIndex("MedicalNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
 
                     b.ToTable("Patients", (string)null);
                 });
@@ -136,27 +173,25 @@ namespace TodoApi.Migrations
                 {
                     b.HasBaseType("TodoApi.Models.User");
 
+                    b.Property<string>("AvailabilitySlots")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LicenseNumber")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<long>("SpecializationSpecId")
+                    b.Property<long?>("SpecializationSpecId")
                         .HasColumnType("bigint");
 
                     b.HasIndex("LicenseNumber")
@@ -167,7 +202,7 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("SpecializationSpecId");
 
-                    b.ToTable("Staff", (string)null);
+                    b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Appointment", b =>
@@ -196,42 +231,7 @@ namespace TodoApi.Migrations
 
                     b.HasOne("TodoApi.Models.Specialization", "Specialization")
                         .WithMany()
-                        .HasForeignKey("SpecializationSpecId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("TodoApi.Models.AvailabilitySlot", "AvailabilitySlots", b1 =>
-                        {
-                            b1.Property<long>("StaffId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("datetime(6)")
-                                .HasColumnName("AvailabilitySlotDate");
-
-                            b1.Property<TimeSpan>("EndTime")
-                                .HasColumnType("time(6)")
-                                .HasColumnName("AvailabilitySlotEndTime");
-
-                            b1.Property<TimeSpan>("StartTime")
-                                .HasColumnType("time(6)")
-                                .HasColumnName("AvailabilitySlotStartTime");
-
-                            b1.HasKey("StaffId", "Id");
-
-                            b1.ToTable("AvailabilitySlot");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StaffId");
-                        });
-
-                    b.Navigation("AvailabilitySlots");
+                        .HasForeignKey("SpecializationSpecId");
 
                     b.Navigation("Specialization");
                 });
