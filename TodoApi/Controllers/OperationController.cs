@@ -83,10 +83,10 @@ public class OperationController : ControllerBase
     public async Task<ActionResult<OperationType>> PostType(OperationType type)
     {
 
-        if(!string.IsNullOrEmpty(type.Duration))
+        if (!string.IsNullOrEmpty(type.Duration))
         {
             Regex regex = new Regex(DurationPattern);
-            if(!regex.IsMatch(type.Duration))
+            if (!regex.IsMatch(type.Duration))
             {
                 return BadRequest("Operation type duration should be in the HH:mm:ss format");
             }
@@ -102,7 +102,7 @@ public class OperationController : ControllerBase
     // |=============================================|
 
 
- // GET: api/operation/request
+    // GET: api/operation/request
     [HttpGet("request")]
     public async Task<ActionResult<IEnumerable<OperationRequest>>> GetRequests()
     {
@@ -130,12 +130,12 @@ public class OperationController : ControllerBase
     public async Task<ActionResult<OperationRequest>> PostRequest(OperationRequest request)
     {
 
-        if(!string.IsNullOrEmpty(request.Deadline))
+        if (!string.IsNullOrEmpty(request.Deadline))
         {
             Regex regex = new Regex(DatePattern);
-            if(!regex.IsMatch(request.Deadline))
+            if (!regex.IsMatch(request.Deadline))
             {
-                return BadRequest("Request deadline should be in the dd-MM-YYYY format");
+                return BadRequest("Request deadline should be in the dd/MM/YYYY format");
             }
         }
 

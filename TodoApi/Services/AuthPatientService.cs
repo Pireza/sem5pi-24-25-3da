@@ -19,9 +19,9 @@ namespace TodoApi.Services
 
       public async Task<string?> AuthenticateUser()
 {
-    var clientId = "8gzuRxcChBjycTwEIqcUedN0Mjwy2p2P"; // Auth0 Client ID
-    var domain = "dev-utkrfny6obmuy77m.eu.auth0.com"; // Auth0 Domain
-    var redirectUri = "http://localhost:5000/callback"; // Redirect URI
+    var clientId = AuthenticationConstants.CLIENT_ID; // Auth0 Client ID
+    var domain = AuthenticationConstants.DOMAIN; // Auth0 Domain
+    var redirectUri = AuthenticationConstants.REDIRECTURI; // Redirect URI
 
     // Adding 'prompt=login' to force new login
     var authorizationUrl = $"https://{domain}/authorize?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&scope=openid profile email&prompt=login";
@@ -44,7 +44,7 @@ namespace TodoApi.Services
         var tokenPayload = new
         {
             client_id = clientId,
-            client_secret = "shwt2O56GiaaE511R2YHPEU43SNDlYq1wo307uuKCo50SE9Yay7QOB_onmVUWeU6", // Replace with correct Client Secret
+            client_secret = AuthenticationConstants.CLIENT_SECRET, // Replace with correct Client Secret
             code = code,
             redirect_uri = redirectUri,
             grant_type = "authorization_code"
@@ -83,7 +83,7 @@ namespace TodoApi.Services
         {
             using (var listener = new HttpListener()) // Create a new listener instance here
             {
-                listener.Prefixes.Add("http://localhost:5000/callback/");
+                listener.Prefixes.Add(AuthenticationConstants.REDIRECTURI2);
                 listener.Start();
                 Console.WriteLine("Waiting for authentication...");
 
