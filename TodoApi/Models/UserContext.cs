@@ -16,7 +16,7 @@ public class UserContext : DbContext
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<Specialization> Specializations { get; set; }
-    public DbSet<OperationPriority> Priorities {get; set;}
+    public DbSet<OperationPriority> Priorities { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
@@ -32,6 +32,12 @@ public class UserContext : DbContext
         modelBuilder.Entity<Specialization>()
               .ToTable("Specializations")
               .HasKey(s => s.SpecId);
+
+        // Establishment of a many-to-many relationship between OperationType and Specialization
+        modelBuilder.Entity<OperationType>()
+            .HasMany(o => o.Specializations)
+            .WithMany(s => s.OperationTypes)
+            .UsingEntity(j => j.ToTable("OperationType_Specializations"));
 
         modelBuilder.Entity<Patient>()
             .HasMany(p => p.Appointments); // A patient has many appointments
