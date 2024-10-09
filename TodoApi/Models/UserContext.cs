@@ -17,6 +17,8 @@ public class UserContext : DbContext
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<Specialization> Specializations { get; set; }
     public DbSet<OperationPriority> Priorities { get; set; }
+    public DbSet<OperationType> Types {get; set;}
+    public DbSet<OperationRequest> Requests {get; set;}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
