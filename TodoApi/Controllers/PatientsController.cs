@@ -168,7 +168,7 @@ public async Task<ActionResult<string>> AuthenticateUser()
         }
 
         // POST: api/Patients
-[HttpPost]
+[HttpPost("registerPatient")]
 // POST: api/Patients
 public async Task<ActionResult<Patient>> CreatePatient([FromBody] CreatePatientRequest request)
 {
