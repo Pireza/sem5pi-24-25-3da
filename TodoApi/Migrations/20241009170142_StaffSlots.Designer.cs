@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241009170142_StaffSlots")]
+    partial class StaffSlots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,40 +24,6 @@ namespace TodoApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("AvailabilitySlot", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Date")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("EndTime")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Slot")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long?>("StaffId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("StartTime")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StaffId");
-
-                    b.ToTable("AvailabilitySlot", (string)null);
-                });
 
             modelBuilder.Entity("OperationPriority", b =>
                 {
@@ -305,6 +274,9 @@ namespace TodoApi.Migrations
                 {
                     b.HasBaseType("TodoApi.Models.User");
 
+                    b.Property<string>("AvailabilitySlots")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext");
 
@@ -332,13 +304,6 @@ namespace TodoApi.Migrations
                     b.HasIndex("SpecializationSpecId");
 
                     b.ToTable("Staff");
-                });
-
-            modelBuilder.Entity("AvailabilitySlot", b =>
-                {
-                    b.HasOne("TodoApi.Models.Staff", null)
-                        .WithMany("AvailabilitySlots")
-                        .HasForeignKey("StaffId");
                 });
 
             modelBuilder.Entity("OperationRequest", b =>
@@ -427,11 +392,6 @@ namespace TodoApi.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Operations");
-                });
-
-            modelBuilder.Entity("TodoApi.Models.Staff", b =>
-                {
-                    b.Navigation("AvailabilitySlots");
                 });
 #pragma warning restore 612, 618
         }

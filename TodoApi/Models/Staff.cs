@@ -16,6 +16,5 @@ public class Staff : User
     public string? LicenseNumber { get; set; }
     public Specialization? Specialization { get; set; }
     public string? Phone { get; set; }
-    public List<string>? AvailabilitySlots { get; set; }
-
+    public ICollection<AvailabilitySlot>? AvailabilitySlots { get; set; } = new List<AvailabilitySlot>();
 }

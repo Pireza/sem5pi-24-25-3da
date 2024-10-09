@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace TodoApi.Models;
 
@@ -17,8 +19,9 @@ public class UserContext : DbContext
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<Specialization> Specializations { get; set; }
     public DbSet<OperationPriority> Priorities { get; set; }
-    public DbSet<OperationType> Types {get; set;}
-    public DbSet<OperationRequest> Requests {get; set;}
+    public DbSet<OperationType> Types { get; set; }
+    public DbSet<OperationRequest> Requests { get; set; }
+    public DbSet<AvailabilitySlot> Slots { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
@@ -30,6 +33,7 @@ public class UserContext : DbContext
       .ToTable("Appointment").HasKey(a => a.Id);
         modelBuilder.Entity<AuditLog>()
      .ToTable("AuditLog");
+     modelBuilder.Entity<AvailabilitySlot>().ToTable("AvailabilitySlot");
 
         modelBuilder.Entity<Specialization>()
               .ToTable("Specializations")
