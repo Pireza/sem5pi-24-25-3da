@@ -167,6 +167,55 @@ public async Task<ActionResult<string>> AuthenticateUser()
             return CreatedAtAction("GetPatient", new { id = patient.Id }, patient);
         }
 
+        // POST: api/Patients
+[HttpPost]
+// POST: api/Patients
+public async Task<ActionResult<Patient>> CreatePatient([FromBody] CreatePatientRequest request)
+{
+    // Validação básica dos campos obrigatórios
+    if (string.IsNullOrEmpty(request.FirstName) || string.IsNullOrEmpty(request.LastName))
+    {
+        return BadRequest("First name and last name are required.");
+    }
+
+    // Validação do formato da data de nascimento
+    if (!DateTime.TryParseExact(request.Birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
+    {
+        return BadRequest("Invalid date format. Use DD/MM/YYYY.");
+    }
+
+    // Verifica se já existe um paciente com o mesmo número médico ou e-mail
+    var existingPatient = await _context.Patients
+        .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
+
+    if (existingPatient != null)
+    {
+        return Conflict("A patient with the same medical number or email already exists.");
+    }
+
+    // Cria uma nova instância do paciente com os dados fornecidos
+    var newPatient = new Patient
+    {
+        FirstName = request.FirstName,
+        LastName = request.LastName,
+        Email = request.Email,
+        Birthday = dob,
+        MedicalNumber = request.MedicalNumber,
+        Phone = request.Phone,
+        MedicalConditions = request.MedicalConditions 
+    };
+
+    // Adiciona ao contexto e salva no banco de dados
+    _context.Patients.Add(newPatient);
+    await _context.SaveChangesAsync();
+
+    // Retorna a resposta com o status 201 Created
+    return CreatedAtAction(nameof(GetPatient), new { id = newPatient.Id }, newPatient);
+}
+
+
+
+
        // PUT: api/Patients/5
 [HttpPut("{id}")]
 public async Task<IActionResult> PutPatient(long id, Patient patient)
