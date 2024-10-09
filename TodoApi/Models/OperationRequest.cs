@@ -7,6 +7,7 @@ public class OperationRequest
     public required Staff Doctor {get; set;}
     public required OperationType OperationType{get; set;}
     public required string Deadline {get; set;}
+    public required string Status {get; set;}
     public required OperationPriority Priority {get; set;}
 
 }
