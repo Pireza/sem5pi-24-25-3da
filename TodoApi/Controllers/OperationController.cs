@@ -14,6 +14,8 @@ public class OperationController : ControllerBase
     private const string DatePattern = @"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\\d{4})$";
     private const string PENDING_STATUS = "pending";
     private const string APPROVED_STATUS = "approved";
+    private const string ACTIVE_STATUS = "active";
+    private const string INACTIVE_STATUS = "inactive";
 
     public OperationController(UserContext context)
     {
@@ -84,6 +86,13 @@ public class OperationController : ControllerBase
     [HttpPost("type")]
     public async Task<ActionResult<OperationType>> PostType(OperationType type)
     {
+
+         if (string.IsNullOrEmpty(type.Status) ||
+            !string.Equals(type.Status, ACTIVE_STATUS) ||
+                !string.Equals(type.Status, INACTIVE_STATUS))
+        {
+            return BadRequest("Status must be either \"active\" or \"inactive\"");
+        }
 
         if (!string.IsNullOrEmpty(type.Duration))
         {
