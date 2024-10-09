@@ -11,6 +11,7 @@ public class OperationController : ControllerBase
 {
     private readonly UserContext _context;
     private const string DurationPattern = @"^([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+    private const string DatePattern = @"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(\\d{4})$";
 
     public OperationController(UserContext context)
     {
@@ -128,6 +129,16 @@ public class OperationController : ControllerBase
     [HttpPost("request")]
     public async Task<ActionResult<OperationRequest>> PostRequest(OperationRequest request)
     {
+
+        if(!string.IsNullOrEmpty(request.Deadline))
+        {
+            Regex regex = new Regex(DatePattern);
+            if(!regex.IsMatch(request.Deadline))
+            {
+                return BadRequest("Request deadline should be in the dd-MM-YYYY format");
+            }
+        }
+
         _context.Requests.Add(request);
         await _context.SaveChangesAsync();
 
