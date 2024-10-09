@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Auth0.ManagementApi.Models.Actions;
 using Microsoft.EntityFrameworkCore;
 
 namespace TodoApi.Models;
@@ -19,6 +20,8 @@ namespace TodoApi.Models;
         public string EmergencyContact { get; set; } 
          public DateTime? PendingDeletionDate { get; set; } = null;
         
+        public ICollection<OperationRequest> Operations {get; set;} = [];
         // Navigation property for appointments
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+   
     }
