@@ -47,6 +47,7 @@ public class UserContext : DbContext
 
         modelBuilder.Entity<Patient>()
             .HasMany(p => p.Appointments); // A patient has many appointments
+        modelBuilder.Entity<OperationTypeLog>().ToTable("OperationTypeLog");
 
     }
 

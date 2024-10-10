@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241010131445_AddUniqueConstraintOnOperationTypeName")]
+    partial class AddUniqueConstraintOnOperationTypeName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,32 +146,6 @@ namespace TodoApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Types");
-                });
-
-            modelBuilder.Entity("OperationTypeLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("OperationTypeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("TimeStamp")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OperationTypeId");
-
-                    b.ToTable("OperationTypeLog", (string)null);
                 });
 
             modelBuilder.Entity("OperationTypeSpecialization", b =>
@@ -403,17 +380,6 @@ namespace TodoApi.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("Priority");
-                });
-
-            modelBuilder.Entity("OperationTypeLog", b =>
-                {
-                    b.HasOne("OperationType", "OperationType")
-                        .WithMany()
-                        .HasForeignKey("OperationTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OperationType");
                 });
 
             modelBuilder.Entity("OperationTypeSpecialization", b =>

@@ -84,28 +84,40 @@ public class OperationController : ControllerBase
     //POST: api/operation/type
 
     [HttpPost("type")]
-    public async Task<ActionResult<OperationType>> PostType(OperationType type)
+    public async Task<ActionResult<OperationTypeDTO>> PostType(OperationTypeDTO typeDTO)
     {
 
-         if (string.IsNullOrEmpty(type.Status) ||
-            !string.Equals(type.Status, ACTIVE_STATUS) ||
-                !string.Equals(type.Status, INACTIVE_STATUS))
-        {
-            return BadRequest("Status must be either \"active\" or \"inactive\"");
-        }
-
-        if (!string.IsNullOrEmpty(type.Duration))
+        if (!string.IsNullOrEmpty(typeDTO.Duration))
         {
             Regex regex = new Regex(DurationPattern);
-            if (!regex.IsMatch(type.Duration))
+            if (!regex.IsMatch(typeDTO.Duration))
             {
                 return BadRequest("Operation type duration should be in the HH:mm:ss format");
             }
         }
-        _context.Types.Add(type);
-        await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetType", new { id = type.Id }, type);
+        var operationType = new OperationType
+        {
+            Id = typeDTO.Id,
+            Name = typeDTO.Name,
+            Duration = typeDTO.Duration,
+            Status = "active",
+            Specializations = new List<Specialization>(typeDTO.Specializations)
+        };
+
+
+        // The following try/catch clause catches the cases where there is already a type with the same name
+        try
+        {
+            _context.Types.Add(operationType);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            return BadRequest("Operation type with that name already exists.");
+        }
+
+        return CreatedAtAction("GetType", new { id = operationType.Id }, operationType);
     }
 
     // |=============================================|
