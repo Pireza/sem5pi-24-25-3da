@@ -51,7 +51,7 @@ namespace TodoApi.Controllers
             {
                 if (DateTime.TryParseExact(dateOfBirth, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
                 {
-                    query = query.Where(p => p.Birthday == dob);
+                    query = query.Where(p => p.Birthday.Date == dob);
                 }
                 else
                 {

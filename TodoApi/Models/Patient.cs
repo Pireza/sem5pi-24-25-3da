@@ -20,8 +20,7 @@ namespace TodoApi.Models;
         public string EmergencyContact { get; set; } 
          public DateTime? PendingDeletionDate { get; set; } = null;
         
-        public ICollection<OperationRequest> Operations {get; set;} = [];
-        // Navigation property for appointments
+        public virtual ICollection<OperationRequest> Operations {get; set;} = new List<OperationRequest>();
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
    
     }
