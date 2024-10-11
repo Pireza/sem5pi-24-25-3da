@@ -105,6 +105,54 @@ public class OperationController : ControllerBase
 
     }
 
+    // PUT: api/Operation/type/activate/{id}
+
+    [HttpPut("type/activate/{id}")]
+
+    public async Task<ActionResult<OperationType>> ActivateType(long id)
+    {
+
+        try
+        {
+            var prod = await _service.ActivateTypeAsync(id);
+
+            if (prod == null)
+            {
+                Console.WriteLine("lol");
+                return NotFound();
+            }
+            return Ok(prod);
+        }
+        catch (InvalidDataException ex)
+        {
+            return BadRequest("This type is already active");
+        }
+    }
+
+
+    // PUT: api/Operation/type/inactivate/{id}
+
+    [HttpPut("type/deactivate/{id}")]
+
+    public async Task<ActionResult<OperationType>> InactivateType(long id)
+    {
+
+        try
+        {
+            var prod = await _service.InactivateTypeAsync(id);
+
+            if (prod == null)
+            {
+                return NotFound();
+            }
+            return Ok(prod);
+        }
+        catch (InvalidDataException ex)
+        {
+            return BadRequest("This type is already inactive");
+        }
+    }
+
     // |=============================================|
     // | Following methods regard Operation Requests |
     // |=============================================|

@@ -116,5 +116,43 @@ public class OperationService
 
     }
 
+    public async Task<OperationType> ActivateTypeAsync(long id)
+    {
+        var op = await this._context.Types.FindAsync(id);
+
+        if (op == null)
+            return null;
+
+        // change all fields
+        if (op.Status.Equals(ACTIVE_STATUS))
+        {
+            throw new InvalidDataException();
+        }
+
+        op.Status = ACTIVE_STATUS;
+        await this._context.SaveChangesAsync();
+
+        return op;
+    }
+    public async Task<OperationType> InactivateTypeAsync(long id)
+    {
+        var op = await this._context.Types.FindAsync(id);
+
+        if (op == null)
+            return null;
+
+        // change all fields
+        if (op.Status.Equals(INACTIVE_STATUS))
+        {
+            throw new InvalidDataException();
+        }
+
+        op.Status = INACTIVE_STATUS;
+        await this._context.SaveChangesAsync();
+
+        return op;
+    }
+
+
 
 }
