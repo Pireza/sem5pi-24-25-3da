@@ -53,6 +53,12 @@ public class OperationService
         return await this._context.Types.ToListAsync();
     }
 
+    public async Task<List<OperationType>> GetAllTypeFilterAsync(OperationTypeSearch search)
+    {
+        return await this._context.Types.Where(x => x.Name.Equals(search.Name) ||
+         x.Status.Equals(search.Status)).ToListAsync();
+    }
+
     public async Task<OperationType> GetTypeByIdAsync(long id)
     {
         var prod = await this._context.Types.FindAsync(id);
@@ -62,6 +68,8 @@ public class OperationService
 
         return prod;
     }
+
+
 
 
     public async Task<OperationType> AddTypeAsync(OperationTypeDTO operationTypeDTO)

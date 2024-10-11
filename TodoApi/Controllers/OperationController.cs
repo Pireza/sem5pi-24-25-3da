@@ -75,7 +75,20 @@ public class OperationController : ControllerBase
 
         return type;
     }
+    // GET: api/operation/filter
+    [HttpGet("type/filter")]
 
+    public async Task<ActionResult<IEnumerable<OperationType>>> GetTypeFilter(OperationTypeSearch search)
+    {
+        var type = await _service.GetAllTypeFilterAsync(search);
+
+        if (type == null)
+        {
+            return NotFound();
+        }
+
+        return type;
+    }
 
     //POST: api/operation/type
 
@@ -118,7 +131,6 @@ public class OperationController : ControllerBase
 
             if (prod == null)
             {
-                Console.WriteLine("lol");
                 return NotFound();
             }
             return Ok(prod);
