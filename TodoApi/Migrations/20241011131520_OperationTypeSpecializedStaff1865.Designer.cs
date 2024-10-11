@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011131520_OperationTypeSpecializedStaff1865")]
+    partial class OperationTypeSpecializedStaff1865
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,19 +174,6 @@ namespace TodoApi.Migrations
                     b.ToTable("OperationTypeLog", (string)null);
                 });
 
-            modelBuilder.Entity("OperationType_Staff", b =>
-                {
-                    b.Property<long>("OperationTypeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("SpecializedStaffId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("OperationTypeId", "SpecializedStaffId");
-
-                    b.ToTable("Type_Staff");
-                });
-
             modelBuilder.Entity("SpecializedStaff", b =>
                 {
                     b.Property<long>("Id")
@@ -191,6 +181,9 @@ namespace TodoApi.Migrations
                         .HasColumnType("bigint");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("OperationTypeId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -200,6 +193,8 @@ namespace TodoApi.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OperationTypeId");
 
                     b.HasIndex("SpecializationSpecId");
 
@@ -438,6 +433,10 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("SpecializedStaff", b =>
                 {
+                    b.HasOne("OperationType", null)
+                        .WithMany("Staff")
+                        .HasForeignKey("OperationTypeId");
+
                     b.HasOne("TodoApi.Models.Specialization", "Specialization")
                         .WithMany()
                         .HasForeignKey("SpecializationSpecId")
@@ -476,6 +475,11 @@ namespace TodoApi.Migrations
                         .HasForeignKey("SpecializationSpecId");
 
                     b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("OperationType", b =>
+                {
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>

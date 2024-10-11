@@ -52,14 +52,14 @@ public class SpecializationController : ControllerBase
 
     // GET: api/Specialization/staff
     [HttpGet("staff")]
-    public async Task<ActionResult<IEnumerable<SpecializationStaffDTO>>> GetSpecializedStaff()
+    public async Task<ActionResult<IEnumerable<SpecializedStaff>>> GetSpecializedStaff()
     {
-        return await _context.SpecializedStaff.Select(x => StaffToDTO(x)).ToListAsync();
+        return await _context.SpecializedStaff.ToListAsync();
     }
 
     // GET: api/Specialization/{id}
     [HttpGet("staff/{id}")]
-    public async Task<ActionResult<SpecializationStaffDTO>> GetSpecializedStaff(long id)
+    public async Task<ActionResult<SpecializedStaff>> GetSpecializedStaff(long id)
     {
         var specialization = await _context.SpecializedStaff.FindAsync(id);
 
@@ -68,14 +68,14 @@ public class SpecializationController : ControllerBase
             return NotFound();
         }
 
-        return StaffToDTO(specialization);
+        return specialization;
     }
 
 
     //POST: api/Specialization
 
     [HttpPost("staff")]
-    public async Task<ActionResult<SpecializationStaffDTO>> PostSpecializedStaff(SpecializationStaffDTO staff)
+    public async Task<ActionResult<SpecializedStaff>> PostSpecializedStaff(SpecializedStaff staff)
     {
         var specialization = await _context.Specializations.FindAsync(staff.Specialization);
 
@@ -83,24 +83,13 @@ public class SpecializationController : ControllerBase
             return BadRequest("The specified Specialization doesn't exist");
         }
 
-        var ret = new SpecializedStaff 
-        {
-            Role = staff.Role,
-            Specialization = specialization
-        };
 
-        _context.SpecializedStaff.Add(ret);
+        _context.SpecializedStaff.Add(staff);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetSpecializedStaff", new { id = ret.Id }, ret);
+        return CreatedAtAction("GetSpecializedStaff", new { id = staff.Id }, staff);
     }
 
-    private static SpecializationStaffDTO StaffToDTO (SpecializedStaff specializedStaff) =>
-        new SpecializationStaffDTO
-        {
-            Id = specializedStaff.Id,
-            Role = specializedStaff.Role,
-            Specialization = specializedStaff.Id
-        };
+
 
 }

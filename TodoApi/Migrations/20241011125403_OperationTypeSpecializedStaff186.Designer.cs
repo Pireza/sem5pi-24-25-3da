@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011125403_OperationTypeSpecializedStaff186")]
+    partial class OperationTypeSpecializedStaff186
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,17 +174,19 @@ namespace TodoApi.Migrations
                     b.ToTable("OperationTypeLog", (string)null);
                 });
 
-            modelBuilder.Entity("OperationType_Staff", b =>
+            modelBuilder.Entity("OperationTypeSpecializedStaff", b =>
                 {
-                    b.Property<long>("OperationTypeId")
+                    b.Property<long>("StaffId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("SpecializedStaffId")
+                    b.Property<long>("TypesId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("OperationTypeId", "SpecializedStaffId");
+                    b.HasKey("StaffId", "TypesId");
 
-                    b.ToTable("Type_Staff");
+                    b.HasIndex("TypesId");
+
+                    b.ToTable("OperationType_NeededStaff", (string)null);
                 });
 
             modelBuilder.Entity("SpecializedStaff", b =>
@@ -434,6 +439,21 @@ namespace TodoApi.Migrations
                         .IsRequired();
 
                     b.Navigation("OperationType");
+                });
+
+            modelBuilder.Entity("OperationTypeSpecializedStaff", b =>
+                {
+                    b.HasOne("SpecializedStaff", null)
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OperationType", null)
+                        .WithMany()
+                        .HasForeignKey("TypesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SpecializedStaff", b =>

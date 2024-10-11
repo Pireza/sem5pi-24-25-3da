@@ -20,6 +20,7 @@ public class UserContext : DbContext
     public DbSet<Specialization> Specializations { get; set; }
     public DbSet<SpecializedStaff> SpecializedStaff { get; set; }
     public DbSet<OperationPriority> Priorities { get; set; }
+    public DbSet<OperationType_Staff> Type_Staff { get; set; }
     public DbSet<OperationType> Types { get; set; }
     public DbSet<OperationRequest> Requests { get; set; }
     public DbSet<AvailabilitySlot> Slots { get; set; }
@@ -44,13 +45,10 @@ public class UserContext : DbContext
               .ToTable("SpecializedStaff")
               .HasKey(s => s.Id);
 
+       modelBuilder.Entity<OperationType_Staff>()
+            .HasKey(ots => new { ots.OperationTypeId, ots.SpecializedStaffId });
 
-        // Establishment of a many-to-many relationship between OperationType and Specialization
-        modelBuilder.Entity<OperationType>()
-            .HasMany(o => o.Staff)
-            .WithMany(s => s.Types)
-            .UsingEntity(j => j.ToTable("OperationType_NeededStaff"));
-
+      
         modelBuilder.Entity<Patient>()
             .HasMany(p => p.Appointments); // A patient has many appointments
         modelBuilder.Entity<OperationTypeLog>().ToTable("OperationTypeLog");
