@@ -53,11 +53,23 @@ public class OperationService
         return await this._context.Types.ToListAsync();
     }
 
+
     public async Task<List<OperationType>> GetAllTypeFilterAsync(OperationTypeSearch search)
     {
-        return await this._context.Types.Where(x => x.Name.Equals(search.Name) ||
-         x.Status.Equals(search.Status)).ToListAsync();
+        var query = from ot in _context.Types
+                    join ots in _context.Type_Staff on ot.Id equals ots.OperationTypeId
+                    join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
+                    join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
+                    where
+                    (string.IsNullOrEmpty(search.Name) || ot.Name.Equals(search.Name)) &&
+                    (string.IsNullOrEmpty(search.Status) || ot.Status.Equals(search.Status)) &&
+                    (string.IsNullOrEmpty(search.Specialization) || sp.SpecDescription.Equals(search.Specialization))
+                    select ot;
+
+        return await query.Distinct().ToListAsync();
     }
+
+
 
     public async Task<OperationType> GetTypeByIdAsync(long id)
     {

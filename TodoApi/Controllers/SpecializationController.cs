@@ -77,7 +77,7 @@ public class SpecializationController : ControllerBase
     [HttpPost("staff")]
     public async Task<ActionResult<SpecializedStaff>> PostSpecializedStaff(SpecializedStaff staff)
     {
-        var specialization = await _context.Specializations.FindAsync(staff.Specialization);
+        var specialization = await _context.Specializations.FindAsync(staff.SpecializationId);
 
         if(specialization == null){
             return BadRequest("The specified Specialization doesn't exist");
