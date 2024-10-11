@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011135241_OperationTypeSpecializedStaff1865333e3")]
+    partial class OperationTypeSpecializedStaff1865333e3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +184,7 @@ namespace TodoApi.Migrations
 
                     b.HasKey("OperationTypeId", "SpecializedStaffId");
 
-                    b.ToTable("Type_Staff");
+                    b.ToTable("Staff_Type", (string)null);
                 });
 
             modelBuilder.Entity("SpecializedStaff", b =>

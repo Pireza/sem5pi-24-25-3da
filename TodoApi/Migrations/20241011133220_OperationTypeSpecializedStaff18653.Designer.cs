@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011133220_OperationTypeSpecializedStaff18653")]
+    partial class OperationTypeSpecializedStaff18653
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +184,9 @@ namespace TodoApi.Migrations
 
                     b.HasKey("OperationTypeId", "SpecializedStaffId");
 
-                    b.ToTable("Type_Staff");
+                    b.HasIndex("SpecializedStaffId");
+
+                    b.ToTable("Staff_Type", (string)null);
                 });
 
             modelBuilder.Entity("SpecializedStaff", b =>
@@ -436,6 +441,23 @@ namespace TodoApi.Migrations
                     b.Navigation("OperationType");
                 });
 
+            modelBuilder.Entity("OperationType_Staff", b =>
+                {
+                    b.HasOne("OperationType", null)
+                        .WithMany("Staff")
+                        .HasForeignKey("OperationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SpecializedStaff", "SpecializedStaff")
+                        .WithMany()
+                        .HasForeignKey("SpecializedStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SpecializedStaff");
+                });
+
             modelBuilder.Entity("SpecializedStaff", b =>
                 {
                     b.HasOne("TodoApi.Models.Specialization", "Specialization")
@@ -476,6 +498,11 @@ namespace TodoApi.Migrations
                         .HasForeignKey("SpecializationSpecId");
 
                     b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("OperationType", b =>
+                {
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>

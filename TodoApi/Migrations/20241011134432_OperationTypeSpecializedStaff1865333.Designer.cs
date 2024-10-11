@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011134432_OperationTypeSpecializedStaff1865333")]
+    partial class OperationTypeSpecializedStaff1865333
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,13 +176,25 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("OperationType_Staff", b =>
                 {
-                    b.Property<long>("OperationTypeId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("SpecializedStaffId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("OperationTypeId", "SpecializedStaffId");
+                    b.Property<long>("OperationTypeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("OperationTypeId1")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("SpecializedStaffId1")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("SpecializedStaffId", "OperationTypeId");
+
+                    b.HasIndex("OperationTypeId");
+
+                    b.HasIndex("OperationTypeId1");
+
+                    b.HasIndex("SpecializedStaffId1");
 
                     b.ToTable("Type_Staff");
                 });
@@ -436,6 +451,33 @@ namespace TodoApi.Migrations
                     b.Navigation("OperationType");
                 });
 
+            modelBuilder.Entity("OperationType_Staff", b =>
+                {
+                    b.HasOne("OperationType", "OperationType")
+                        .WithMany()
+                        .HasForeignKey("OperationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OperationType", null)
+                        .WithMany("OperationTypeStaffs")
+                        .HasForeignKey("OperationTypeId1");
+
+                    b.HasOne("SpecializedStaff", "SpecializedStaff")
+                        .WithMany()
+                        .HasForeignKey("SpecializedStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SpecializedStaff", null)
+                        .WithMany("OperationTypeStaffs")
+                        .HasForeignKey("SpecializedStaffId1");
+
+                    b.Navigation("OperationType");
+
+                    b.Navigation("SpecializedStaff");
+                });
+
             modelBuilder.Entity("SpecializedStaff", b =>
                 {
                     b.HasOne("TodoApi.Models.Specialization", "Specialization")
@@ -476,6 +518,16 @@ namespace TodoApi.Migrations
                         .HasForeignKey("SpecializationSpecId");
 
                     b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("OperationType", b =>
+                {
+                    b.Navigation("OperationTypeStaffs");
+                });
+
+            modelBuilder.Entity("SpecializedStaff", b =>
+                {
+                    b.Navigation("OperationTypeStaffs");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>

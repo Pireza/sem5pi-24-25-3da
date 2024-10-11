@@ -8,6 +8,5 @@ public class OperationType
     public required string Name { get; set; }
     public required string Duration { get; set; }
     public required string Status { get; set; }
-    public ICollection<SpecializedStaff>? Staff { get; set; } = [];
-
+    
 }

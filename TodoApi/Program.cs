@@ -89,6 +89,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization(); // Enable authorization
 
+
+
 app.MapControllers();
 
 app.Run();
