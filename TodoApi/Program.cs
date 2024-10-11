@@ -74,6 +74,7 @@ builder.Services.AddAuthorization(options =>
 // Add other services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<OperationService>();
 
 var app = builder.Build();
 
