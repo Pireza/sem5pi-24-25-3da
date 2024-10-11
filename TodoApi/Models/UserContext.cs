@@ -47,9 +47,9 @@ public class UserContext : DbContext
 
         // Establishment of a many-to-many relationship between OperationType and Specialization
         modelBuilder.Entity<OperationType>()
-            .HasMany(o => o.Specializations)
-            .WithMany(s => s.OperationTypes)
-            .UsingEntity(j => j.ToTable("OperationType_Specializations"));
+            .HasMany(o => o.Staff)
+            .WithMany(s => s.Types)
+            .UsingEntity(j => j.ToTable("OperationType_NeededStaff"));
 
         modelBuilder.Entity<Patient>()
             .HasMany(p => p.Appointments); // A patient has many appointments

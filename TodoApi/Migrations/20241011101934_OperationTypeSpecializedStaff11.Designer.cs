@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApi.Models;
 
@@ -11,9 +12,11 @@ using TodoApi.Models;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20241011101934_OperationTypeSpecializedStaff11")]
+    partial class OperationTypeSpecializedStaff11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,7 +136,7 @@ namespace TodoApi.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<long?>("SpecializationSpecId")
+                    b.Property<long?>("SpecializedStaffId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Status")
@@ -145,7 +148,7 @@ namespace TodoApi.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("SpecializationSpecId");
+                    b.HasIndex("SpecializedStaffId");
 
                     b.ToTable("Types");
                 });
@@ -176,19 +179,19 @@ namespace TodoApi.Migrations
                     b.ToTable("OperationTypeLog", (string)null);
                 });
 
-            modelBuilder.Entity("OperationTypeSpecializedStaff", b =>
+            modelBuilder.Entity("OperationTypeSpecialization", b =>
                 {
-                    b.Property<long>("StaffId")
+                    b.Property<long>("OperationTypesId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TypesId")
+                    b.Property<long>("SpecializationsSpecId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("StaffId", "TypesId");
+                    b.HasKey("OperationTypesId", "SpecializationsSpecId");
 
-                    b.HasIndex("TypesId");
+                    b.HasIndex("SpecializationsSpecId");
 
-                    b.ToTable("OperationType_NeededStaff", (string)null);
+                    b.ToTable("OperationType_Specializations", (string)null);
                 });
 
             modelBuilder.Entity("SpecializedStaff", b =>
@@ -429,9 +432,9 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("OperationType", b =>
                 {
-                    b.HasOne("TodoApi.Models.Specialization", null)
-                        .WithMany("OperationTypes")
-                        .HasForeignKey("SpecializationSpecId");
+                    b.HasOne("SpecializedStaff", null)
+                        .WithMany("Types")
+                        .HasForeignKey("SpecializedStaffId");
                 });
 
             modelBuilder.Entity("OperationTypeLog", b =>
@@ -445,17 +448,17 @@ namespace TodoApi.Migrations
                     b.Navigation("OperationType");
                 });
 
-            modelBuilder.Entity("OperationTypeSpecializedStaff", b =>
+            modelBuilder.Entity("OperationTypeSpecialization", b =>
                 {
-                    b.HasOne("SpecializedStaff", null)
+                    b.HasOne("OperationType", null)
                         .WithMany()
-                        .HasForeignKey("StaffId")
+                        .HasForeignKey("OperationTypesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OperationType", null)
+                    b.HasOne("TodoApi.Models.Specialization", null)
                         .WithMany()
-                        .HasForeignKey("TypesId")
+                        .HasForeignKey("SpecializationsSpecId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -491,9 +494,9 @@ namespace TodoApi.Migrations
                     b.Navigation("Specialization");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.Specialization", b =>
+            modelBuilder.Entity("SpecializedStaff", b =>
                 {
-                    b.Navigation("OperationTypes");
+                    b.Navigation("Types");
                 });
 
             modelBuilder.Entity("TodoApi.Models.Patient", b =>

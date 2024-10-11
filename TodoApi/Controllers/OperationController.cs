@@ -82,7 +82,7 @@ public class OperationController : ControllerBase
 
 
     //POST: api/operation/type
-
+/*
     [HttpPost("type")]
     public async Task<ActionResult<OperationTypeDTO>> PostType(OperationTypeDTO typeDTO)
     {
@@ -119,7 +119,7 @@ public class OperationController : ControllerBase
 
         return CreatedAtAction("GetType", new { id = operationType.Id }, operationType);
     }
-
+*/
     // |=============================================|
     // | Following methods regard Operation Requests |
     // |=============================================|
