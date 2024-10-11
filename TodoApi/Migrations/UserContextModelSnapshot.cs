@@ -73,7 +73,7 @@ namespace TodoApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Priorities");
+                    b.ToTable("Priorities", (string)null);
                 });
 
             modelBuilder.Entity("OperationRequest", b =>
@@ -114,7 +114,7 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("PriorityId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("OperationType", b =>
@@ -142,7 +142,7 @@ namespace TodoApi.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Types");
+                    b.ToTable("Types", (string)null);
                 });
 
             modelBuilder.Entity("OperationTypeLog", b =>
@@ -360,7 +360,7 @@ namespace TodoApi.Migrations
 
                     b.HasIndex("SpecializationSpecId");
 
-                    b.ToTable("Staff");
+                    b.ToTable("Staff", (string)null);
                 });
 
             modelBuilder.Entity("AvailabilitySlot", b =>
