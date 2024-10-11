@@ -55,9 +55,9 @@ public class OperationController : ControllerBase
         return CreatedAtAction("GetPriority", new { id = priority.Id }, priority);
     }
 
-    // |==========================================|
-    // | Following methods regard Operation Types |
-    // |==========================================|
+    // |=============================================|
+    // | Following methods regarding Operation Types |
+    // |=============================================|
 
     // GET: api/operation/type
     [HttpGet("type")]
