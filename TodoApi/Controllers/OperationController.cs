@@ -78,7 +78,7 @@ public class OperationController : ControllerBase
     // GET: api/operation/filter
     [HttpGet("type/filter")]
 
-    public async Task<ActionResult<IEnumerable<OperationType>>> GetTypeFilter(OperationTypeSearch search)
+    public async Task<ActionResult<IEnumerable<OperationTypeGetDTO>>> GetTypeFilter(OperationTypeSearch search)
     {
         var type = await _service.GetAllTypeFilterAsync(search);
 

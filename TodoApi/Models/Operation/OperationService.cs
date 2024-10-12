@@ -54,8 +54,9 @@ public class OperationService
     }
 
 
-    public async Task<List<OperationType>> GetAllTypeFilterAsync(OperationTypeSearch search)
+    public async Task<List<OperationTypeGetDTO>> GetAllTypeFilterAsync(OperationTypeSearch search)
     {
+        // Step 1: Filter OperationTypes based on search criteria
         var query = from ot in _context.Types
                     join ots in _context.Type_Staff on ot.Id equals ots.OperationTypeId
                     join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
@@ -63,10 +64,42 @@ public class OperationService
                     where
                     (string.IsNullOrEmpty(search.Name) || ot.Name.Equals(search.Name)) &&
                     (string.IsNullOrEmpty(search.Status) || ot.Status.Equals(search.Status)) &&
+                    // Only filter by specialization on the operation type level
                     (string.IsNullOrEmpty(search.Specialization) || sp.SpecDescription.Equals(search.Specialization))
                     select ot;
 
-        return await query.Distinct().ToListAsync();
+        var operationTypes = await query.Distinct().ToListAsync();
+
+        // Step 2: For each matching OperationType, retrieve ALL associated SpecializedStaff
+        var result = new List<OperationTypeGetDTO>();
+
+        foreach (var operationType in operationTypes)
+        {
+            // Retrieve all specialized staff for the current OperationType
+            var specializedStaffList = await (from ots in _context.Type_Staff
+                                              join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
+                                              join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
+                                              where ots.OperationTypeId == operationType.Id
+                                              select new
+                                              {
+                                                  ss.Role,
+                                                  sp.SpecDescription
+                                              }).ToListAsync();
+
+            // Step 3: Construct the DTO
+            var dto = new OperationTypeGetDTO
+            {
+                Name = operationType.Name,
+                Duration = operationType.Duration,
+                SpecializedStaff = specializedStaffList
+                    .Select(s => $"{s.Role}:{s.SpecDescription}")
+                    .ToList()
+            };
+
+            result.Add(dto);
+        }
+
+        return result;
     }
 
 
