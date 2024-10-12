@@ -7,15 +7,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Auth0.ManagementApi.Models;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Newtonsoft.Json;
+using TodoApi.Models;
 
 public class Auth0UserService
 {
+    private readonly UserContext _context;
+
     private const string Auth0Domain = AuthenticationConstants.DOMAIN;
     private const string ClientId = AuthenticationConstants.CLIENT_ID;
     private const string ClientSecret = AuthenticationConstants.CLIENT_SECRET;
     private const string Audience = $"https://{Auth0Domain}/api/v2/";
 
+
+    public Auth0UserService(UserContext context)
+    {
+        _context = context;
+    }
     public async Task<string> GetManagementApiTokenAsync()
     {
         using var client = new HttpClient();
@@ -82,7 +91,7 @@ public class Auth0UserService
         {
             users = new string[1]
         };
-        assignees.users[0] = "auth0|" +  model.Email;
+        assignees.users[0] = "auth0|" + model.Email;
         var role_id = AuthenticationConstants.map[model.Role];
 
         Console.WriteLine(role_id);
@@ -131,10 +140,23 @@ public class Auth0UserService
 
     }
 
-    public async Task RegisterNewUser(RegisterUserDto model, string password)
+    public async Task RegisterNewStaff(RegisterUserDto model, string password)
     {
 
         await CreateUserAsync(model, password);
+
+    
+
+        var staff = new Staff
+        {
+            Email = model.Email,
+            Role = model.Role,
+            UserName = model.Username
+        };
+
+        _context.Staff.Add(staff);
+        await _context.SaveChangesAsync();
+
         Console.WriteLine("User has been successfully registered.");
 
     }

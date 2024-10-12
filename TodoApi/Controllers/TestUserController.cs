@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TodoApi.Models;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -26,7 +27,7 @@ public class TestUserController : ControllerBase
         try
         {
 
-            await _auth0Service.RegisterNewUser(model, _passService.GeneratePassword());
+            await _auth0Service.RegisterNewStaff(model, _passService.GeneratePassword());
             return Ok();
         }
         catch (InvalidDataException)
