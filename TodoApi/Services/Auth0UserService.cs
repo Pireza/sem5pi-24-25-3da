@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Formats.Asn1;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Auth0.ManagementApi.Models;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Newtonsoft.Json;
 
 public class Auth0UserService
@@ -47,12 +49,11 @@ public class Auth0UserService
 
         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-
-
         var user = new
         {
             email = model.Email,
             username = model.Username,
+            user_id = model.Email,
             password = password,
             connection = "Username-Password-Authentication"  // The default database connection
         };
@@ -69,8 +70,42 @@ public class Auth0UserService
         else
         {
             Console.WriteLine($"Error creating user: {responseString}");
-            throw new InvalidDataException();
+            throw new UserAlreadyExistsException("User already registered in the system");
         }
+
+
+        // ============================================
+        // Bellow is role assignment after registration
+        // ============================================
+
+        var assignees = new
+        {
+            users = new string[1]
+        };
+        assignees.users[0] = "auth0|" +  model.Email;
+        var role_id = AuthenticationConstants.map[model.Role];
+
+        Console.WriteLine(role_id);
+        Console.WriteLine(model.Role);
+
+        requestContent = new StringContent(JsonConvert.SerializeObject(assignees), Encoding.UTF8, "application/json");
+        response = await client.PostAsync($"https://{Auth0Domain}/api/v2/roles/{role_id}/users", requestContent);
+        responseString = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Role assigned successfuly");
+        }
+        else
+        {
+            Console.WriteLine($"Error creating user: {responseString}");
+            throw new InvalidDataException("Role does not exist in the system");
+        }
+
+
+        // ===========================================
+        // Bellow is password reset after registration
+        // ===========================================
 
         var passwordChangeRequest = new
         {
@@ -94,15 +129,14 @@ public class Auth0UserService
         }
 
 
-
     }
 
     public async Task RegisterNewUser(RegisterUserDto model, string password)
     {
 
-            await CreateUserAsync(model, password);
-            Console.WriteLine("User has been successfully registered.");
-        
+        await CreateUserAsync(model, password);
+        Console.WriteLine("User has been successfully registered.");
+
     }
 
 

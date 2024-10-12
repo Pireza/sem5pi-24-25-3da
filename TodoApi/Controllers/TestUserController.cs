@@ -31,6 +31,10 @@ public class TestUserController : ControllerBase
         }
         catch (InvalidDataException)
         {
+            return BadRequest("Role does not exist in the system");
+        }
+        catch (UserAlreadyExistsException)
+        {
             return BadRequest("User already exists in the system");
         }
         catch (Exception ex)
@@ -42,6 +46,7 @@ public class TestUserController : ControllerBase
 
 public class RegisterUserDto
 {
-    public string Username { get; set; }
-    public string Email { get; set; }
+    public required string Username { get; set; }
+    public required string Email { get; set; }
+    public required string Role { get; set; }
 }
