@@ -75,6 +75,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<OperationService>();
+builder.Services.AddTransient<Auth0UserService>();
+builder.Services.AddTransient<PasswordGeneratorService>();
 
 var app = builder.Build();
 
