@@ -24,6 +24,8 @@ public class UserContext : DbContext
     public DbSet<OperationType> Types { get; set; }
     public DbSet<OperationRequest> Requests { get; set; }
     public DbSet<AvailabilitySlot> Slots { get; set; }
+        public DbSet<RequestsLog> RequestsLogs { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
