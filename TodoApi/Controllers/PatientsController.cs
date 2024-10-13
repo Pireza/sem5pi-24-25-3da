@@ -186,6 +186,15 @@ namespace TodoApi.Controllers
                 return BadRequest("Invalid date format. Use DD/MM/YYYY.");
             }
 
+            if(string.IsNullOrEmpty(request.Phone) || string.IsNullOrEmpty(request.EmergencyContact)){
+                return BadRequest("The phone number and emergency contact should be provided.");
+
+            }
+            if(string.IsNullOrEmpty(request.Gender) ){
+                return BadRequest("The gender should be provided.");
+
+            }
+
             // Verifica se já existe um paciente com o mesmo número médico ou e-mail
             var existingPatient = await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
@@ -198,12 +207,16 @@ namespace TodoApi.Controllers
             // Cria uma nova instância do paciente com os dados fornecidos
             var newPatient = new Patient
             {
+                UserName= request.Username,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
                 Birthday = dob,
                 MedicalNumber = request.MedicalNumber,
                 Phone = request.Phone,
+                EmergencyContact = request.EmergencyContact,
+                Gender = request.Gender,
+                Role= "Patient",
                 MedicalConditions = request.MedicalConditions
             };
 
