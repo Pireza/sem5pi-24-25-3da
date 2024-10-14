@@ -16,12 +16,16 @@ namespace TodoApi.Controllers
     {
         private readonly UserContext _context;
         private readonly AuthServicePatient _authServicePatient;
+        private readonly PasswordGeneratorService _passService;
 
 
-        public PatientsController(UserContext context, AuthServicePatient authServicePatient)
+
+        public PatientsController(UserContext context, AuthServicePatient authServicePatient, PasswordGeneratorService passService)
         {
             _context = context;
             _authServicePatient = authServicePatient; // Inject AuthServicePatient
+                    _passService = passService;
+
         }
 
         // GET: api/Patients
@@ -156,6 +160,35 @@ namespace TodoApi.Controllers
 
             return Ok(new { AccessToken = token }); // Return a success response
         }
+
+       [HttpPost("registerPatientViaAuth0")]
+    public async Task<IActionResult> RegisterPatient([FromBody] Patient model)
+    {
+        if (model == null)
+        {
+            return BadRequest("User information is required.");
+        }
+
+        try
+        {
+
+            await _authServicePatient.RegisterNewPatient(model, _passService.GeneratePassword());
+            return Ok();
+        }
+        catch (InvalidDataException)
+        {
+            return BadRequest("Role does not exist in the system");
+        }
+        catch (UserAlreadyExistsException)
+        {
+            return BadRequest("User already exists in the system");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 
 
 

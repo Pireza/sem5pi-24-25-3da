@@ -11,13 +11,15 @@ public class AuthenticationConstants
     public const string DOCTOR_ID = "rol_FspOH0w3YtSmJsZu";
     public const string TECH_ID = "rol_4XOBau8jjUUud1Gv";
     public const string NURSE_ID = "rol_vOEO80y0HIUKAAQt";
+    public const string PATIENT_ID = "rol_XMxhoQ1RgVNQUr5w";
 
    public static Dictionary<string, string> map = new Dictionary<string, string>
 {
     { "Admin", ADMIN_ID },
     { "Doctor", DOCTOR_ID },
     { "Technician", TECH_ID },
-    { "Nurse", NURSE_ID }
+    { "Nurse", NURSE_ID }, 
+    { "Patient", PATIENT_ID }
 };
 
 }

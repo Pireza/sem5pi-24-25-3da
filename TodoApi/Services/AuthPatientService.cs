@@ -5,19 +5,30 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using TodoApi.Models;
 
 namespace TodoApi.Services
 {
     public class AuthServicePatient
     {
         private readonly HttpClient _httpClient;
+            private readonly UserContext _context;
 
-        public AuthServicePatient(HttpClient httpClient)
+         private const string Auth0Domain = AuthenticationConstants.DOMAIN;
+        private const string ClientId = AuthenticationConstants.CLIENT_ID;
+        private const string ClientSecret = AuthenticationConstants.CLIENT_SECRET;
+        private const string Audience = $"https://{Auth0Domain}/api/v2/";
+
+
+        public AuthServicePatient(HttpClient httpClient,UserContext context)
         {
             _httpClient = httpClient;
+                    _context = context;
+
         }
 
-      public async Task<string?> AuthenticateUser()
+    public async Task<string?> AuthenticateUser()
 {
     var clientId = AuthenticationConstants.CLIENT_ID; // Auth0 Client ID
     var domain = AuthenticationConstants.DOMAIN; // Auth0 Domain
@@ -50,7 +61,7 @@ namespace TodoApi.Services
             grant_type = "authorization_code"
         };
 
-        var json = JsonSerializer.Serialize(tokenPayload);
+        var json = System.Text.Json.JsonSerializer.Serialize(tokenPayload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         // Send request to Auth0 using the injected HttpClient
@@ -60,7 +71,7 @@ namespace TodoApi.Services
             var result = await response.Content.ReadAsStringAsync();
     Console.WriteLine("Token Response: " + result); // Log the entire response
 
-    var tokenResponse = JsonSerializer.Deserialize<JsonElement>(result);
+    var tokenResponse = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(result);
     var accessToken = tokenResponse.GetProperty("access_token").GetString();
     var idToken = tokenResponse.GetProperty("id_token").GetString(); // Extract ID token
 
@@ -76,6 +87,118 @@ namespace TodoApi.Services
 
     return null;
 }
+
+public async Task CreatePatientUser(Patient model, string password)
+{
+    var accessToken = await GetManagementApiTokenAsync(); // Obtain Auth0 Management API token
+
+    using var client = new HttpClient();
+
+    // Set authorization header with the Management API access token
+    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+    // User registration payload
+    var user = new
+    {
+        email = model.Email,
+        username = model.UserName,
+        user_id = model.Email,  // Using email as user_id
+        password = password,
+        connection = "Username-Password-Authentication"  // Default Auth0 connection
+    };
+
+    // Send POST request to create the user
+    var requestContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+    var response = await client.PostAsync($"https://{Auth0Domain}/api/v2/users", requestContent);
+    var responseString = await response.Content.ReadAsStringAsync();
+
+    if (response.IsSuccessStatusCode)
+    {
+        Console.WriteLine("User created successfully.");
+    }
+    else
+    {
+        Console.WriteLine($"Error creating user: {responseString}");
+        throw new UserAlreadyExistsException("User already registered in the system");
+    }
+
+    // ============================
+    // Role assignment for "Patient"
+    // ============================
+    var assignees = new
+    {
+        users = new string[1] { "auth0|" + model.Email } // User identifier with 'auth0|' prefix
+    };
+    var roleId = AuthenticationConstants.map["Patient"];  // Get the role ID for "Patient"
+
+    // Send POST request to assign the "Patient" role
+    requestContent = new StringContent(JsonConvert.SerializeObject(assignees), Encoding.UTF8, "application/json");
+    response = await client.PostAsync($"https://{Auth0Domain}/api/v2/roles/{roleId}/users", requestContent);
+    responseString = await response.Content.ReadAsStringAsync();
+
+    if (response.IsSuccessStatusCode)
+    {
+        Console.WriteLine("Patient role assigned successfully.");
+    }
+    else
+    {
+        Console.WriteLine($"Error assigning role: {responseString}");
+        throw new InvalidDataException("Role does not exist in the system");
+    }
+
+    // ==================================
+    // Password reset email after creation
+    // ==================================
+    var passwordChangeRequest = new
+    {
+        client_id = ClientId,  // Replace with your actual Auth0 client ID
+        email = model.Email,
+        connection = "Username-Password-Authentication",
+    };
+
+    requestContent = new StringContent(JsonConvert.SerializeObject(passwordChangeRequest), Encoding.UTF8, "application/json");
+    response = await client.PostAsync($"https://{Auth0Domain}/dbconnections/change_password", requestContent);
+    responseString = await response.Content.ReadAsStringAsync();
+
+    if (response.IsSuccessStatusCode)
+    {
+        Console.WriteLine("Password reset email sent successfully.");
+    }
+    else
+    {
+        Console.WriteLine($"Error sending password reset email: {responseString}");
+    }
+}
+  public async Task RegisterNewPatient(Patient model, string password)
+    {
+
+        await CreatePatientUser(model, password);
+
+    
+
+        var patient = new Patient
+        {
+            Email = model.Email,
+            Role = "Patient",
+            UserName = model.UserName,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Birthday = model.Birthday,
+            Gender= model.Gender,
+            MedicalNumber = model.MedicalNumber,
+            Phone= model.Phone,
+            MedicalConditions = model.MedicalConditions,
+            EmergencyContact = model.EmergencyContact
+
+        };
+
+        _context.Patients.Add(patient);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine("User has been successfully registered.");
+
+    }
+
 
 
         // WaitForCodeAsync method
@@ -126,7 +249,7 @@ namespace TodoApi.Services
                     }
                     var jsonBytes = Convert.FromBase64String(payload);
                     var json = Encoding.UTF8.GetString(jsonBytes);
-                    var jsonElement = JsonSerializer.Deserialize<JsonElement>(json);
+                    var jsonElement = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(json);
                     return jsonElement.GetProperty("email").GetString();
                 }
             }
@@ -134,11 +257,39 @@ namespace TodoApi.Services
             {
                 Console.WriteLine($"Error decoding ID token: {ex.Message}");
             }
-            catch (JsonException ex)
+            catch (System.Text.Json.JsonException ex)
             {
                 Console.WriteLine($"Error processing JSON: {ex.Message}");
             }
             return null;
         }
+    
+
+     public async Task<string> GetManagementApiTokenAsync()
+    {
+        using var client = new HttpClient();
+
+        var tokenRequest = new
+        {
+            client_id = ClientId,
+            client_secret = ClientSecret,
+            audience = Audience,
+            grant_type = "client_credentials"
+        };
+
+        var requestContent = new StringContent(JsonConvert.SerializeObject(tokenRequest), Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync($"https://{Auth0Domain}/oauth/token", requestContent);
+        var responseString = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Error retrieving token: {responseString}");
+        }
+
+        var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+        return tokenResponse.access_token;
+    }
     }
 }
+
