@@ -12,6 +12,7 @@ public class UserContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<OperationType> OperationTypes { get; set; } 
     public DbSet<Patient> Patients { get; set; }
 
     public DbSet<Staff> Staff { get; set; }
@@ -26,6 +27,7 @@ public class UserContext : DbContext
     public DbSet<AvailabilitySlot> Slots { get; set; }
         public DbSet<RequestsLog> RequestsLogs { get; set; }
         public DbSet<AuditLogStaff> AuditLogStaff { get; set; }
+        public DbSet<AuditLogOperationType> AuditLogOperationTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

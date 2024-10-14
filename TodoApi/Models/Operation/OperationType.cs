@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
 
 [Index(nameof(Name), IsUnique = true)]
 public class OperationType
@@ -8,5 +7,5 @@ public class OperationType
     public required string Name { get; set; }
     public required string Duration { get; set; }
     public required string Status { get; set; }
-    
+    public bool IsActive { get; set; } = true; // Add an IsActive flag
 }
