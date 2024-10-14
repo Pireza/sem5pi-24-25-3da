@@ -19,6 +19,7 @@ public class Auth0UserService
     private const string ClientId = AuthenticationConstants.CLIENT_ID;
     private const string ClientSecret = AuthenticationConstants.CLIENT_SECRET;
     private const string Audience = $"https://{Auth0Domain}/api/v2/";
+    private const string ConnectionType = "Username-Password-Authentication";
 
 
     public Auth0UserService(UserContext context)
@@ -50,6 +51,32 @@ public class Auth0UserService
         var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
         return tokenResponse.access_token;
     }
+    public async Task ResetPasswordAsync(string email)
+    {
+        using var client = new HttpClient();
+        var resetPasswordRequest = new
+        {
+            email = email,
+            connection = ConnectionType
+        };
+
+      
+
+        var requestJSON = new StringContent(JsonConvert.SerializeObject(resetPasswordRequest), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync($"https://{Auth0Domain}/dbconnections/change_password", requestJSON);
+        var responseString = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Password reset email sent successfuly");
+        }
+        else
+        {
+            Console.WriteLine($"Error sending email: {responseString}");
+            throw new Exception();
+        }
+
+    }
     public async Task CreateUserAsync(RegisterUserDto model, string password)
     {
         var accessToken = await GetManagementApiTokenAsync();
@@ -64,7 +91,7 @@ public class Auth0UserService
             username = model.Username,
             user_id = model.Email,
             password = password,
-            connection = "Username-Password-Authentication" 
+            connection = "Username-Password-Authentication"
         };
 
         var requestContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
@@ -145,7 +172,7 @@ public class Auth0UserService
 
         await CreateUserAsync(model, password);
 
-    
+
 
         var staff = new Staff
         {

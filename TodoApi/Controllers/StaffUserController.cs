@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using TodoApi.Models;
 
@@ -15,6 +16,32 @@ public class StaffUserController : ControllerBase
     {
         _auth0Service = auth0Service;
         _passService = passService;
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] string email)
+    {
+        if (string.IsNullOrEmpty(email))
+            return BadRequest("Email must not be empty");
+
+        try
+        {
+            MailAddress mail = new MailAddress(email);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Email format not supported");
+        }
+
+        try
+        {
+            await _auth0Service.ResetPasswordAsync(email);
+            return Ok("Password reset email sent successfuly");
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPost("register")]
@@ -52,3 +79,4 @@ public class RegisterUserDto
     public required string Email { get; set; }
     public required string Role { get; set; }
 }
+
