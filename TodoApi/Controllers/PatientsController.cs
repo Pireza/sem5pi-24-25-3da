@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace TodoApi.Controllers
 {
@@ -571,6 +573,88 @@ namespace TodoApi.Controllers
 
             return NoContent();
         }
+
+
+// PUT: api/Patients/email/Admin{email}
+[HttpPut("email/UpdatePatientProfileAsAdmin{email}")]
+public async Task<IActionResult> PutPatientUpdateAsAdmin(
+    string email,
+    [FromQuery] string? firstName = null,
+    [FromQuery] string? lastName = null,
+    [FromQuery] string? phone = null,
+    [FromQuery] string? emergencyContact = null,
+    [FromQuery] List<string>? medicalConditions = null)
+{
+    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+
+    if (patient == null)
+    {
+        return NotFound();
+    }
+
+    var changes = new List<string>();
+
+    // Update the patient's properties based on the provided parameters
+    if (!string.IsNullOrEmpty(firstName))
+    {
+        changes.Add($"FirstName changed from {patient.FirstName} to {firstName}");
+        patient.FirstName = firstName;
+    }
+
+    if (!string.IsNullOrEmpty(lastName))
+    {
+        changes.Add($"LastName changed from {patient.LastName} to {lastName}");
+        patient.LastName = lastName;
+    }
+
+    if (medicalConditions != null && medicalConditions.Any())
+    {
+        var oldConditions = patient.MedicalConditions != null ? string.Join(", ", patient.MedicalConditions) : "None";
+        var newConditions = string.Join(", ", medicalConditions);
+        changes.Add($"MedicalConditions changed from [{oldConditions}] to [{newConditions}]");
+        patient.MedicalConditions = medicalConditions;
+    }
+
+    if (!string.IsNullOrEmpty(phone))
+    {
+        changes.Add($"Phone changed from {patient.Phone} to {phone}");
+        patient.Phone = phone;
+    }
+
+    if (!string.IsNullOrEmpty(emergencyContact))
+    {
+        changes.Add($"EmergencyContact changed from {patient.EmergencyContact} to {emergencyContact}");
+        patient.EmergencyContact = emergencyContact;
+    }
+
+    _context.Entry(patient).State = EntityState.Modified;
+
+    try
+    {
+        var auditLog = new AuditLog
+        {
+            PatientId = patient.Id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = string.Join(", ", changes)
+        };
+
+        _context.AuditLogs.Add(auditLog);
+        await _context.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!PatientExists(patient.Id))
+        {
+            return NotFound();
+        }
+        else
+        {
+            throw;
+        }
+    }
+
+    return NoContent();
+}
 
         // DELETE: api/Patients/email/{email}
         [HttpDelete("email/{email}")]
