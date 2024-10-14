@@ -64,7 +64,7 @@ public class Auth0UserService
             username = model.Username,
             user_id = model.Email,
             password = password,
-            connection = "Username-Password-Authentication"  // The default database connection
+            connection = "Username-Password-Authentication" 
         };
 
         var requestContent = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -5,12 +6,12 @@ using TodoApi.Models;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TestUserController : ControllerBase
+public class StaffUserController : ControllerBase
 {
     private readonly Auth0UserService _auth0Service;
     private readonly PasswordGeneratorService _passService;
 
-    public TestUserController(Auth0UserService auth0Service, PasswordGeneratorService passService)
+    public StaffUserController(Auth0UserService auth0Service, PasswordGeneratorService passService)
     {
         _auth0Service = auth0Service;
         _passService = passService;
