@@ -101,7 +101,7 @@ namespace TodoApi.Controllers
 
         // GET: api/Patients
         [HttpGet("all")]
-        [Authorize]
+        [Authorize(Policy = "PatientOnly")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
             return await _context.Patients.ToListAsync();

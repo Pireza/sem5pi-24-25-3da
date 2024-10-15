@@ -173,6 +173,7 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
     {
 
     
+                await CreatePatientUser(model, password);
 
         // Validação do formato da data de nascimento
             if (!DateTime.TryParseExact(model.Birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
@@ -200,7 +201,6 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
 
         _context.Patients.Add(patient);
         await _context.SaveChangesAsync();
-                await CreatePatientUser(model, password);
 
 
         Console.WriteLine("User has been successfully registered.");
@@ -282,7 +282,10 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
             client_id = ClientId,
             client_secret = ClientSecret,
             audience = Audience,
-            grant_type = "client_credentials"
+            grant_type = "client_credentials",
+            scope = "create:users"
+
+
         };
 
         var requestContent = new StringContent(JsonConvert.SerializeObject(tokenRequest), Encoding.UTF8, "application/json");
@@ -296,6 +299,10 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
         }
 
         var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+         var accessToken = tokenResponse.access_token;
+
+    // Optionally decode the token to check its scopes
+    Console.WriteLine($"Management API Token: {accessToken}");
         return tokenResponse.access_token;
     }
     }

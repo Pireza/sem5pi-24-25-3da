@@ -79,8 +79,12 @@ builder.Services.AddHostedService<DeletionService>();
 // Configure authorization policies
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
-});
+options.AddPolicy("PatientOnly", policy => 
+    {
+        policy.RequireClaim("http://dev-b2f7avjyddz6kpot.us.auth0.comroles", "Patient");
+    });
+    
+    });
 
 // Add other services
 builder.Services.AddEndpointsApiExplorer();
@@ -101,6 +105,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization(); // Enable authorization
+
 
 
 
