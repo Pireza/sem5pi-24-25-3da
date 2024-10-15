@@ -49,9 +49,19 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidIssuer = $"https://{domain}",
+
         ValidateAudience = true,
         ValidAudience = audience,
-        ValidateLifetime = true
+
+        ValidateLifetime = true,
+
+        // Automatically retrieve the signing keys from Auth0
+        IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
+        {
+            var client = new HttpClient();
+            var jwks = client.GetStringAsync($"https://{domain}/.well-known/jwks.json").Result;
+            return new JsonWebKeySet(jwks).GetSigningKeys();
+        }
     };
 
     options.Events = new JwtBearerEvents
@@ -63,6 +73,7 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+
 builder.Services.AddHostedService<DeletionService>();
 
 // Configure authorization policies

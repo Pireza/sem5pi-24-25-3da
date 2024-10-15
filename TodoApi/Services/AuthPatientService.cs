@@ -47,7 +47,7 @@ namespace TodoApi.Services
 
     // Wait for the callback and get the authorization code
     string? code = await WaitForCodeAsync();
-
+    Console.WriteLine(code);
     if (!string.IsNullOrEmpty(code))
     {
         // Exchange the authorization code for an access token and ID token
@@ -88,7 +88,7 @@ namespace TodoApi.Services
     return null;
 }
 
-public async Task CreatePatientUser(Patient model, string password)
+public async Task CreatePatientUser(CreatePatientRequest model, string password)
 {
     var accessToken = await GetManagementApiTokenAsync(); // Obtain Auth0 Management API token
 
@@ -101,7 +101,7 @@ public async Task CreatePatientUser(Patient model, string password)
     var user = new
     {
         email = model.Email,
-        username = model.UserName,
+        username = model.Username,
         user_id = model.Email,  // Using email as user_id
         password = password,
         connection = "Username-Password-Authentication"  // Default Auth0 connection
@@ -169,28 +169,40 @@ public async Task CreatePatientUser(Patient model, string password)
         Console.WriteLine($"Error sending password reset email: {responseString}");
     }
 }
-  public async Task RegisterNewPatient(Patient model, string password)
+  public async Task RegisterNewPatient(CreatePatientRequest model, string password)
     {
 
         await CreatePatientUser(model, password);
 
     
 
-        var patient = new Patient
-        {
-            Email = model.Email,
-            Role = "Patient",
-            UserName = model.UserName,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Birthday = model.Birthday,
-            Gender= model.Gender,
-            MedicalNumber = model.MedicalNumber,
-            Phone= model.Phone,
-            MedicalConditions = model.MedicalConditions,
-            EmergencyContact = model.EmergencyContact
+       DateTime birthday;
+    string format = "dd/MM/yyyy";
+    bool isValidDate = DateTime.TryParseExact(model.Birthday, format, 
+                                          System.Globalization.CultureInfo.InvariantCulture, 
+                                          System.Globalization.DateTimeStyles.None, 
+                                          out birthday);
 
-        };
+    if (!isValidDate)
+    {
+        // Handle invalid date format here, throw an exception or return an error
+        throw new FormatException("The Birthday is not in the correct format (DD/MM/YYYY).");
+    }
+    var patient = new Patient
+    {
+        Email = model.Email,
+        Role = "Patient",
+        UserName = model.Username,
+        FirstName = model.FirstName,
+        LastName = model.LastName,
+        Birthday = birthday,  
+        Gender = model.Gender,
+        MedicalNumber = model.MedicalNumber,
+        Phone = model.Phone,
+        MedicalConditions = model.MedicalConditions,
+        EmergencyContact = model.EmergencyContact
+    };
+
 
         _context.Patients.Add(patient);
         await _context.SaveChangesAsync();

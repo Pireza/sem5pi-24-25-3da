@@ -101,6 +101,7 @@ namespace TodoApi.Controllers
 
         // GET: api/Patients
         [HttpGet("all")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
             return await _context.Patients.ToListAsync();
@@ -164,7 +165,7 @@ namespace TodoApi.Controllers
         }
 
        [HttpPost("registerPatientViaAuth0")]
-    public async Task<IActionResult> RegisterPatient([FromBody] Patient model)
+    public async Task<IActionResult> RegisterPatient([FromBody] CreatePatientRequest model)
     {
         if (model == null)
         {
