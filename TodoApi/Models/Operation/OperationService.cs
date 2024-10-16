@@ -208,4 +208,56 @@ public class OperationService
 
 
 
+    // |================================================|
+    // |   Following methods regard Operation Requests  |
+    // |================================================|
+
+
+    public async Task<List<OperationRequestDTO>> GetAllRequestFilterAsync(OperationRequestSearch search)
+    {
+        // Get the base query from your DbContext. 
+        // Assuming you have a DbSet<OperationRequest> named 'OperationRequests'.
+        IQueryable<OperationRequest> query = _context.Requests.Include(or => or.Patient)
+                                                                          .Include(or => or.Doctor)
+                                                                          .Include(or => or.OperationType)
+                                                                          .Include(or => or.Priority);
+
+        // Apply filters dynamically based on the properties of the search object.
+        if (!string.IsNullOrEmpty(search.PatientName))
+        {
+            query = query.Where(or => or.Patient.FirstName.Contains(search.PatientName));
+        }
+
+        if (!string.IsNullOrEmpty(search.OperationType))
+        {
+            query = query.Where(or => or.OperationType.Name.Contains(search.OperationType));
+        }
+
+        if (!string.IsNullOrEmpty(search.Priority))
+        {
+            query = query.Where(or => or.Priority.Description.Contains(search.Priority));
+        }
+
+        if (!string.IsNullOrEmpty(search.Status))
+        {
+            query = query.Where(or => or.Status == search.Status);
+        }
+
+
+        var result = await query.Select(or => new OperationRequestDTO
+        {
+            PatientName = or.Patient.FirstName,
+            DoctorName = or.Doctor.FirstName,
+            OperationType = or.OperationType.Name,
+            Deadline = or.Deadline,
+            Status = or.Status,
+            PriorityName = or.Priority.Description
+        }).ToListAsync();
+
+        // Execute the query and return the filtered results as a list.
+        return result;
+    }
+
+
+
 }

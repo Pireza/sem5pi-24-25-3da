@@ -1,6 +1,10 @@
+using System.Security.Claims;
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 using TodoApi.Services;
@@ -19,21 +23,7 @@ builder.Services.AddDbContext<UserContext>(options =>
 );
 
 
-
-// Register AuthServicePatient with HttpClient
-builder.Services.AddHttpClient<AuthServicePatient>();
-
-// Configure cookie authentication
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always in production
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromHours(1); // Set the cookie expiration time
-});
-
-string domain = builder.Configuration["Auth0:Domain"];
-string audience = builder.Configuration["Auth0:Audience"];
+var localDomain = AuthenticationConstants.DOMAIN;
 
 builder.Services.AddAuthentication(options =>
 {
@@ -42,27 +32,24 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.Authority = $"https://{domain}";
-    options.Audience = audience;
-
+    var auth0Domain = $"https://{localDomain}/";
+    options.Authority = auth0Domain;
+    options.Audience = AuthenticationConstants.AUDIENCE;
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidIssuer = auth0Domain,
         ValidateIssuer = true,
-        ValidIssuer = $"https://{domain}",
         ValidateAudience = true,
-        ValidAudience = audience,
-        ValidateLifetime = true
-    };
-
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        }
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
     };
 });
+// Register AuthServicePatient with HttpClient
+builder.Services.AddHttpClient<AuthServicePatient>();
+
+// Configure cookie authentication
+
+
 builder.Services.AddHostedService<DeletionService>();
 
 // Configure authorization policies
@@ -90,8 +77,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization(); // Enable authorization
-
-
 
 app.MapControllers();
 

@@ -171,4 +171,18 @@ public class OperationController : ControllerBase
 
 
 
+    [HttpGet("request/filter")]
+
+    public async Task<ActionResult<IEnumerable<OperationRequestDTO>>> GetRequestFilter(OperationRequestSearch search)
+    {
+        var requests = await _service.GetAllRequestFilterAsync(search);
+
+        if (requests == null)
+        {
+            return NotFound();
+        }
+
+        return requests;
+    }
+
 }
