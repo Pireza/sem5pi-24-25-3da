@@ -1,10 +1,6 @@
-using System.Security.Claims;
-using Auth0.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 using TodoApi.Services;
@@ -23,7 +19,21 @@ builder.Services.AddDbContext<UserContext>(options =>
 );
 
 
-var localDomain = AuthenticationConstants.DOMAIN;
+
+// Register AuthServicePatient with HttpClient
+builder.Services.AddHttpClient<AuthServicePatient>();
+
+// Configure cookie authentication
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use Always in production
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(1); // Set the cookie expiration time
+});
+
+string domain = builder.Configuration["Auth0:Domain"];
+string audience = builder.Configuration["Auth0:Audience"];
 
 builder.Services.AddAuthentication(options =>
 {
@@ -32,12 +42,11 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var auth0Domain = $"https://{localDomain}/";
-    options.Authority = auth0Domain;
-    options.Audience = AuthenticationConstants.AUDIENCE;
+    options.Authority = $"https://{domain}";
+    options.Audience = audience;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = auth0Domain,
         ValidateIssuer = true,
         ValidIssuer = $"https://{domain}",
 
@@ -103,3 +112,4 @@ app.UseAuthorization(); // Enable authorization
 app.MapControllers();
 
 app.Run();
+
