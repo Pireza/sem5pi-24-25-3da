@@ -497,7 +497,7 @@ namespace TodoApi.Controllers
             return NoContent();
         }
         // PUT: api/Patients/email/{email}
-        [HttpPut("email/UpdateProfile{email}")]
+        [HttpPut("email/UpdateProfile/{email}")]
         public async Task<IActionResult> PutPatientByEmail(
             string email,
             [FromQuery] string? firstName = null,

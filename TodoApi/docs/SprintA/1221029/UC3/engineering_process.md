@@ -7,15 +7,9 @@
 
 As a Patient, I want to register for the healthcare application, so that I can create a user profile and book appointments online.
 
-### 1.2. Customer Specifications and Clarifications
-
-**From the client clarifications:**
 
 
-
-
-
-### 1.3. Acceptance Criteria
+### 1.2. Acceptance Criteria
 
 **AC1**- Patients can self-register using the external IAM system.
 
@@ -28,11 +22,11 @@ profile.
 
 
 
-### 1.4. Found out Dependencies
+### 1.3. Found out Dependencies
 
 * There is a dependency with US7, because the account created in this user story will be used in that Us.
 
-### 1.5 Input and Output Data
+### 1.4 Input and Output Data
 
 **Input Data:**
 
@@ -55,7 +49,7 @@ profile.
 * New user registered in the system
 * (In)Success of the operation
 
-### 1.6. System Views
+### 1.5. System Views
 
 ### Level 1
 
