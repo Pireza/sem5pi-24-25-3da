@@ -31,7 +31,7 @@ namespace TodoApi.Controllers
         }
 
         // GET: api/Patients
-        [HttpGet]
+        [HttpGet("searchPatientProfiles")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsByAttributes(
             [FromQuery] string? name = null,
             [FromQuery] string? email = null,

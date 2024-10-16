@@ -1,54 +1,52 @@
-# US1 - To register backoffice users 
+# US11 - Search/list for patient profile by different attributes
 
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Admin, I want to register new backoffice users (e.g., doctors, nurses, technicians, admins) via an out-of-band process, so that they can access the backoffice system with appropriate permissions.
+As an Admin, I want to list/search patient profiles by different attributes, so that I
+can view the details, edit, and remove patient profiles.
 
-### 1.2. Customer Specifications and Clarifications
+### 1.2. Acceptance Criteria
 
-**From the client clarifications:**
+**AC1** - Admins can search patient profiles by various attributes, including name, email, date of birth,
+or medical record number.
 
-> **Question:** What are the system's password requirements?
+**AC2** - The system displays search results in a list view with key patient information (name, email, date
+of birth).
 
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+**AC3** - Admins can select a profile from the list to view, edit, or delete the patient record.
 
-
-### 1.3. Acceptance Criteria
-
-* **AC1:** Backoffice users (e.g., doctors, nurses, technicians) are registered by an Admin via an internal
-process, not via self-registration.
-* **AC2:** Admin assigns roles (e.g., Doctor, Nurse, Technician) during the registration process.
-* **AC3:** Registered users receive a one-time setup link via email to set their password and activate their
-account.
-* **AC4:** The system enforces strong password requirements for security.
-* **AC5:** A confirmation email is sent to verify the user’s registration. 
+**AC4** - The search results are paginated, and filters are available to refine the search results.
 
 
 
-### 1.4. Found out Dependencies
+### 1.3. Found out Dependencies
 
-* n/a
+* There is a dependency with US6, because the admin has to be authenticated to check the patient's profiles
 
-### 1.5 Input and Output Data
+### 1.4 Input and Output Data
 
 **Input Data:**
 
 * Typed data:
-    * a username
-    * an email address
-
-* Selected data:
-    * A role for the user.
+    * a name
+    * an email
+    * a date of birth
+    * a medical number
+    * the page
+    * the page size
 
 **Output Data:**
 
-* New user registered in the system
-* (In)Success of the operation
+* id of the patient
+* first name of the patient
+* last name of the patient
+* email of the patient
+* birthday of the patient
 
-### 1.6. System Views
+### 1.5. System Views
 
 ### Level 1
 
