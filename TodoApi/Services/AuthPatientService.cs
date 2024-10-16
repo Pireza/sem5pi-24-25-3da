@@ -305,6 +305,63 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
     Console.WriteLine($"Management API Token: {accessToken}");
         return tokenResponse.access_token;
     }
+
+   private async Task<string> GetUserIdByEmailAsync(string email)
+{
+    var accessToken = await GetManagementApiTokenAsync(); // Obtain Auth0 Management API token
+
+    using var client = new HttpClient();
+    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+    var response = await client.GetAsync($"https://{Auth0Domain}/api/v2/users-by-email?email={email}");
+    
+    if (response.IsSuccessStatusCode)
+    {
+        var userResponse = await response.Content.ReadAsStringAsync();
+        var users = JsonConvert.DeserializeObject<List<dynamic>>(userResponse);
+
+        if (users != null && users.Count > 0)
+        {
+            return users[0].user_id; // Return the user_id of the first user found
+        }
+    }
+
+    throw new InvalidOperationException("User not found with the provided email.");
+}
+
+public async Task UpdateEmailInAuth0(string currentEmail, string newEmail)
+{
+    var userId = await GetUserIdByEmailAsync(currentEmail); // Get user ID by email
+
+    var accessToken = await GetManagementApiTokenAsync(); // Obtain Auth0 Management API token
+
+    using var client = new HttpClient();
+    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+    var updateUser = new
+    {
+        email = newEmail,
+        email_verified = false, // Require re-verification of the new email
+        verify_email = true     // Send verification email to the new email address
+    };
+
+    var response = await client.PatchAsync($"https://{Auth0Domain}/api/v2/users/{userId}",
+        new StringContent(JsonConvert.SerializeObject(updateUser), Encoding.UTF8, "application/json"));
+
+    var responseString = await response.Content.ReadAsStringAsync();
+
+    if (!response.IsSuccessStatusCode)
+    {
+        Console.WriteLine($"Error updating email in Auth0: {responseString}");
+        throw new InvalidOperationException("Failed to update email in Auth0.");
+    }
+
+    Console.WriteLine("Email updated successfully in Auth0 and verification email sent to the new address.");
+}
+
+ 
+
+
     }
 }
 

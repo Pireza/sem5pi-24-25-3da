@@ -496,84 +496,89 @@ namespace TodoApi.Controllers
 
             return NoContent();
         }
-        // PUT: api/Patients/email/{email}
-        [HttpPut("email/UpdateProfile/{email}")]
-        public async Task<IActionResult> PutPatientByEmail(
-            string email,
-            [FromQuery] string? firstName = null,
-            [FromQuery] string? lastName = null,
-            [FromQuery] string? phone = null,
-            [FromQuery] string? emergencyContact = null)
+
+       [HttpPut("email/UpdateProfile/{email}")]
+public async Task<IActionResult> PutPatientByEmail(
+    string email,
+    [FromQuery] string? newEmail = null,  // Add newEmail as a parameter
+    [FromQuery] string? firstName = null,
+    [FromQuery] string? lastName = null,
+    [FromQuery] string? phone = null,
+    [FromQuery] string? emergencyContact = null)
+{
+    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+
+    if (patient == null)
+    {
+        return NotFound();
+    }
+
+    var changes = new List<string>();
+
+    // Update email if a new one is provided
+    if (!string.IsNullOrEmpty(newEmail) && newEmail != patient.Email)
+    {
+        // Trigger Auth0 email verification
+        await _authServicePatient.UpdateEmailInAuth0(patient.Email, newEmail);
+
+        changes.Add($"Email changed from {patient.Email} to {newEmail}");
+
+        patient.Email = newEmail;
+            }
+
+    // Update other fields
+    if (!string.IsNullOrEmpty(firstName))
+    {
+        changes.Add($"FirstName changed from {patient.FirstName} to {firstName}");
+        patient.FirstName = firstName;
+    }
+
+    if (!string.IsNullOrEmpty(lastName))
+    {
+        changes.Add($"LastName changed from {patient.LastName} to {lastName}");
+        patient.LastName = lastName;
+    }
+
+    if (!string.IsNullOrEmpty(phone))
+    {
+        changes.Add($"Phone changed from {patient.Phone} to {phone}");
+        patient.Phone = phone;
+    }
+
+    if (!string.IsNullOrEmpty(emergencyContact))
+    {
+        changes.Add($"EmergencyContact changed from {patient.EmergencyContact} to {emergencyContact}");
+        patient.EmergencyContact = emergencyContact;
+    }
+
+    _context.Entry(patient).State = EntityState.Modified;
+
+    try
+    {
+        var auditLog = new AuditLog
         {
-            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
-
-            if (patient == null)
-            {
-                return NotFound();
-            }
-            var changes = new List<string>();
-
-            // Update the patient's properties based on the provided parameters
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                changes.Add($"FirstName changed from {patient.FirstName} to {firstName}");
-
-                patient.FirstName = firstName;
-            }
-
-            if (!string.IsNullOrEmpty(lastName))
-            {
-                changes.Add($"LastName changed from {patient.LastName} to {lastName}");
-
-                patient.LastName = lastName;
-            }
-
-
-
-
-            if (!string.IsNullOrEmpty(phone))
-            {
-                changes.Add($"Phone changed from {patient.Phone} to {phone}");
-
-                patient.Phone = phone;
-            }
-
-
-            if (!string.IsNullOrEmpty(emergencyContact))
-            {
-                changes.Add($"EmergencyContact changed from {patient.EmergencyContact} to {emergencyContact}");
-
-                patient.EmergencyContact = emergencyContact;
-            }
-
-            _context.Entry(patient).State = EntityState.Modified;
-
-            try
-            {
-                var auditLog = new AuditLog
-                {
-                    PatientId = patient.Id,
-                    ChangeDate = DateTime.UtcNow,
-                    ChangeDescription = string.Join(", ", changes)
-                };
-                _context.AuditLogs.Add(auditLog);
-                await _context.SaveChangesAsync();
-
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PatientExists(patient.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            PatientId = patient.Id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = string.Join(", ", changes)
+        };
+        _context.AuditLogs.Add(auditLog);
+        await _context.SaveChangesAsync();
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!PatientExists(patient.Id))
+        {
+            return NotFound();
         }
+        else
+        {
+            throw;
+        }
+    }
+
+    return NoContent();
+}
+
 
 
 // PUT: api/Patients/email/Admin{email}
@@ -680,6 +685,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             _context.AuditLogs.Add(auditLog);
 
             _context.Patients.Update(patient);
+
             await _context.SaveChangesAsync();
             try
             {
