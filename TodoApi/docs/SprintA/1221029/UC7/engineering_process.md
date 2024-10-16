@@ -1,22 +1,18 @@
-# US1 - To register backoffice users 
+# US7 - As a patient login to system using external IAM credentials 
 
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Admin, I want to register new backoffice users (e.g., doctors, nurses, technicians, admins) via an out-of-band process, so that they can access the backoffice system with appropriate permissions.
-
-### 1.2. Customer Specifications and Clarifications
-
-**From the client clarifications:**
-
-> **Question:** What are the system's password requirements?
-
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+As a Patient, I want to log in to the healthcare system using my external IAM
+credentials, so that I can access my appointments, medical records, and other
+features securely.
 
 
-### 1.3. Acceptance Criteria
+
+
+### 1.2. Acceptance Criteria
 
 * **AC1:** Backoffice users (e.g., doctors, nurses, technicians) are registered by an Admin via an internal
 process, not via self-registration.
@@ -28,27 +24,24 @@ account.
 
 
 
-### 1.4. Found out Dependencies
+### 1.3 Found out Dependencies
 
-* n/a
+* There is a dependency with US3, because the profile creation is done in that US.
 
-### 1.5 Input and Output Data
+### 1.4 Input and Output Data
 
 **Input Data:**
 
 * Typed data:
-    * a username
-    * an email address
+    * an username or an email address
+    * a password
 
-* Selected data:
-    * A role for the user.
 
 **Output Data:**
 
-* New user registered in the system
-* (In)Success of the operation
+* Access token
 
-### 1.6. System Views
+### 1.5. System Views
 
 ### Level 1
 
