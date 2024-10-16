@@ -1,52 +1,42 @@
-# US1 - To register backoffice users 
+# US5 - As a patient delete my user account
 
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Admin, I want to register new backoffice users (e.g., doctors, nurses, technicians, admins) via an out-of-band process, so that they can access the backoffice system with appropriate permissions.
+As a Patient, I want to delete my account and all associated data, so that I can
+exercise my right to be forgotten as per GDPR.
 
-### 1.2. Customer Specifications and Clarifications
+### 1.2. Acceptance Criteria
 
-**From the client clarifications:**
+**AC1** - Patients can request to delete their account through the profile settings.
 
-> **Question:** What are the system's password requirements?
+**AC2** - The system sends a confirmation email to the patient before proceeding with account deletion.
 
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+**AC3** - Upon confirmation, all personal data is permanently deleted from the system within the legally required time frame (e.g., 30 days).
 
+**AC4** - Patients are notified once the deletion is complete, and the system logs the action for GDPR compliance.
 
-### 1.3. Acceptance Criteria
-
-* **AC1:** Backoffice users (e.g., doctors, nurses, technicians) are registered by an Admin via an internal
-process, not via self-registration.
-* **AC2:** Admin assigns roles (e.g., Doctor, Nurse, Technician) during the registration process.
-* **AC3:** Registered users receive a one-time setup link via email to set their password and activate their
-account.
-* **AC4:** The system enforces strong password requirements for security.
-* **AC5:** A confirmation email is sent to verify the user’s registration. 
+**AC5** - Some anonymized data may be retained for legal or research purposes, but all identifiable information is erased.
 
 
 
 ### 1.4. Found out Dependencies
 
-* n/a
+* There is a dependency with US7, because the user has to be logged in to be able to delete its account.
 
 ### 1.5 Input and Output Data
 
 **Input Data:**
 
 * Typed data:
-    * a username
-    * an email address
+    * the email address of the account to delete
 
-* Selected data:
-    * A role for the user.
 
 **Output Data:**
 
-* New user registered in the system
-* (In)Success of the operation
+* (In)Success of the account deletion
 
 ### 1.6. System Views
 

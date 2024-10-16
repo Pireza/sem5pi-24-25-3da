@@ -658,7 +658,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
 }
 
         // DELETE: api/Patients/email/{email}
-        [HttpDelete("email/{email}")]
+        [HttpDelete("deleteUserByEmail/{email}")]
         public async Task<IActionResult> DeletePatientByEmail(string email)
         {
             var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
