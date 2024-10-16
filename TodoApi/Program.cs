@@ -39,24 +39,43 @@ builder.Services.AddAuthentication(options =>
     {
         ValidIssuer = auth0Domain,
         ValidateIssuer = true,
+        ValidIssuer = $"https://{domain}",
+
         ValidateAudience = true,
+        ValidAudience = audience,
+
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
+
+        // Automatically retrieve the signing keys from Auth0
+        IssuerSigningKeyResolver = (token, securityToken, identifier, parameters) =>
+        {
+            var client = new HttpClient();
+            var jwks = client.GetStringAsync($"https://{domain}/.well-known/jwks.json").Result;
+            return new JsonWebKeySet(jwks).GetSigningKeys();
+        }
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            return Task.CompletedTask;
+        }
     };
 });
-// Register AuthServicePatient with HttpClient
-builder.Services.AddHttpClient<AuthServicePatient>();
-
-// Configure cookie authentication
-
 
 builder.Services.AddHostedService<DeletionService>();
 
 // Configure authorization policies
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
-});
+options.AddPolicy("PatientOnly", policy => 
+    {
+        policy.RequireClaim("http://dev-b2f7avjyddz6kpot.us.auth0.comroles", "Patient");
+    });
+    
+    });
 
 // Add other services
 builder.Services.AddEndpointsApiExplorer();
@@ -77,6 +96,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization(); // Enable authorization
+
+
+
 
 app.MapControllers();
 

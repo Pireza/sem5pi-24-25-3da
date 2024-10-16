@@ -47,7 +47,7 @@ namespace TodoApi.Services
 
     // Wait for the callback and get the authorization code
     string? code = await WaitForCodeAsync();
-
+    Console.WriteLine(code);
     if (!string.IsNullOrEmpty(code))
     {
         // Exchange the authorization code for an access token and ID token
@@ -88,7 +88,7 @@ namespace TodoApi.Services
     return null;
 }
 
-public async Task CreatePatientUser(Patient model, string password)
+public async Task CreatePatientUser(CreatePatientRequest model, string password)
 {
     var accessToken = await GetManagementApiTokenAsync(); // Obtain Auth0 Management API token
 
@@ -101,7 +101,7 @@ public async Task CreatePatientUser(Patient model, string password)
     var user = new
     {
         email = model.Email,
-        username = model.UserName,
+        username = model.Username,
         user_id = model.Email,  // Using email as user_id
         password = password,
         connection = "Username-Password-Authentication"  // Default Auth0 connection
@@ -169,31 +169,39 @@ public async Task CreatePatientUser(Patient model, string password)
         Console.WriteLine($"Error sending password reset email: {responseString}");
     }
 }
-  public async Task RegisterNewPatient(Patient model, string password)
+  public async Task RegisterNewPatient(CreatePatientRequest model, string password)
     {
 
-        await CreatePatientUser(model, password);
-
     
+                await CreatePatientUser(model, password);
 
-        var patient = new Patient
-        {
-            Email = model.Email,
-            Role = "Patient",
-            UserName = model.UserName,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Birthday = model.Birthday,
-            Gender= model.Gender,
-            MedicalNumber = model.MedicalNumber,
-            Phone= model.Phone,
-            MedicalConditions = model.MedicalConditions,
-            EmergencyContact = model.EmergencyContact
+        // Validação do formato da data de nascimento
+            if (!DateTime.TryParseExact(model.Birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
+            {
+                        throw new FormatException("The Birthday is not in the correct format (DD/MM/YYYY).");
 
-        };
+            }
+
+   
+    var patient = new Patient
+    {
+        Email = model.Email,
+        Role = "Patient",
+        UserName = model.Username,
+        FirstName = model.FirstName,
+        LastName = model.LastName,
+        Birthday = dob,  
+        Gender = model.Gender,
+        MedicalNumber = model.MedicalNumber,
+        Phone = model.Phone,
+        MedicalConditions = model.MedicalConditions,
+        EmergencyContact = model.EmergencyContact
+    };
+
 
         _context.Patients.Add(patient);
         await _context.SaveChangesAsync();
+
 
         Console.WriteLine("User has been successfully registered.");
 
@@ -274,7 +282,10 @@ public async Task CreatePatientUser(Patient model, string password)
             client_id = ClientId,
             client_secret = ClientSecret,
             audience = Audience,
-            grant_type = "client_credentials"
+            grant_type = "client_credentials",
+            scope = "create:users"
+
+
         };
 
         var requestContent = new StringContent(JsonConvert.SerializeObject(tokenRequest), Encoding.UTF8, "application/json");
@@ -288,6 +299,10 @@ public async Task CreatePatientUser(Patient model, string password)
         }
 
         var tokenResponse = JsonConvert.DeserializeObject<dynamic>(responseString);
+         var accessToken = tokenResponse.access_token;
+
+    // Optionally decode the token to check its scopes
+    Console.WriteLine($"Management API Token: {accessToken}");
         return tokenResponse.access_token;
     }
     }
