@@ -44,6 +44,7 @@ public class StaffUserController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
     {

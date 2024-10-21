@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 using TodoApi.Services;
@@ -75,16 +76,24 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddHostedService<DeletionService>();
-
 // Configure authorization policies
 builder.Services.AddAuthorization(options =>
 {
-options.AddPolicy("PatientOnly", policy => 
+    options.AddPolicy("PatientOnly", policy =>
+        {
+            policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Patient");
+        });
+    options.AddPolicy("AdminOnly", policy =>
     {
-        policy.RequireClaim("http://dev-b2f7avjyddz6kpot.us.auth0.comroles", "Patient");
+        policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Admin");
     });
-    
+    options.AddPolicy("DoctorOnly", policy =>
+    {
+        policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Doctor");
     });
+});
+
+
 
 // Add other services
 builder.Services.AddEndpointsApiExplorer();

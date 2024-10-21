@@ -7,6 +7,7 @@ public class AuthenticationConstants
     public const string AUDIENCE = "https://dev-b2f7avjyddz6kpot.us.auth0.com/api/v2/";
 
     public const string REDIRECTURI2 = "http://localhost:5000/callback/";
+    public const string ROLES_URL = "http://dev-b2f7avjyddz6kpot.us.auth0.comroles";
 
     public const string ADMIN_ID = "rol_FWeFbdm8i6ItQhic";
     public const string DOCTOR_ID = "rol_FspOH0w3YtSmJsZu";

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -76,6 +77,7 @@ public class OperationController : ControllerBase
         return type;
     }
     // GET: api/operation/filter
+    [Authorize(Policy ="AdminOnly")]
     [HttpGet("type/filter")]
 
     public async Task<ActionResult<IEnumerable<OperationTypeGetDTO>>> GetTypeFilter(OperationTypeSearch search)
@@ -91,7 +93,7 @@ public class OperationController : ControllerBase
     }
 
     //POST: api/operation/type
-
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("type")]
     public async Task<ActionResult<OperationTypeDTO>> PostType(OperationTypeDTO typeDTO)
     {
@@ -170,7 +172,7 @@ public class OperationController : ControllerBase
     // |=============================================|
 
 
-
+    [Authorize(Policy="DoctorOnly")]
     [HttpGet("request/filter")]
 
     public async Task<ActionResult<IEnumerable<OperationRequestDTO>>> GetRequestFilter(OperationRequestSearch search)
