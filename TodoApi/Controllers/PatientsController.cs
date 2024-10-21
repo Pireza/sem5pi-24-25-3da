@@ -206,9 +206,10 @@ namespace TodoApi.Controllers
         }
 
         // POST: api/Patients
-        [HttpPost("registerPatient")]
+        [HttpPost("createPatientAsAdmin")]
+        [Authorize(Policy = "AdminOnly")]
         // POST: api/Patients
-        public async Task<ActionResult<Patient>> CreatePatient([FromBody] CreatePatientRequest request)
+        public async Task<ActionResult<Patient>> CreatePatientAsAdmin([FromBody] CreatePatientRequest request)
         {
             // Validação básica dos campos obrigatórios
             if (string.IsNullOrEmpty(request.FirstName) || string.IsNullOrEmpty(request.LastName))
@@ -583,6 +584,7 @@ public async Task<IActionResult> PutPatientByEmail(
 
 // PUT: api/Patients/email/Admin{email}
 [HttpPut("email/UpdatePatientProfileAsAdmin{email}")]
+[Authorize(Policy = "AdminOnly")]
 public async Task<IActionResult> PutPatientUpdateAsAdmin(
     string email,
     [FromQuery] string? firstName = null,
