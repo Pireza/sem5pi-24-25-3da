@@ -1,44 +1,47 @@
-# US2 - To reset the password
+# US1 - To add new operation types
 
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As a Backoffice User (Admin, Doctor, Nurse, Technician), I want to reset my
-password if I forget it, so that I can regain access to the system securely.
+As an Admin, I want to add new types of operations, so that I can reflect the
+available medical procedures in the system.
 
 ### 1.2. Customer Specifications and Clarifications
 
 **From the client clarifications:**
 
-> **Question:** What are the system's password requirements?
+> **Question:** Can we assume while creating a new operation type, that the surgery must always have this 3 phases?
 
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+> **Answer:** Yes.
 
 
 ### 1.3. Acceptance Criteria
 
-* **AC1:** Backoffice users can request a password reset by providing their email.
-* **AC2:** The system sends a password reset link via email.
-* **AC3:** The reset link expires after a predefined period (e.g., 24 hours) for security.
-* **AC4:** Users must provide a new password that meets the system’s password complexity rules.
-
+* **AC1:** The system validates that the operation name is unique.
+* **AC2:** The system logs the creation of new operation types and makes them available for scheduling
+immediately.
 
 
 ### 1.4. Found out Dependencies
 
-There is a dependency to US1 because in order to ask for a password reset email, the backoffice user must be registered in the system in the first place.
+* n/a
 
 ### 1.5 Input and Output Data
 
 **Input Data:**
 
 * Typed data:
+    * a username
     * an email address
+
+* Selected data:
+    * A role for the user.
 
 **Output Data:**
 
+* New user registered in the system
 * (In)Success of the operation
 
 ### 1.6. System Views
