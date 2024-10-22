@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,7 +17,8 @@ public class OperationTypeController : ControllerBase
     }
 
     // PUT: api/OperationType/deactivate/{id}
-    [HttpDelete("deactivate/{id}")]
+    [HttpDelete("removeOperationTypeAsAdmin{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeactivateOperationType(long id)
     {
         // Check if the operation type exists

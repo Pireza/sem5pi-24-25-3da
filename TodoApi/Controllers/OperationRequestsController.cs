@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -136,10 +137,10 @@ public class OperationRequestsController : ControllerBase
 
 
 // DELETE: api/OperationRequests/{id}
-[HttpDelete("{id}")]
+[HttpDelete("id/deleteOperationRequestAsDoctor{id}")]
+[Authorize(Policy = "DoctorOnly")]
 public async Task<IActionResult> DeleteOperationRequest(
-    long id, 
-    [FromQuery] string email)  // Assuming email is passed to verify the doctor's identity
+    long id)  
 {
     // Retrieve the operation request by its ID, include Patient and Doctor to check their relationship
     var operationRequest = await _context.Requests
@@ -150,12 +151,6 @@ public async Task<IActionResult> DeleteOperationRequest(
     if (operationRequest == null)
     {
         return NotFound();  // Request not found
-    }
-
-    // Check if the logged-in doctor is the one who created the operation request
-    if (operationRequest.Doctor.Email != email)
-    {
-        return Unauthorized();  // Doctor cannot delete a request they didn't create
     }
 
     // Check if the operation has already been scheduled (based on the deadline)
@@ -177,7 +172,7 @@ public async Task<IActionResult> DeleteOperationRequest(
         {
             RequestId = id,
             ChangeDate = DateTime.UtcNow,
-            ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted by doctor {operationRequest.Doctor.Email}."
+            ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted."
         };
 
         _context.RequestsLogs.Add(requestLog);
@@ -205,4 +200,5 @@ private void NotifyPlanningModule(OperationRequest operationRequest)
 {
     Console.WriteLine($"Notifying Planning Module: Operation request for patient {operationRequest.Patient.Id} has been deleted.");
 }
+
 }
