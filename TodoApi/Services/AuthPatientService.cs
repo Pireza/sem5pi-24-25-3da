@@ -14,6 +14,7 @@ namespace TodoApi.Services
     {
         private readonly HttpClient _httpClient;
             private readonly UserContext _context;
+            private PatientRepository _patientrepository;
 
          private const string Auth0Domain = AuthenticationConstants.DOMAIN;
         private const string ClientId = AuthenticationConstants.CLIENT_ID;
@@ -21,10 +22,11 @@ namespace TodoApi.Services
         private const string Audience = $"https://{Auth0Domain}/api/v2/";
 
 
-        public AuthServicePatient(HttpClient httpClient,UserContext context)
+        public AuthServicePatient(HttpClient httpClient,UserContext context, PatientRepository patientRepository)
         {
             _httpClient = httpClient;
                     _context = context;
+                    _patientrepository=patientRepository;
 
         }
 
@@ -199,8 +201,8 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
     };
 
 
-        _context.Patients.Add(patient);
-        await _context.SaveChangesAsync();
+        await _patientrepository.AddPatientAsync(patient);
+
 
 
         Console.WriteLine("User has been successfully registered.");

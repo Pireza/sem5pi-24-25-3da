@@ -19,14 +19,16 @@ namespace TodoApi.Controllers
         private readonly UserContext _context;
         private readonly AuthServicePatient _authServicePatient;
         private readonly PasswordGeneratorService _passService;
+        private PatientRepository _repository;
 
 
 
-        public PatientsController(UserContext context, AuthServicePatient authServicePatient, PasswordGeneratorService passService)
+        public PatientsController(UserContext context, AuthServicePatient authServicePatient, PasswordGeneratorService passService, PatientRepository repository)
         {
             _context = context;
             _authServicePatient = authServicePatient; // Inject AuthServicePatient
                     _passService = passService;
+                    _repository=repository;
 
         }
 
@@ -41,7 +43,7 @@ namespace TodoApi.Controllers
             [FromQuery] int page = 1, // Default to page 1
             [FromQuery] int pageSize = 10) // Default page size of 10
         {
-            var query = _context.Patients.AsQueryable();
+            var query = _repository.GetPatientsQueryable();
 
             // Apply filters
             if (!string.IsNullOrEmpty(name))
@@ -501,8 +503,7 @@ namespace TodoApi.Controllers
 
        [HttpPut("email/UpdateProfile/{email}")]
        [Authorize(Policy = "PatientOnly")]
-
-public async Task<IActionResult> PutPatientByEmail(
+    public async Task<IActionResult> PutPatientByEmail(
     string email,
     [FromQuery] string? newEmail = null,  // Add newEmail as a parameter
     [FromQuery] string? firstName = null,
@@ -510,7 +511,7 @@ public async Task<IActionResult> PutPatientByEmail(
     [FromQuery] string? phone = null,
     [FromQuery] string? emergencyContact = null)
 {
-    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+    var patient = await _repository.GetPatientByEmailAsync(email);
 
     if (patient == null)
     {
@@ -555,18 +556,11 @@ public async Task<IActionResult> PutPatientByEmail(
         patient.EmergencyContact = emergencyContact;
     }
 
-    _context.Entry(patient).State = EntityState.Modified;
+    await _repository.UpdatePatientAsync(patient);
 
     try
     {
-        var auditLog = new AuditLog
-        {
-            PatientId = patient.Id,
-            ChangeDate = DateTime.UtcNow,
-            ChangeDescription = string.Join(", ", changes)
-        };
-        _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
+       await _repository.LogAuditChangeAsync(patient.Id,changes);
     }
     catch (DbUpdateConcurrencyException)
     {
@@ -679,20 +673,8 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             }
             patient.PendingDeletionDate = DateTime.UtcNow;
 
-            // Create an audit log entry before deletion
-            var auditLog = new AuditLog
-            {
-                PatientId = patient.Id,
-                ChangeDate = DateTime.UtcNow,
-                ChangeDescription = $"Patient with Email {email} will be deleted in 30 days."
-            };
-
-            // Add the audit log entry to the context
-            _context.AuditLogs.Add(auditLog);
-
-            _context.Patients.Update(patient);
-
-            await _context.SaveChangesAsync();
+            await _repository.AddAuditLogForDeletionAsync(email);
+           await _repository.UpdatePatientAsync(patient);
             try
             {
                 await _context.SaveChangesAsync(); // Save changes to both the audit log and the patient deletion
