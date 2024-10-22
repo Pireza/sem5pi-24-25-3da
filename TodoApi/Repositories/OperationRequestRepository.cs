@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 
 public class OperationRequestRepository
@@ -29,9 +30,14 @@ public async Task UpdateOperationRequestAsync(OperationRequest operationRequest)
             ChangeDate = DateTime.UtcNow,
             ChangeDescription = string.Join(", ", changes)
         };
+       if(!changes.IsNullOrEmpty()){
 
-        await _context.RequestsLogs.AddAsync(requestLog);
+          await _context.RequestsLogs.AddAsync(requestLog);
         await _context.SaveChangesAsync();
+       }
+      
+        
+
     }
 
      public async Task<OperationPriority> GetOperationPriorityByIdAsync(long operationPriorityId)

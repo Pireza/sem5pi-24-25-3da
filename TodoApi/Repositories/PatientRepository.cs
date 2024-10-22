@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 
 public class PatientRepository
@@ -30,9 +31,11 @@ public class PatientRepository
             ChangeDate = DateTime.UtcNow,
             ChangeDescription = string.Join(", ", changes)
         };
-
-        _context.AuditLogs.Add(auditLog);
+        if(!changes.IsNullOrEmpty()){
+            _context.AuditLogs.Add(auditLog);
         await _context.SaveChangesAsync();
+        }
+        
     }
     public async Task UpdatePatientAsync(Patient patient)
 {
@@ -55,7 +58,7 @@ public async Task AddAuditLogForDeletionAsync(string email)
             ChangeDate = DateTime.UtcNow,
             ChangeDescription = $"Patient with Email {email} will be deleted in 30 days."
         };
-
+        
         _context.AuditLogs.Add(auditLog);
         await _context.SaveChangesAsync();
     }

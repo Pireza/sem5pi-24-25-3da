@@ -59,7 +59,7 @@ public class OperationRequestsController : ControllerBase
 
 
 
-        if (!string.IsNullOrEmpty(deadline))
+        if (!string.IsNullOrEmpty(deadline) && operationRequest.Deadline!= deadline)
         {
             changes.Add($"Deadline changed from {operationRequest.Deadline} to {deadline}.");
             operationRequest.Deadline = deadline;
