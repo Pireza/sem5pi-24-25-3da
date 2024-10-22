@@ -32,6 +32,7 @@ namespace TodoApi.Controllers
 
         // GET: api/Patients
         [HttpGet("searchPatientProfiles")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsByAttributes(
             [FromQuery] string? name = null,
             [FromQuery] string? email = null,
@@ -499,6 +500,8 @@ namespace TodoApi.Controllers
         }
 
        [HttpPut("email/UpdateProfile/{email}")]
+       [Authorize(Policy = "PatientOnly")]
+
 public async Task<IActionResult> PutPatientByEmail(
     string email,
     [FromQuery] string? newEmail = null,  // Add newEmail as a parameter
@@ -666,6 +669,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
 
         // DELETE: api/Patients/email/{email}
         [HttpDelete("deleteUserByEmail/{email}")]
+        [Authorize(Policy = "PatientOnly")]
         public async Task<IActionResult> DeletePatientByEmail(string email)
         {
             var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
