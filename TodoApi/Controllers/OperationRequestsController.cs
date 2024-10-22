@@ -10,11 +10,13 @@ using System.Security.Claims;
 [ApiController]
 public class OperationRequestsController : ControllerBase
 {
-    private readonly UserContext _context; // Replace with your actual DbContext
+    private readonly UserContext _context; 
+    private OperationRequestRepository _repository;
 
-    public OperationRequestsController(UserContext context)
+    public OperationRequestsController(UserContext context, OperationRequestRepository repository)
     {
         _context = context;
+        _repository=repository;
     }
 
     // PUT: api/OperationRequests/{id}
@@ -25,7 +27,7 @@ public class OperationRequestsController : ControllerBase
         [FromQuery] long? operationPriorityId = null, 
         [FromQuery] string? deadline = null)
     {
-    var operationRequest = await _context.Requests.Include(r => r.Priority).Include(d => d.Doctor).FirstOrDefaultAsync(r => r.Id == id);
+    var operationRequest = await _repository.GetOperationRequestByIdAsync(id);
     var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
      loggedInDoctorEmail = loggedInDoctorEmail?.Split('|').LastOrDefault();
 
@@ -36,13 +38,13 @@ public class OperationRequestsController : ControllerBase
         }
          if (operationRequest.Doctor == null || operationRequest.Doctor.Email != loggedInDoctorEmail)
     {
-        return BadRequest("You are not authorized to update this operation request.");
+        return BadRequest("You are not authorized to update this operation request. Reason: You are not the doctor that created this request!");
     }
                 var changes = new List<string>();
 
       if (operationPriorityId.HasValue)
     {
-        var operationPriority = await _context.Priorities.FindAsync(operationPriorityId.Value);
+        var operationPriority = await _repository.GetOperationPriorityByIdAsync(operationPriorityId.Value);
         if (operationPriority == null)
         {
             return BadRequest($"OperationPriority with ID {operationPriorityId.Value} does not exist.");
@@ -64,18 +66,11 @@ public class OperationRequestsController : ControllerBase
         }
 
         
-        _context.Entry(operationRequest).State = EntityState.Modified;
-
+        await _repository.UpdateOperationRequestAsync(operationRequest);
+        
         try
         {
-            var requestLog = new RequestsLog
-            {
-                RequestId = id,
-                ChangeDate = DateTime.UtcNow,
-                ChangeDescription = string.Join(", ", changes)
-            };
-            _context.RequestsLogs.Add(requestLog);
-            await _context.SaveChangesAsync();
+           await _repository.LogRequestChangeAsync(id, changes);
         }
         catch (DbUpdateConcurrencyException)
         {
