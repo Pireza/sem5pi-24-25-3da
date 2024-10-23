@@ -101,7 +101,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<OperationService>();
 builder.Services.AddTransient<Auth0UserService>();
 builder.Services.AddTransient<PasswordGeneratorService>();
-builder.Services.AddScoped<PatientRepository>();
+builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<OperationRequestRepository>();
 
 var app = builder.Build();

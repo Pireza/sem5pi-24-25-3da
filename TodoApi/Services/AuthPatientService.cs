@@ -14,7 +14,7 @@ namespace TodoApi.Services
     {
         private readonly HttpClient _httpClient;
             private readonly UserContext _context;
-            private PatientRepository _patientrepository;
+            private UserRepository _patientrepository;
 
          private const string Auth0Domain = AuthenticationConstants.DOMAIN;
         private const string ClientId = AuthenticationConstants.CLIENT_ID;
@@ -22,7 +22,7 @@ namespace TodoApi.Services
         private const string Audience = $"https://{Auth0Domain}/api/v2/";
 
 
-        public AuthServicePatient(HttpClient httpClient,UserContext context, PatientRepository patientRepository)
+        public AuthServicePatient(HttpClient httpClient,UserContext context, UserRepository patientRepository)
         {
             _httpClient = httpClient;
                     _context = context;

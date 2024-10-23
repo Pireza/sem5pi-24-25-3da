@@ -13,7 +13,7 @@ using TodoApi.Models;
 
 public class Auth0UserService
 {
-    private readonly UserContext _context;
+    private readonly UserRepository _repo;
 
     private const string Auth0Domain = AuthenticationConstants.DOMAIN;
     private const string ClientId = AuthenticationConstants.CLIENT_ID;
@@ -22,9 +22,9 @@ public class Auth0UserService
     private const string ConnectionType = "Username-Password-Authentication";
 
 
-    public Auth0UserService(UserContext context)
+    public Auth0UserService(UserRepository repo)
     {
-        _context = context;
+        _repo = repo;
     }
     public async Task<string> GetManagementApiTokenAsync()
     {
@@ -60,7 +60,7 @@ public class Auth0UserService
             connection = ConnectionType
         };
 
-      
+
 
         var requestJSON = new StringContent(JsonConvert.SerializeObject(resetPasswordRequest), Encoding.UTF8, "application/json");
         var response = await client.PostAsync($"https://{Auth0Domain}/dbconnections/change_password", requestJSON);
@@ -173,17 +173,7 @@ public class Auth0UserService
         await CreateUserAsync(model, password);
 
 
-
-        var staff = new Staff
-        {
-            Email = model.Email,
-            Role = model.Role,
-            UserName = model.Username
-        };
-
-        _context.Staff.Add(staff);
-        await _context.SaveChangesAsync();
-
+        await _repo.AddStaff(model);
         Console.WriteLine("User has been successfully registered.");
 
     }
