@@ -69,6 +69,11 @@ public class UserRepository
         var query = _context.Patients.AsQueryable();
         return query;
     }
+      public async Task<Patient?> checkEmail(CreatePatientRequest request)
+    {
+        return await _context.Patients
+                .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
+    }
 
     // Staff Users ============================================
 

@@ -19,11 +19,11 @@ namespace TodoApi.Controllers
         private readonly UserContext _context;
         private readonly AuthServicePatient _authServicePatient;
         private readonly PasswordGeneratorService _passService;
-        private PatientRepository _repository;
+        private UserRepository _repository;
 
 
 
-        public PatientsController(UserContext context, AuthServicePatient authServicePatient, PasswordGeneratorService passService, PatientRepository repository)
+        public PatientsController(UserContext context, AuthServicePatient authServicePatient, PasswordGeneratorService passService, UserRepository repository)
         {
             _context = context;
             _authServicePatient = authServicePatient; // Inject AuthServicePatient
