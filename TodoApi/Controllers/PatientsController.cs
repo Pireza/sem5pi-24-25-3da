@@ -236,9 +236,7 @@ namespace TodoApi.Controllers
             }
 
             // Verifica se já existe um paciente com o mesmo número médico ou e-mail
-            var existingPatient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
-
+            var existingPatient = await _repository.checkEmail(request);
             if (existingPatient != null)
             {
                 return Conflict("A patient with the same medical number or email already exists.");

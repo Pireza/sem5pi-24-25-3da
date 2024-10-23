@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
@@ -70,4 +71,9 @@ public IQueryable<Patient> GetPatientsQueryable()
 }
 
 
+    public async Task<Patient?> checkEmail(CreatePatientRequest request)
+    {
+        return await _context.Patients
+                .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
+    }
 }
