@@ -5,13 +5,13 @@ using TodoApi.Models;
 
 public class OperationService
 {
-    private readonly UserContext _context;
+    private readonly OperationRequestRepository _repo;
     private const string DurationPattern = @"^([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
     private const string ACTIVE_STATUS = "active";
     private const string INACTIVE_STATUS = "inactive";
-    public OperationService(UserContext userContext)
+    public OperationService(OperationRequestRepository repo)
     {
-        _context = userContext;
+        _repo = repo;
     }
 
     // |==================================================|
@@ -20,12 +20,12 @@ public class OperationService
 
     public async Task<List<OperationPriority>> GetAllPrioAsync()
     {
-        return await this._context.Priorities.ToListAsync();
+        return await this._repo.GetAllPrioAsync();
     }
 
     public async Task<OperationPriority> GetPrioByIdAsync(long id)
     {
-        var prod = await this._context.Priorities.FindAsync(id);
+        var prod = await this._repo.GetPrioById(id);
 
         if (prod == null)
             return null;
@@ -36,10 +36,7 @@ public class OperationService
     public async Task<OperationPriority> AddPrioAsync(OperationPriority prio)
     {
 
-        this._context.Priorities.Add(prio);
-
-        await this._context.SaveChangesAsync();
-
+        await this._repo.AddPrio(prio);
         return prio;
     }
 
@@ -50,63 +47,18 @@ public class OperationService
 
     public async Task<List<OperationType>> GetAllTypeAsync()
     {
-        return await this._context.Types.ToListAsync();
+        return await this._repo.GetTypes();
     }
 
 
     public async Task<List<OperationTypeGetDTO>> GetAllTypeFilterAsync(OperationTypeSearch search)
     {
-        // Step 1: Filter OperationTypes based on search criteria
-        var query = from ot in _context.Types
-                    join ots in _context.Type_Staff on ot.Id equals ots.OperationTypeId
-                    join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
-                    join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
-                    where
-                    (string.IsNullOrEmpty(search.Name) || ot.Name.Equals(search.Name)) &&
-                    (string.IsNullOrEmpty(search.Status) || ot.Status.Equals(search.Status)) &&
-                    // Only filter by specialization on the operation type level
-                    (string.IsNullOrEmpty(search.Specialization) || sp.SpecDescription.Equals(search.Specialization))
-                    select ot;
-
-        var operationTypes = await query.Distinct().ToListAsync();
-
-        // Step 2: For each matching OperationType, retrieve ALL associated SpecializedStaff
-        var result = new List<OperationTypeGetDTO>();
-
-        foreach (var operationType in operationTypes)
-        {
-            // Retrieve all specialized staff for the current OperationType
-            var specializedStaffList = await (from ots in _context.Type_Staff
-                                              join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
-                                              join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
-                                              where ots.OperationTypeId == operationType.Id
-                                              select new
-                                              {
-                                                  ss.Role,
-                                                  sp.SpecDescription
-                                              }).ToListAsync();
-
-            // Step 3: Construct the DTO
-            var dto = new OperationTypeGetDTO
-            {
-                Name = operationType.Name,
-                Duration = operationType.Duration,
-                SpecializedStaff = specializedStaffList
-                    .Select(s => $"{s.Role}:{s.SpecDescription}")
-                    .ToList()
-            };
-
-            result.Add(dto);
-        }
-
-        return result;
+        return await _repo.FilterTypes(search);
     }
-
-
 
     public async Task<OperationType> GetTypeByIdAsync(long id)
     {
-        var prod = await this._context.Types.FindAsync(id);
+        var prod = await this._repo.GetTypeById(id);
 
         if (prod == null)
             return null;
@@ -130,80 +82,14 @@ public class OperationService
         // Verification of SpecializedStaff existence
         foreach (long id in operationTypeDTO.Staff)
         {
-            await checkStaffIdAsync(id);
+            await _repo.checkStaffIdAsync(id);
 
         }
 
-        var type = new OperationType
-        {
-            Name = operationTypeDTO.Name,
-            Duration = operationTypeDTO.Duration,
-            Status = ACTIVE_STATUS,
-        };
 
-        this._context.Types.Add(type);
-        await this._context.SaveChangesAsync();
-
-        // Bellow we create the association between tables
-
-        foreach (long l in operationTypeDTO.Staff)
-        {
-            var asso = new OperationType_Staff
-            {
-                SpecializedStaffId = l,
-                OperationTypeId = type.Id
-            };
-            this._context.Type_Staff.Add(asso);
-
-        }
-
-        await this._context.SaveChangesAsync();
+        var type = await this._repo.AddType(operationTypeDTO);
         return type;
-    }
 
-    private async Task checkStaffIdAsync(long id)
-    {
-        var specStaffId = await _context.SpecializedStaff.FindAsync(id);
-        if (specStaffId == null)
-            throw new NotFoundResource("Invalid specialized staff id");
-
-    }
-
-    public async Task<OperationType> ActivateTypeAsync(long id)
-    {
-        var op = await this._context.Types.FindAsync(id);
-
-        if (op == null)
-            return null;
-
-        // change all fields
-        if (op.Status.Equals(ACTIVE_STATUS))
-        {
-            throw new InvalidDataException();
-        }
-
-        op.Status = ACTIVE_STATUS;
-        await this._context.SaveChangesAsync();
-
-        return op;
-    }
-    public async Task<OperationType> InactivateTypeAsync(long id)
-    {
-        var op = await this._context.Types.FindAsync(id);
-
-        if (op == null)
-            return null;
-
-        // change all fields
-        if (op.Status.Equals(INACTIVE_STATUS))
-        {
-            throw new InvalidDataException();
-        }
-
-        op.Status = INACTIVE_STATUS;
-        await this._context.SaveChangesAsync();
-
-        return op;
     }
 
 
@@ -215,47 +101,7 @@ public class OperationService
 
     public async Task<List<OperationRequestDTO>> GetAllRequestFilterAsync(OperationRequestSearch search)
     {
-        // Get the base query from your DbContext. 
-        // Assuming you have a DbSet<OperationRequest> named 'OperationRequests'.
-        IQueryable<OperationRequest> query = _context.Requests.Include(or => or.Patient)
-                                                                          .Include(or => or.Doctor)
-                                                                          .Include(or => or.OperationType)
-                                                                          .Include(or => or.Priority);
-
-        // Apply filters dynamically based on the properties of the search object.
-        if (!string.IsNullOrEmpty(search.PatientName))
-        {
-            query = query.Where(or => or.Patient.FirstName.Contains(search.PatientName));
-        }
-
-        if (!string.IsNullOrEmpty(search.OperationType))
-        {
-            query = query.Where(or => or.OperationType.Name.Contains(search.OperationType));
-        }
-
-        if (!string.IsNullOrEmpty(search.Priority))
-        {
-            query = query.Where(or => or.Priority.Description.Contains(search.Priority));
-        }
-
-        if (!string.IsNullOrEmpty(search.Status))
-        {
-            query = query.Where(or => or.Status == search.Status);
-        }
-
-
-        var result = await query.Select(or => new OperationRequestDTO
-        {
-            PatientName = or.Patient.FirstName,
-            DoctorName = or.Doctor.FirstName,
-            OperationType = or.OperationType.Name,
-            Deadline = or.Deadline,
-            Status = or.Status,
-            PriorityName = or.Priority.Description
-        }).ToListAsync();
-
-        // Execute the query and return the filtered results as a list.
-        return result;
+        return await _repo.FilterRequests(search);
     }
 
 

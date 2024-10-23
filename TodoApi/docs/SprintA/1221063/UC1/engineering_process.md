@@ -85,6 +85,6 @@ account.
 
 #### Logic view
 
-![Logic View](views/logic-view-lvl4.svg)
+ ![Logic View](views/logic-view-lvl4.svg)
 
 

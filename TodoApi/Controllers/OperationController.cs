@@ -77,7 +77,7 @@ public class OperationController : ControllerBase
         return type;
     }
     // GET: api/operation/filter
-    [Authorize(Policy ="AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("type/filter")]
 
     public async Task<ActionResult<IEnumerable<OperationTypeGetDTO>>> GetTypeFilter(OperationTypeSearch search)
@@ -120,59 +120,13 @@ public class OperationController : ControllerBase
 
     }
 
-    // PUT: api/Operation/type/activate/{id}
-
-    [HttpPut("type/activate/{id}")]
-
-    public async Task<ActionResult<OperationType>> ActivateType(long id)
-    {
-
-        try
-        {
-            var prod = await _service.ActivateTypeAsync(id);
-
-            if (prod == null)
-            {
-                return NotFound();
-            }
-            return Ok(prod);
-        }
-        catch (InvalidDataException ex)
-        {
-            return BadRequest("This type is already active");
-        }
-    }
-
-
-    // PUT: api/Operation/type/inactivate/{id}
-
-    [HttpPut("type/deactivate/{id}")]
-
-    public async Task<ActionResult<OperationType>> InactivateType(long id)
-    {
-
-        try
-        {
-            var prod = await _service.InactivateTypeAsync(id);
-
-            if (prod == null)
-            {
-                return NotFound();
-            }
-            return Ok(prod);
-        }
-        catch (InvalidDataException ex)
-        {
-            return BadRequest("This type is already inactive");
-        }
-    }
 
     // |=============================================|
     // | Following methods regard Operation Requests |
     // |=============================================|
 
 
-    [Authorize(Policy="DoctorOnly")]
+    [Authorize(Policy = "DoctorOnly")]
     [HttpGet("request/filter")]
 
     public async Task<ActionResult<IEnumerable<OperationRequestDTO>>> GetRequestFilter(OperationRequestSearch search)
