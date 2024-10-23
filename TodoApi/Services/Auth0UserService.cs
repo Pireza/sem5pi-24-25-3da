@@ -106,7 +106,7 @@ public class Auth0UserService
         else
         {
             Console.WriteLine($"Error creating user: {responseString}");
-            throw new UserAlreadyExistsException("User already registered in the system");
+            throw new Exception();
         }
 
 
