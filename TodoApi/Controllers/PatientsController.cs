@@ -236,9 +236,7 @@ namespace TodoApi.Controllers
             }
 
             // Verifica se já existe um paciente com o mesmo número médico ou e-mail
-            var existingPatient = await _context.Patients
-                .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
-
+            var existingPatient = await _repository.checkEmail(request);
             if (existingPatient != null)
             {
                 return Conflict("A patient with the same medical number or email already exists.");
@@ -417,7 +415,7 @@ namespace TodoApi.Controllers
             [FromQuery] int? medicalNumber = null,
             [FromQuery] string? emergencyContact = null)
         {
-            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+            var patient = await _repository.GetPatientByEmailAsync(email);
 
             if (patient == null)
             {
@@ -476,15 +474,7 @@ namespace TodoApi.Controllers
 
             try
             {
-                var auditLog = new AuditLog
-                {
-                    PatientId = patient.Id,
-                    ChangeDate = DateTime.UtcNow,
-                    ChangeDescription = string.Join(", ", changes)
-                };
-                _context.AuditLogs.Add(auditLog);
-                await _context.SaveChangesAsync();
-
+                await _repository.LogAuditChangeAsync(patient.Id, changes);
             }
             catch (DbUpdateConcurrencyException)
             {
