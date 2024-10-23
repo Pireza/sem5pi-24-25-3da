@@ -80,7 +80,7 @@ public class OperationRequestRepository
                     join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
                     where
                     (string.IsNullOrEmpty(search.Name) || ot.Name.Equals(search.Name)) &&
-                    (string.IsNullOrEmpty(search.Status) || ot.Status.Equals(search.Status)) &&
+                    ot.IsActive == search.IsActive &&
                     // Only filter by specialization on the operation type level
                     (string.IsNullOrEmpty(search.Specialization) || sp.SpecDescription.Equals(search.Specialization))
                     select ot;
@@ -123,7 +123,7 @@ public class OperationRequestRepository
         return await this._context.Types.FindAsync(id);
     }
 
-    public async Task<OperationType> AddType(Operati    onTypeDTO dto)
+    public async Task<OperationType> AddType(OperationTypeDTO dto)
     {
 
         var type = new OperationType
