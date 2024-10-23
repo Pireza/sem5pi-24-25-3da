@@ -13,6 +13,7 @@ public class StaffUserController : ControllerBase
     private readonly Auth0UserService _auth0Service;
     private readonly PasswordGeneratorService _passService;
     private readonly UserContext _context;
+    private UserRepository _repository;
 
     public StaffUserController(Auth0UserService auth0Service, PasswordGeneratorService passService, UserContext context)
     {
@@ -25,7 +26,7 @@ public class StaffUserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Staff>> GetStaff(long id)
     {
-        var staff = await _context.Staff.FindAsync(id);
+       var staff = await _repository.getStaff(id);
 
         if (staff == null)
         {
@@ -92,7 +93,7 @@ public class StaffUserController : ControllerBase
     [Authorize(Policy = "AdminOnly")]
     [HttpPost("CreateStaffAsAdmin")]
     // POST: api/Staffs
-    public async Task<ActionResult<Staff>> CreateStaff([FromBody] CreateStaffRequest request)
+    public async Task<ActionResult<Staff>> CreateStaffAsAdmin([FromBody] CreateStaffRequest request)
     {
         // Basic validation for required fields
         if (string.IsNullOrEmpty(request.FirstName) || string.IsNullOrEmpty(request.LastName))
@@ -116,8 +117,7 @@ public class StaffUserController : ControllerBase
         }
 
         // Check if a staff member with the same license number or phone already exists
-        var existingStaff = await _context.Staff
-            .FirstOrDefaultAsync(s => s.LicenseNumber == request.LicenseNumber || s.Phone == request.Phone || s.Email == request.Email);
+        var existingStaff = await _repository.checkStaff(request);
 
         if (existingStaff != null)
         {

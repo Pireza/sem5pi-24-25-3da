@@ -76,5 +76,6 @@ public IQueryable<Patient> GetPatientsQueryable()
         return await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
     }
+
 }
 

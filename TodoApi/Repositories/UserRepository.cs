@@ -86,6 +86,14 @@ public class UserRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<Staff?> getStaff(long id)
+    {
+        return await _context.Staff.FindAsync(id);
+    }
 
-
+    public async Task<Task<Staff?>> checkStaff(CreateStaffRequest request)
+    {
+     return _context.Staff
+            .FirstOrDefaultAsync(s => s.LicenseNumber == request.LicenseNumber || s.Phone == request.Phone || s.Email == request.Email);
+    }
 }
