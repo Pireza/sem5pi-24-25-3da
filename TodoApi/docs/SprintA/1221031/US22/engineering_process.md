@@ -1,54 +1,46 @@
-# US1 - To register backoffice users 
+# US22 - To remove operation types
 
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Admin, I want to register new backoffice users (e.g., doctors, nurses, technicians, admins) via an out-of-band process, so that they can access the backoffice system with appropriate permissions.
-
-### 1.2. Customer Specifications and Clarifications
-
-**From the client clarifications:**
-
-> **Question:** What are the system's password requirements?
-
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+ As an Admin, I want to remove obsolete or no longer performed operation types, so that the system stays current with hospital practices.
 
 
-### 1.3. Acceptance Criteria
+### 1.2. Acceptance Criteria
 
-* **AC1:** Backoffice users (e.g., doctors, nurses, technicians) are registered by an Admin via an internal
-process, not via self-registration.
-* **AC2:** Admin assigns roles (e.g., Doctor, Nurse, Technician) during the registration process.
-* **AC3:** Registered users receive a one-time setup link via email to set their password and activate their
-account.
-* **AC4:** The system enforces strong password requirements for security.
-* **AC5:** A confirmation email is sent to verify the user’s registration. 
+- Admins can search for and mark operation types as inactive (rather than deleting them) to
+preserve historical records.
+- Inactive operation types are no longer available for future scheduling but remain in historical
+data.
+- A confirmation prompt is shown before deactivating an operation type.
 
 
 
-### 1.4. Found out Dependencies
+### 1.3. Found out Dependencies
 
 * n/a
 
-### 1.5 Input and Output Data
+### 1.4 Input and Output Data
 
 **Input Data:**
 
-* Typed data:
-    * a username
-    * an email address
+* Route parameter:
+- id (long) - ID of the operation type to deactivate.
+* Output Data:
 
-* Selected data:
-    * A role for the user.
+*  On success:
 
-**Output Data:**
+- Operation type deactivated in the system.
+- 204 No Content response.
+* On failure:
 
-* New user registered in the system
-* (In)Success of the operation
+- 404 Not Found if the operation type with the given ID does not exist.
+- 400 Bad Request for invalid operations or if an exception occurs during processing.
+- 500 Internal Server Error for other unhandled exceptions.
 
-### 1.6. System Views
+### 1.5. System Views
 
 ### Level 1
 
