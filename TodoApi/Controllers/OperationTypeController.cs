@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+
 public class OperationTypeController : ControllerBase
 {
     private readonly UserContext _context;
@@ -15,68 +16,33 @@ public class OperationTypeController : ControllerBase
     {
         _context = context;
     }
+    private OperationRequestRepository _repository;
 
-    // PUT: api/OperationType/deactivate/{id}
-    [HttpDelete("removeOperationTypeAsAdmin{id}")]
-    [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> DeactivateOperationType(long id)
+   // PUT: api/OperationType/deactivate/{id}
+[HttpDelete("removeOperationTypeAsAdmin{id}")]
+[Authorize(Policy = "AdminOnly")]
+public async Task<IActionResult> DeactivateOperationType(long id)
+{
+    try
     {
-        // Check if the operation type exists
-        var operationType = await _context.OperationTypes
-            .FirstOrDefaultAsync(ot => ot.Id == id);
+        // Call repository to deactivate the operation type
+        var deactivated = await _repository.DeactivateOperationTypeAsync(id);
 
-        if (operationType == null)
+        if (!deactivated)
         {
-            return NotFound(); // Operation type not found
-        }
-
-        if (!operationType.IsActive)
-        {
-            return BadRequest("Operation type is already inactive."); // Already inactive
-        }
-
-        // Mark the operation type as inactive
-        operationType.IsActive = false;
-
-        _context.Entry(operationType).State = EntityState.Modified;
-
-        try
-        {
-            // Save the changes to the database
-            await _context.SaveChangesAsync();
-
-            // Log the deactivation (optional, for audit purposes)
-            var logEntry = new AuditLogOperationType
-            {
-                EntityId = operationType.Id,
-                EntityName = nameof(OperationType),
-                Action = "Deactivated",
-                ChangeDate = DateTime.UtcNow,
-                Description = $"Operation type '{operationType.Name}' deactivated by admin."
-            };
-
-            _context.AuditLogOperationTypes.Add(logEntry);
-            await _context.SaveChangesAsync();
-
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!OperationTypeExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
+            return NotFound(); // Operation type not found or doesn't exist
         }
 
         return NoContent();
     }
-
-    // Helper method to check if an OperationType exists
-    private bool OperationTypeExists(long id)
+    catch (InvalidOperationException ex)
     {
-        return _context.OperationTypes.Any(e => e.Id == id);
+        return BadRequest(ex.Message);
     }
+    catch (Exception)
+    {
+        // Handle any other exceptions that may occur
+        return StatusCode(500, "An error occurred while processing your request.");
+    }
+}
 }
