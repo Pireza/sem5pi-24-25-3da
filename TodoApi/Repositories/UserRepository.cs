@@ -12,18 +12,18 @@ public class UserRepository
         _context = context;
     }
     public UserRepository() { }
-    public async Task AddPatientAsync(Patient patient)
+    public virtual async Task AddPatientAsync(Patient patient)
     {
         _context.Patients.Add(patient);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Patient?> GetPatientByEmailAsync(string email)
+    public virtual async Task<Patient?> GetPatientByEmailAsync(string email)
     {
         return await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
     }
 
-    public async Task LogAuditChangeAsync(long patientId, List<string> changes)
+    public virtual async Task LogAuditChangeAsync(long patientId, List<string> changes)
     {
         var auditLog = new AuditLog
         {
@@ -38,16 +38,16 @@ public class UserRepository
         }
 
     }
-    public async Task UpdatePatientAsync(Patient patient)
+    public virtual async Task UpdatePatientAsync(Patient patient)
     {
         MarkPatientAsModified(patient);
         await _context.SaveChangesAsync();
     }
-    private void MarkPatientAsModified(Patient patient)
+    public virtual void MarkPatientAsModified(Patient patient)
     {
         _context.Entry(patient).State = EntityState.Modified;
     }
-    public async Task AddAuditLogForDeletionAsync(string email)
+    public virtual async Task AddAuditLogForDeletionAsync(string email)
     {
         var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
 
@@ -69,7 +69,7 @@ public class UserRepository
         var query = _context.Patients.AsQueryable();
         return query;
     }
-      public async Task<Patient?> checkEmail(CreatePatientRequest request)
+      public virtual async Task<Patient?> checkEmail(CreatePatientRequest request)
     {
         return await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
