@@ -656,7 +656,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         [Authorize(Policy = "PatientOnly")]
         public async Task<IActionResult> DeletePatientByEmail(string email)
         {
-            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+            var patient = await _repository.GetPatientByEmailAsync(email);
             if (patient == null)
             {
                 return NotFound();
@@ -665,21 +665,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
 
             await _repository.AddAuditLogForDeletionAsync(email);
            await _repository.UpdatePatientAsync(patient);
-            try
-            {
-                await _context.SaveChangesAsync(); // Save changes to both the audit log and the patient deletion
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PatientExists(patient.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+         
 
             return NoContent();
         }
