@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 
-public class UserRepository
+public class UserRepository 
 {
     private readonly UserContext _context;
 
@@ -11,7 +11,7 @@ public class UserRepository
     {
         _context = context;
     }
-
+    public UserRepository() { }
     public async Task AddPatientAsync(Patient patient)
     {
         _context.Patients.Add(patient);
@@ -64,7 +64,7 @@ public class UserRepository
             await _context.SaveChangesAsync();
         }
     }
-    public IQueryable<Patient> GetPatientsQueryable()
+    public virtual IQueryable<Patient> GetPatientsQueryable()
     {
         var query = _context.Patients.AsQueryable();
         return query;

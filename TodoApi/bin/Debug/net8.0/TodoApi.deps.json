@@ -20,7 +20,9 @@
           "Microsoft.EntityFrameworkCore.Tools": "8.0.8",
           "Microsoft.NET.Test.Sdk": "17.11.1",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "8.0.5",
+          "MockQueryable.Moq": "7.0.3",
           "Moq": "4.20.72",
+          "Moq.EntityFrameworkCore": "8.0.1.2",
           "MySql.Data.EntityFrameworkCore": "8.0.22",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
           "Swashbuckle.AspNetCore": "6.4.0",
@@ -2076,6 +2078,38 @@
           }
         }
       },
+      "MockQueryable.Core/7.0.3": {
+        "runtime": {
+          "lib/netstandard2.1/MockQueryable.Core.dll": {
+            "assemblyVersion": "7.0.0.3",
+            "fileVersion": "7.0.0.3"
+          }
+        }
+      },
+      "MockQueryable.EntityFrameworkCore/7.0.3": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.8",
+          "MockQueryable.Core": "7.0.3"
+        },
+        "runtime": {
+          "lib/net6.0/MockQueryable.EntityFrameworkCore.dll": {
+            "assemblyVersion": "7.0.0.3",
+            "fileVersion": "7.0.0.3"
+          }
+        }
+      },
+      "MockQueryable.Moq/7.0.3": {
+        "dependencies": {
+          "MockQueryable.EntityFrameworkCore": "7.0.3",
+          "Moq": "4.20.72"
+        },
+        "runtime": {
+          "lib/net6.0/MockQueryable.Moq.dll": {
+            "assemblyVersion": "7.0.0.3",
+            "fileVersion": "7.0.0.3"
+          }
+        }
+      },
       "Mono.TextTemplating/2.3.1": {
         "dependencies": {
           "System.CodeDom": "5.0.0"
@@ -2095,6 +2129,18 @@
           "lib/net6.0/Moq.dll": {
             "assemblyVersion": "4.20.72.0",
             "fileVersion": "4.20.72.0"
+          }
+        }
+      },
+      "Moq.EntityFrameworkCore/8.0.1.2": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.8",
+          "Moq": "4.20.72"
+        },
+        "runtime": {
+          "lib/net8.0/Moq.EntityFrameworkCore.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.2.0"
           }
         }
       },
@@ -4436,6 +4482,27 @@
       "path": "microsoft.win32.systemevents/7.0.0",
       "hashPath": "microsoft.win32.systemevents.7.0.0.nupkg.sha512"
     },
+    "MockQueryable.Core/7.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ittsOy5XMXtTC72dXmpDCCKF1dzJeOM5kEeYUL5vI6TTtI6K15zdyET+GSGuMz59S/VwTIuR0pnyeo7Wfilfog==",
+      "path": "mockqueryable.core/7.0.3",
+      "hashPath": "mockqueryable.core.7.0.3.nupkg.sha512"
+    },
+    "MockQueryable.EntityFrameworkCore/7.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W/4WOG+5g/ZNsuRG0oM++zLxvqdKOUH94Hg8VC/CVpmIPAfMXgOKfW3rDGeLQXguWTa5/5qy2c1pH/9btGMw5A==",
+      "path": "mockqueryable.entityframeworkcore/7.0.3",
+      "hashPath": "mockqueryable.entityframeworkcore.7.0.3.nupkg.sha512"
+    },
+    "MockQueryable.Moq/7.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AUCgJj84DZQnGxGNKlqzTRqnMspZCljD4oY85paoXIX3/9p1ACCq8RZ6H1t0R0G2fKcCl8KM018wiRdIrWxdOg==",
+      "path": "mockqueryable.moq/7.0.3",
+      "hashPath": "mockqueryable.moq.7.0.3.nupkg.sha512"
+    },
     "Mono.TextTemplating/2.3.1": {
       "type": "package",
       "serviceable": true,
@@ -4449,6 +4516,13 @@
       "sha512": "sha512-EA55cjyNn8eTNWrgrdZJH5QLFp2L43oxl1tlkoYUKIE9pRwL784OWiTXeCV5ApS+AMYEAlt7Fo03A2XfouvHmQ==",
       "path": "moq/4.20.72",
       "hashPath": "moq.4.20.72.nupkg.sha512"
+    },
+    "Moq.EntityFrameworkCore/8.0.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LAgsu4wwRLlUjM8+t0FFwk4hy7of4BfeKqe52UUfXNaDKYUzYCZqwTcId1dB3FHiuailsmowei6lej1t//d8Ng==",
+      "path": "moq.entityframeworkcore/8.0.1.2",
+      "hashPath": "moq.entityframeworkcore.8.0.1.2.nupkg.sha512"
     },
     "MySql.Data/8.0.22": {
       "type": "package",
