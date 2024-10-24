@@ -17,4 +17,6 @@ public class Staff : User
     public Specialization? Specialization { get; set; }
     public string? Phone { get; set; }
     public ICollection<AvailabilitySlot>? AvailabilitySlots { get; set; } = new List<AvailabilitySlot>();
+    public bool IsActive { get; set; } = true;
+    
 }
