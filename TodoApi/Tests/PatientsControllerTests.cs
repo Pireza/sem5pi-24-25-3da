@@ -159,4 +159,257 @@ public async Task GetPatientsByAttributes_IntegrationTest_ReturnsNoPatients()
 
 
 
+ //UC4
+ [Fact]
+public async Task PutPatientByEmail_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var email = "john@example.com";
+    var patient = new Patient
+    {
+        Id = 1,
+        FirstName = "John",
+        LastName = "Doe",
+        Email = email,
+        Phone = "1234567890",
+        EmergencyContact = "Jane Doe"
+    };
+
+    // Set up the repository mock to return the existing patient
+    _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
+    _repositoryMock.Setup(repo => repo.UpdatePatientAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
+    _repositoryMock.Setup(repo => repo.LogAuditChangeAsync(patient.Id, It.IsAny<List<string>>())).Returns(Task.CompletedTask);
+
+    // Act
+    var result = await _controller.PutPatientByEmail(email, firstName: "Johnny");
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+    Assert.Equal("Johnny", patient.FirstName); // Check if the first name was updated
+
+    // Verify that the update method was called
+    _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.Is<Patient>(p => p.Id == patient.Id && p.FirstName == "Johnny")), Times.Once);
+}
+
+
+    // UC4
+    [Fact]
+    public async Task PutPatientByEmail_ReturnsNotFound_WhenPatientDoesNotExist()
+    {
+        // Arrange
+        var email = "nonexistent@example.com";
+
+        _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync((Patient)null);
+
+        // Act
+        var result = await _controller.PutPatientByEmail(email);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    // UC4
+    [Fact]
+    public async Task PutPatientByEmail_ReturnsNoContent_WhenOnlyEmergencyContactIsUpdated()
+    {
+        // Arrange
+        var email = "john@example.com";
+        var patient = new Patient
+        {
+            Id = 1,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = email,
+            Phone = "1234567890",
+            EmergencyContact = "Jane Doe"
+        };
+
+        _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
+        _repositoryMock.Setup(repo => repo.UpdatePatientAsync(patient)).Returns(Task.CompletedTask);
+        _repositoryMock.Setup(repo => repo.LogAuditChangeAsync(patient.Id, It.IsAny<List<string>>())).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _controller.PutPatientByEmail(email, emergencyContact: "New Contact");
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+        Assert.Equal("New Contact", patient.EmergencyContact); // Check if the emergency contact was updated
+    }
+    
+    // UC4
+    [Fact]
+    public async Task PutPatientByEmail_ReturnsNoContent_WhenNoFieldsUpdated()
+    {
+        // Arrange
+        var email = "john@example.com";
+        var patient = new Patient
+        {
+            Id = 1,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = email,
+            Phone = "1234567890",
+            EmergencyContact = "Jane Doe"
+        };
+
+        _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
+        _repositoryMock.Setup(repo => repo.UpdatePatientAsync(patient)).Returns(Task.CompletedTask);
+        _repositoryMock.Setup(repo => repo.LogAuditChangeAsync(patient.Id, It.IsAny<List<string>>())).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _controller.PutPatientByEmail(email);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+        Assert.Equal("John", patient.FirstName); // Ensure no changes were made
+    }
+
+
+// UC4 - Integration Test with Some Isolation
+[Fact]
+public async Task PutPatientByEmail_IntegrationTest_WithIsolation_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var options = new DbContextOptionsBuilder<UserContext>()
+        .UseInMemoryDatabase(databaseName: "IsolationPutPatientTestDb") // Unique name for this test
+        .Options;
+
+    // Seed the in-memory database
+    using (var context = new UserContext(options))
+    {
+        context.Patients.Add(new Patient
+        {
+            Id = 1,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john@example.com",
+            Phone = "1234567890",
+            EmergencyContact = "Jane Doe",
+            Gender = "Male",  
+            Role = "Patient", 
+        UserName = "john.doe" 
+        });
+        context.SaveChanges();
+    }
+
+    // Setup repository with the seeded database
+    var repository = new UserRepository(new UserContext(options));
+    var controller = new PatientsController(null, null, null, repository);
+
+    // Act
+    var result = await controller.PutPatientByEmail("john@example.com", firstName: "Johnny");
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+
+    // Verify that the first name was updated
+    using (var context = new UserContext(options))
+    {
+        var updatedPatient = await context.Patients.FindAsync(1L);
+        Assert.Equal("Johnny", updatedPatient.FirstName); // Check if the first name was updated
+    }
+}
+
+// UC5 - Integration Test with Some Isolation
+[Fact]
+public async Task DeletePatientByEmail_IntegrationTest_WithIsolation_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var options = new DbContextOptionsBuilder<UserContext>()
+        .UseInMemoryDatabase(databaseName: "IsolationDeletePatientTestDb") // Unique name for this test
+        .Options;
+
+    // Seed the in-memory database
+    using (var context = new UserContext(options))
+    {
+        context.Patients.Add(new Patient
+        {
+            Id = 1L,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john@example.com",
+            Phone = "1234567890",
+            EmergencyContact = "966966966",
+              Gender = "Male",  
+            Role = "Patient", 
+        UserName = "john.doe" 
+        });
+        context.SaveChanges();
+    }
+
+    // Setup repository with the seeded database
+    var repository = new UserRepository(new UserContext(options));
+    var controller = new PatientsController(null, null, null, repository);
+
+    // Act
+    var result = await controller.DeletePatientByEmail("john@example.com");
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+
+    // Verify the patient was marked for deletion
+    using (var context = new UserContext(options))
+    {
+        var deletedPatient = await context.Patients.FirstOrDefaultAsync(p => p.Email == "john@example.com");
+        Assert.NotNull(deletedPatient); // Ensure the patient exists
+        Assert.NotNull(deletedPatient.PendingDeletionDate); // Ensure the deletion date is set
+    }
+
+}
+// UC5 - Unit Test Using Mock for Repository
+[Fact]
+public async Task DeletePatientByEmail_UnitTest_UsingMock_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var email = "john@example.com";
+    var patient = new Patient
+    {
+        Id = 1L,
+        FirstName = "John",
+        LastName = "Doe",
+        Email = email,
+        Phone = "1234567890",
+        EmergencyContact = "966966966",
+        Gender = "Male",
+        Role = "Patient",
+        UserName = "john.doe"
+    };
+
+    // Set up the repository mock to return the existing patient
+    _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
+    _repositoryMock.Setup(repo => repo.AddAuditLogForDeletionAsync(email)).Returns(Task.CompletedTask);
+    _repositoryMock.Setup(repo => repo.UpdatePatientAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
+
+    // Act
+    var result = await _controller.DeletePatientByEmail(email);
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+
+    // Verify that the patient was marked for deletion
+    _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.Is<Patient>(p => p.Email == email && p.PendingDeletionDate != null)), Times.Once);
+    _repositoryMock.Verify(repo => repo.AddAuditLogForDeletionAsync(email), Times.Once); // Ensure that the audit log method was called
+}
+
+// UC5 - Unit Test for Deleting a Non-Existing Patient
+[Fact]
+public async Task DeletePatientByEmail_UnitTest_ReturnsNotFound_WhenPatientDoesNotExist()
+{
+    // Arrange
+    var email = "nonexistent@example.com";
+
+    // Set up the repository mock to return null for the non-existent patient
+    _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync((Patient)null);
+
+    // Act
+    var result = await _controller.DeletePatientByEmail(email);
+
+    // Assert
+    Assert.IsType<NotFoundResult>(result); // Check for Not Found response
+
+    // Verify that no other methods were called
+    _repositoryMock.Verify(repo => repo.AddAuditLogForDeletionAsync(email), Times.Never); // Ensure audit log method was not called
+    _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.IsAny<Patient>()), Times.Never); // Ensure update method was not called
+}
+
 }
