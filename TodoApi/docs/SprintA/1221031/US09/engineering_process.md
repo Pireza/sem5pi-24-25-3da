@@ -1,54 +1,49 @@
-# US1 - To register backoffice users 
-
+# US9 - Edit an existing patient profile
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Admin, I want to register new backoffice users (e.g., doctors, nurses, technicians, admins) via an out-of-band process, so that they can access the backoffice system with appropriate permissions.
-
-### 1.2. Customer Specifications and Clarifications
-
-**From the client clarifications:**
-
-> **Question:** What are the system's password requirements?
-
-> **Answer:** At least 10 characters long, at least a digit, a capital letter and a special character.
+As an Admin, I want to edit an existing patient profile, so that I can update their information when needed.
 
 
-### 1.3. Acceptance Criteria
+### 1.2. Acceptance Criteria
 
-* **AC1:** Backoffice users (e.g., doctors, nurses, technicians) are registered by an Admin via an internal
-process, not via self-registration.
-* **AC2:** Admin assigns roles (e.g., Doctor, Nurse, Technician) during the registration process.
-* **AC3:** Registered users receive a one-time setup link via email to set their password and activate their
-account.
-* **AC4:** The system enforces strong password requirements for security.
-* **AC5:** A confirmation email is sent to verify the user’s registration. 
+- Admins can search for and select a patient profile to edit.
+- Editable fields include name, contact information, medical history, and allergies.
+- Changes to sensitive data (e.g., contact information) trigger an email notification to the patient.
+- The system logs all profile changes for auditing purposes.
 
 
 
-### 1.4. Found out Dependencies
+### 1.3. Found out Dependencies
 
 * n/a
 
-### 1.5 Input and Output Data
-
+## Input and Output Data
 **Input Data:**
 
-* Typed data:
-    * a username
-    * an email address
-
-* Selected data:
-    * A role for the user.
-
+* Route parameter:
+* email (string) - Email address of the patient to update.
+* Query parameters (optional):
+* firstName (string) - New first name for the patient.
+* lastName (string) - New last name for the patient.
+* phone (string) - New phone number for the patient.
+* emergencyContact (string) - New emergency contact for the patient.
+* medicalConditions (List<string>) - Updated list of medical conditions.
 **Output Data:**
 
-* New user registered in the system
-* (In)Success of the operation
+* **On success:**
 
-### 1.6. System Views
+*Patient profile updated.
+*Audit log created to track changes.
+*204 No Content response.
+* **On failure:**
+
+* 404 Not Found if the patient with the given email or ID does not exist.
+* 500 Internal Server Error or other appropriate status codes in case of database concurrency issues or other exceptions.
+
+### 1.5. System Views
 
 ### Level 1
 
