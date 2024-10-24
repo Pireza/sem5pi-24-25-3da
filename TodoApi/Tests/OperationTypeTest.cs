@@ -22,4 +22,12 @@ public class OperationTypeTest
                    _ = new OperationType(name, duration, status)
                );
     }
+
+    [Fact]
+    public void CheckIfTypeIsCreatedWithActiveStatus()
+    {
+        Mock<OperationType> mock = new Mock<OperationType>();
+        bool res = mock.Object.IsActive;
+        Assert.True(res);
+    }
 }
