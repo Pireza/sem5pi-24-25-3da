@@ -96,66 +96,38 @@ public class OperationRequestsController : ControllerBase
 // DELETE: api/OperationRequests/{id}
 [HttpDelete("id/deleteOperationRequestAsDoctor{id}")]
 [Authorize(Policy = "DoctorOnly")]
-public async Task<IActionResult> DeleteOperationRequest(
-    long id)  
+public async Task<IActionResult> DeleteOperationRequest(long id)
 {
-    // Retrieve the operation request by its ID, include Patient and Doctor to check their relationship
-    var operationRequest = await _context.Requests
-        .Include(r => r.Doctor)  // Include the Doctor who created the request
-        .Include(r => r.Patient) // Include the Patient who has the request
-        .FirstOrDefaultAsync(r => r.Id == id);
-
-    if (operationRequest == null)
-    {
-        return NotFound();  // Request not found
-    }
-
-    // Check if the operation has already been scheduled (based on the deadline)
-    if (!string.IsNullOrEmpty(operationRequest.Deadline) && DateTime.TryParse(operationRequest.Deadline, out var deadline) && deadline < DateTime.UtcNow)
-    {
-        return BadRequest("Operation has already been scheduled and cannot be deleted.");
-    }
-
-    // Delete the operation request from the database
-    _context.Requests.Remove(operationRequest);
-
     try
     {
-        // Save the changes to the database
-        await _context.SaveChangesAsync();
+        // Call repository to delete the operation request by ID
+        var deleted = await _repository.DeleteOperationRequestByIdAsync(id);
 
-        // Log the deletion event
-        var requestLog = new RequestsLog
+        if (!deleted)
         {
-            RequestId = id,
-            ChangeDate = DateTime.UtcNow,
-            ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted."
-        };
+            return NotFound(); // Request not found
+        }
 
-        _context.RequestsLogs.Add(requestLog);
-        await _context.SaveChangesAsync();
+        // Notify the Planning Module (this can be an external service call)
+        NotifyPlanningModule(id);
+
+        return NoContent();
     }
-    catch (DbUpdateConcurrencyException)
+    catch (InvalidOperationException ex)
     {
-        if (!OperationRequestExists(id))
-        {
-            return NotFound();
-        }
-        else
-        {
-            throw;
-        }
+        return BadRequest(ex.Message);
     }
-
-    // Notify the Planning Module (this can be an external service call)
-    NotifyPlanningModule(operationRequest);
-
-    return NoContent();
+    catch (Exception)
+    {
+        // Handle any other exceptions that may occur
+        return StatusCode(500, "An error occurred while processing your request.");
+    }
 }
 
-private void NotifyPlanningModule(OperationRequest operationRequest)
+private void NotifyPlanningModule(long operationRequestId)
 {
-    Console.WriteLine($"Notifying Planning Module: Operation request for patient {operationRequest.Patient.Id} has been deleted.");
+    Console.WriteLine($"Notifying Planning Module: Operation request {operationRequestId} has been deleted.");
 }
+
 
 }

@@ -46,6 +46,48 @@ public class OperationRequestRepository
         return await _context.Priorities.FindAsync(operationPriorityId);
     }
 
+
+
+public async Task<bool> DeleteOperationRequestByIdAsync(long id)
+{
+    // Retrieve the operation request by its ID, include related data
+    var operationRequest = await _context.Requests
+        .Include(r => r.Doctor)
+        .Include(r => r.Patient)
+        .FirstOrDefaultAsync(r => r.Id == id);
+
+    if (operationRequest == null)
+    {
+        return false; // Request not found
+    }
+
+    // Check if the operation has already been scheduled (based on the deadline)
+    if (!string.IsNullOrEmpty(operationRequest.Deadline) && 
+        DateTime.TryParse(operationRequest.Deadline, out var deadline) && 
+        deadline < DateTime.UtcNow)
+    {
+        throw new InvalidOperationException("Operation has already been scheduled and cannot be deleted.");
+    }
+
+    // Remove the operation request from the database
+    _context.Requests.Remove(operationRequest);
+
+    // Log the deletion event
+    var requestLog = new RequestsLog
+    {
+        RequestId = id,
+        ChangeDate = DateTime.UtcNow,
+        ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted."
+    };
+
+    _context.RequestsLogs.Add(requestLog);
+
+    // Save changes to the database
+    await _context.SaveChangesAsync();
+
+    return true; // Deletion successful
+}
+
     // =========================================================================
     // Operation priorities
     // =========================================================================
