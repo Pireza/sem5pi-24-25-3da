@@ -101,4 +101,36 @@ public class UserRepository
      return _context.Staff
             .FirstOrDefaultAsync(s => s.LicenseNumber == request.LicenseNumber || s.Phone == request.Phone || s.Email == request.Email);
     }
+
+    public async Task<Specialization?> specChange(long? specializationId)
+    {
+            return await _context.Specializations
+                .FirstOrDefaultAsync(s => s.SpecId == specializationId);
+    }
+
+        public bool StaffExists(long id)
+    {
+        return _context.Staff.Any(e => e.Id == id);
+    }
+
+    public async void LogAuditChangeAsyncStaff(long id, List<string> changes)
+    {
+         var auditLog = new AuditLogStaff
+        {
+            StaffId = id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = string.Join(", ", changes)
+        };
+        if (!changes.IsNullOrEmpty())
+        {
+            _context.AuditLogStaff.Add(auditLog);
+            await _context.SaveChangesAsync();
+    }
+}
+
+    public async Task<Staff> checkStaffEmail(string email){
+         return await _context.Staff
+        .FirstOrDefaultAsync(s => s.Email == email);
+
+    }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -148,8 +149,7 @@ public class StaffUserController : ControllerBase
     }
 
 
-
-    // PUT: api/Staffs/email/Admin{email}
+// PUT: api/Staffs/email/Admin{email}
     [HttpPut("email/UpdateStaffProfileAsAdmin{email}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> PutStaffUpdateAsAdmin(
@@ -161,8 +161,7 @@ public class StaffUserController : ControllerBase
         [FromQuery] string? role = null,
         [FromQuery] List<AvailabilitySlot>? availabilitySlots = null)
     {
-        var staff = await _context.Staff
-            .FirstOrDefaultAsync(s => s.Email == email);
+        var staff = await _repository.checkStaffEmail(email);
 
         if (staff == null)
         {
@@ -193,8 +192,7 @@ public class StaffUserController : ControllerBase
         // Handling Specialization change (assuming specialization is passed by ID)
         if (specializationId != null)
         {
-            var newSpecialization = await _context.Specializations
-                .FirstOrDefaultAsync(s => s.SpecId == specializationId);
+            var newSpecialization = await _repository.specChange(specializationId);
 
             if (newSpecialization != null && (staff.Specialization == null || staff.Specialization.SpecId != newSpecialization.SpecId))
             {
@@ -229,12 +227,11 @@ public class StaffUserController : ControllerBase
                 ChangeDescription = string.Join(", ", changes)
             };
 
-            _context.AuditLogStaff.Add(auditLog);
-            await _context.SaveChangesAsync();
+            _repository.LogAuditChangeAsync(staff.Id,changes);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!StaffExists(staff.Id))
+            if (!_repository.StaffExists(staff.Id))
             {
                 return NotFound();
             }
@@ -247,10 +244,6 @@ public class StaffUserController : ControllerBase
         return NoContent();
     }
 
-    private bool StaffExists(long id)
-    {
-        return _context.Staff.Any(e => e.Id == id);
-    }
 }
 
 
