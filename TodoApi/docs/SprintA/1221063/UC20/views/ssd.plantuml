@@ -1,0 +1,21 @@
+
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor "Admin" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : requests adding new operation type
+    activate System
+
+        System --> Employee : asks for required data
+    deactivate System
+
+    Employee -> System : inputs data
+    activate System
+
+        System --> Employee : displays operation success
+    deactivate System
+@enduml

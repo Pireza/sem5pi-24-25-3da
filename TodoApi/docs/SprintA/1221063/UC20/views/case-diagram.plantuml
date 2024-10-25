@@ -1,0 +1,11 @@
+@startuml Use case diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Admin" as u
+
+usecase "System" as UC2
+
+
+u --> UC2 : "I want to add new types of operations"
+@enduml

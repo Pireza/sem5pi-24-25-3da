@@ -1,0 +1,27 @@
+
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor "Backoffice\nUser" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : requests password reset
+    activate System
+
+        System --> Employee : asks for email
+    deactivate System
+
+    Employee -> System : types email
+    activate System
+
+        System --> Employee : sends reset password email
+    deactivate System
+
+    Employee -> System : chooses new password according to password policy
+    activate System
+
+        System --> Employee : displays operation success
+    deactivate System
+@enduml

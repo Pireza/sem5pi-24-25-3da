@@ -1,0 +1,21 @@
+
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor "Admin" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : requests list of operation types
+    activate System
+
+        System --> Employee : asks for filtering constraints
+    deactivate System
+
+    Employee -> System : types desired filter options (e.g. name, status)
+    activate System
+    
+        System --> Employee : displays operation success
+    deactivate System
+@enduml

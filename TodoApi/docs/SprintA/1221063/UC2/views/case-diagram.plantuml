@@ -1,0 +1,11 @@
+@startuml Use case diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Backoffice User" as u
+
+usecase "System" as UC2
+
+
+u --> UC2 : "I want to reset my password"
+@enduml

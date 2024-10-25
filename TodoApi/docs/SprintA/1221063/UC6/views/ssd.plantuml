@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor "Backoffice\nUser" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : requests for authentication
+    activate System
+
+        System --> Employee : asks for username and password
+    deactivate System
+
+    Employee -> System : types login credentials
+    activate System
+
+        System --> Employee : displays operation success
+    deactivate System
+@enduml

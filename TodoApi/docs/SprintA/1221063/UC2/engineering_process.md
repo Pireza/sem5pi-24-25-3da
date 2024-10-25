@@ -47,7 +47,7 @@ There is a dependency to US1 because in order to ask for a password reset email,
 
 #### Logic view
 
-![Logic View](views/level1-logic.svg)
+![Logic View](../UC1/views/level1-logic.svg)
 
 #### Scenario view
 
