@@ -12,4 +12,5 @@ public class CreateStaffRequest
     public string Phone { get; set; }
     public Specialization? Specialization { get; set; } // Optional, but it can be provided
     public List<AvailabilitySlot> AvailabilitySlots { get; set; } = new List<AvailabilitySlot>(); // Work schedule slots
+    public bool IsActive { get; set; } = true; 
 }

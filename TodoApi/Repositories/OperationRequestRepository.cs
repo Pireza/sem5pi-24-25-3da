@@ -11,18 +11,19 @@ public class OperationRequestRepository
     {
         _context = context;
     }
+    public OperationRequestRepository() { }
 
 
-    public async Task<OperationRequest> GetOperationRequestByIdAsync(long id)
+    public virtual async Task<OperationRequest> GetOperationRequestByIdAsync(long id)
     {
         return await _context.Requests.Include(r => r.Priority).Include(d => d.Doctor).FirstOrDefaultAsync(r => r.Id == id);
     }
-    public async Task UpdateOperationRequestAsync(OperationRequest operationRequest)
+    public virtual async Task UpdateOperationRequestAsync(OperationRequest operationRequest)
     {
         _context.Entry(operationRequest).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
-    public async Task LogRequestChangeAsync(long requestId, List<string> changes)
+    public virtual async Task LogRequestChangeAsync(long requestId, List<string> changes)
     {
         var requestLog = new RequestsLog
         {
@@ -41,7 +42,7 @@ public class OperationRequestRepository
 
     }
 
-    public async Task<OperationPriority> GetOperationPriorityByIdAsync(long operationPriorityId)
+    public virtual async Task<OperationPriority> GetOperationPriorityByIdAsync(long operationPriorityId)
     {
         return await _context.Priorities.FindAsync(operationPriorityId);
     }

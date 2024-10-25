@@ -137,7 +137,8 @@ public class StaffUserController : ControllerBase
             Specialization = request.Specialization,
             Email = request.Email,
             Role = request.Role,  // Optional field for role
-            AvailabilitySlots = request.AvailabilitySlots
+            AvailabilitySlots = request.AvailabilitySlots,
+            IsActive = true
         };
 
         // Add the new staff to the context and save changes to the database
@@ -242,6 +243,48 @@ public class StaffUserController : ControllerBase
         }
 
         return NoContent();
+    }
+
+// PUT: api/Staffs/deactivate/{id}
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPut("deactivate/{id}")]
+    public async Task<IActionResult> DeactivateStaff(long id)
+    {
+        var staff = await _repository.getStaff(id);
+        if (staff == null)
+        {
+            return NotFound("Staff member not found.");
+        }
+
+        if (!staff.IsActive)
+        {
+            return BadRequest("Staff member is already deactivated.");
+        }
+
+        staff.IsActive = false;
+
+        _context.Entry(staff).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+
+            var changes = new List<string> { "Staff profile deactivated" };
+            await _repository.LogAuditChangeAsync(staff.Id, changes);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_repository.StaffExists(staff.Id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return Ok("Staff member has been successfully deactivated.");
     }
 
 }
