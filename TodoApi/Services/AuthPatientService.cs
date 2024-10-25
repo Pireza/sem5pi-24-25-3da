@@ -175,7 +175,6 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
     {
 
     
-                await CreatePatientUser(model, password);
 
         // Validação do formato da data de nascimento
             if (!DateTime.TryParseExact(model.Birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
@@ -203,6 +202,7 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
 
         await _patientrepository.AddPatientAsync(patient);
 
+                await CreatePatientUser(model, password);
 
 
         Console.WriteLine("User has been successfully registered.");

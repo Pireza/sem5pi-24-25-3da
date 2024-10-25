@@ -65,9 +65,9 @@ public async Task GetPatientsByAttributes_IntegrationTest_WithIsolation_ReturnsP
             LastName = "Doe", 
             Email = "john@example.com", 
             Birthday = DateTime.Parse("1990-01-01"),
-            EmergencyContact = "Jane Doe", 
+            EmergencyContact = "966966967", 
             Gender = "Male", 
-            Phone = "1234567890", 
+            Phone = "966966966", 
             Role = "Patient", 
         UserName = "john.doe" 
         });
@@ -110,9 +110,9 @@ public async Task GetPatientsByAttributes_IntegrationTest_ReturnsPatientsByName(
             LastName = "Doe", 
             Email = "john@example.com", 
             Birthday = DateTime.Parse("1990-01-01"),
-            EmergencyContact = "Jane Doe", 
+            EmergencyContact = "966966967", 
             Gender = "Male", 
-            Phone = "1234567890" ,
+            Phone = "966966966" ,
             Role = "Patient", 
         UserName = "john.doe" 
         });
@@ -167,12 +167,15 @@ public async Task PutPatientByEmail_ReturnsNoContent_WhenPatientExists()
     var email = "john@example.com";
     var patient = new Patient
     {
-        Id = 1,
-        FirstName = "John",
-        LastName = "Doe",
-        Email = email,
-        Phone = "1234567890",
-        EmergencyContact = "Jane Doe"
+        FirstName = "John", 
+            LastName = "Doe", 
+            Email = email, 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
+            Role = "Patient", 
+        UserName = "john.doe" 
     };
 
     // Set up the repository mock to return the existing patient
@@ -216,12 +219,15 @@ public async Task PutPatientByEmail_ReturnsNoContent_WhenPatientExists()
         var email = "john@example.com";
         var patient = new Patient
         {
-            Id = 1,
-            FirstName = "John",
-            LastName = "Doe",
-            Email = email,
-            Phone = "1234567890",
-            EmergencyContact = "Jane Doe"
+            FirstName = "John", 
+            LastName = "Doe", 
+            Email = email, 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
+            Role = "Patient", 
+        UserName = "john.doe"
         };
 
         _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
@@ -229,11 +235,11 @@ public async Task PutPatientByEmail_ReturnsNoContent_WhenPatientExists()
         _repositoryMock.Setup(repo => repo.LogAuditChangeAsync(patient.Id, It.IsAny<List<string>>())).Returns(Task.CompletedTask);
 
         // Act
-        var result = await _controller.PutPatientByEmail(email, emergencyContact: "New Contact");
+        var result = await _controller.PutPatientByEmail(email, emergencyContact: "966966968");
 
         // Assert
         Assert.IsType<NoContentResult>(result);
-        Assert.Equal("New Contact", patient.EmergencyContact); // Check if the emergency contact was updated
+        Assert.Equal("966966968", patient.EmergencyContact); // Check if the emergency contact was updated
     }
     
     // UC4
@@ -244,12 +250,15 @@ public async Task PutPatientByEmail_ReturnsNoContent_WhenPatientExists()
         var email = "john@example.com";
         var patient = new Patient
         {
-            Id = 1,
-            FirstName = "John",
-            LastName = "Doe",
-            Email = email,
-            Phone = "1234567890",
-            EmergencyContact = "Jane Doe"
+            FirstName = "John", 
+            LastName = "Doe", 
+            Email = email, 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
+            Role = "Patient", 
+        UserName = "john.doe"
         };
 
         _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
@@ -279,15 +288,15 @@ public async Task PutPatientByEmail_IntegrationTest_WithIsolation_ReturnsNoConte
     {
         context.Patients.Add(new Patient
         {
-            Id = 1,
-            FirstName = "John",
-            LastName = "Doe",
-            Email = "john@example.com",
-            Phone = "1234567890",
-            EmergencyContact = "Jane Doe",
-            Gender = "Male",  
+             FirstName = "John", 
+            LastName = "Doe", 
+            Email = "john@example.com", 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
             Role = "Patient", 
-        UserName = "john.doe" 
+        UserName = "john.doe"
         });
         context.SaveChanges();
     }
@@ -324,15 +333,15 @@ public async Task DeletePatientByEmail_IntegrationTest_WithIsolation_ReturnsNoCo
     {
         context.Patients.Add(new Patient
         {
-            Id = 1L,
-            FirstName = "John",
-            LastName = "Doe",
-            Email = "john@example.com",
-            Phone = "1234567890",
-            EmergencyContact = "966966966",
-              Gender = "Male",  
+              FirstName = "John", 
+            LastName = "Doe", 
+            Email = "john@example.com", 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
             Role = "Patient", 
-        UserName = "john.doe" 
+        UserName = "john.doe"
         });
         context.SaveChanges();
     }
@@ -364,14 +373,14 @@ public async Task DeletePatientByEmail_UnitTest_UsingMock_ReturnsNoContent_WhenP
     var email = "john@example.com";
     var patient = new Patient
     {
-        Id = 1L,
-        FirstName = "John",
-        LastName = "Doe",
-        Email = email,
-        Phone = "1234567890",
-        EmergencyContact = "966966966",
-        Gender = "Male",
-        Role = "Patient",
+          FirstName = "John", 
+            LastName = "Doe", 
+            Email = "john@example.com", 
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967", 
+            Gender = "Male", 
+            Phone = "966966966" ,
+            Role = "Patient", 
         UserName = "john.doe"
     };
 
