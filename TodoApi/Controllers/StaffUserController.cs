@@ -286,7 +286,53 @@ public class StaffUserController : ControllerBase
 
         return Ok("Staff member has been successfully deactivated.");
     }
+    
+    [Authorize(Policy = "AdminOnly")]
+    [HttpGet("search")]
+    public async Task<ActionResult<IEnumerable<Staff>>> SearchStaff(
+        [FromQuery] string? name = null,
+        [FromQuery] string? email = null,
+        [FromQuery] string? specialization = null,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var query = _repository.GetStaffQueryable();
 
+        // Apply search filters
+        if (!string.IsNullOrEmpty(name))
+        {
+            query = query.Where(s => s.FirstName.Contains(name) || s.LastName.Contains(name));
+        }
+
+        if (!string.IsNullOrEmpty(email))
+        {
+            query = query.Where(s => s.Email.Contains(email));
+        }
+
+        if (!string.IsNullOrEmpty(specialization))
+        {
+            query = query.Where(s => s.Specialization != null && 
+                                    s.Specialization.SpecDescription.Contains(specialization));
+        }
+
+        // Paginate results
+        var paginatedResults = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(s => new
+            {
+                s.Id,
+                s.FirstName,
+                s.LastName,
+                s.Email,
+                Specialization = s.Specialization != null ? s.Specialization.SpecDescription : null
+            })
+            .ToListAsync();
+
+        // Return paginated staff profiles
+        return Ok(paginatedResults);
+    }
+    
 }
 
 

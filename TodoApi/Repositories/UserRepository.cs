@@ -133,4 +133,11 @@ public class UserRepository
         .FirstOrDefaultAsync(s => s.Email == email);
 
     }
+
+     public virtual IQueryable<Staff> GetStaffQueryable()
+    {
+        return _context.Staff.Include(s => s.Specialization).AsQueryable();
+    }
+
+
 }
