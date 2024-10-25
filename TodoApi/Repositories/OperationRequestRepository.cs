@@ -48,45 +48,45 @@ public class OperationRequestRepository
 
 
 
-public async Task<bool> DeleteOperationRequestByIdAsync(long id)
-{
-    // Retrieve the operation request by its ID, include related data
-    var operationRequest = await _context.Requests
-        .Include(r => r.Doctor)
-        .Include(r => r.Patient)
-        .FirstOrDefaultAsync(r => r.Id == id);
-
-    if (operationRequest == null)
+    public async Task<bool> DeleteOperationRequestByIdAsync(long id)
     {
-        return false; // Request not found
+        // Retrieve the operation request by its ID, include related data
+        var operationRequest = await _context.Requests
+            .Include(r => r.Doctor)
+            .Include(r => r.Patient)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (operationRequest == null)
+        {
+            return false; // Request not found
+        }
+
+        // Check if the operation has already been scheduled (based on the deadline)
+        if (!string.IsNullOrEmpty(operationRequest.Deadline) &&
+            DateTime.TryParse(operationRequest.Deadline, out var deadline) &&
+            deadline < DateTime.UtcNow)
+        {
+            throw new InvalidOperationException("Operation has already been scheduled and cannot be deleted.");
+        }
+
+        // Remove the operation request from the database
+        _context.Requests.Remove(operationRequest);
+
+        // Log the deletion event
+        var requestLog = new RequestsLog
+        {
+            RequestId = id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted."
+        };
+
+        _context.RequestsLogs.Add(requestLog);
+
+        // Save changes to the database
+        await _context.SaveChangesAsync();
+
+        return true; // Deletion successful
     }
-
-    // Check if the operation has already been scheduled (based on the deadline)
-    if (!string.IsNullOrEmpty(operationRequest.Deadline) && 
-        DateTime.TryParse(operationRequest.Deadline, out var deadline) && 
-        deadline < DateTime.UtcNow)
-    {
-        throw new InvalidOperationException("Operation has already been scheduled and cannot be deleted.");
-    }
-
-    // Remove the operation request from the database
-    _context.Requests.Remove(operationRequest);
-
-    // Log the deletion event
-    var requestLog = new RequestsLog
-    {
-        RequestId = id,
-        ChangeDate = DateTime.UtcNow,
-        ChangeDescription = $"Operation request for patient {operationRequest.Patient.Id} deleted."
-    };
-
-    _context.RequestsLogs.Add(requestLog);
-
-    // Save changes to the database
-    await _context.SaveChangesAsync();
-
-    return true; // Deletion successful
-}
 
     // =========================================================================
     // Operation priorities
@@ -116,49 +116,67 @@ public async Task<bool> DeleteOperationRequestByIdAsync(long id)
 
     public async Task<List<OperationTypeGetDTO>> FilterTypes(OperationTypeSearch search)
     {
-        var query = from ot in _context.Types
-                    join ots in _context.Type_Staff on ot.Id equals ots.OperationTypeId
-                    join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
-                    join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
-                    where
-                    (string.IsNullOrEmpty(search.Name) || ot.Name.Equals(search.Name)) &&
-                    ot.IsActive == search.IsActive &&
-                    // Only filter by specialization on the operation type level
-                    (string.IsNullOrEmpty(search.Specialization) || sp.SpecDescription.Equals(search.Specialization))
-                    select ot;
+        IQueryable<OperationType> query = _context.Types;
 
-        var operationTypes = await query.Distinct().ToListAsync();
-
-        // Step 2: For each matching OperationType, retrieve ALL associated SpecializedStaff
-        var result = new List<OperationTypeGetDTO>();
-
-        foreach (var operationType in operationTypes)
+        // Filter by Name
+        if (!string.IsNullOrEmpty(search.Name))
         {
-            // Retrieve all specialized staff for the current OperationType
-            var specializedStaffList = await (from ots in _context.Type_Staff
-                                              join ss in _context.SpecializedStaff on ots.SpecializedStaffId equals ss.Id
-                                              join sp in _context.Specializations on ss.SpecializationId equals sp.SpecId
-                                              where ots.OperationTypeId == operationType.Id
-                                              select new
-                                              {
-                                                  ss.Role,
-                                                  sp.SpecDescription
-                                              }).ToListAsync();
-
-            // Step 3: Construct the DTO
-            var dto = new OperationTypeGetDTO
-            {
-                Name = operationType.Name,
-                Duration = operationType.Duration,
-                SpecializedStaff = specializedStaffList
-                    .Select(s => $"{s.Role}:{s.SpecDescription}")
-                    .ToList()
-            };
-
-            result.Add(dto);
+            query = query.Where(ot => ot.Name.Contains(search.Name));
         }
+
+        // Filter by Status (-1 means no filter)
+        if (search.Status != -1)
+        {
+            query = query.Where(ot => ot.IsActive == (search.Status == 1));
+        }
+
+        // Filter by Specialization
+        if (!string.IsNullOrEmpty(search.Specialization))
+        {
+            query = query.Where(ot => _context.Type_Staff
+                .Any(ots => ots.OperationTypeId == ot.Id &&
+                            _context.SpecializedStaff
+                            .Where(ss => ss.Id == ots.SpecializedStaffId)
+                            .Any(ss => _context.Specializations
+                                .Any(s => s.SpecId == ss.SpecializationId &&
+                                          s.SpecDescription.Contains(search.Specialization))
+                            )
+                ));
+        }
+
+        // Fetch the results
+        var operationTypes = await query.ToListAsync();
+
+        // Map to DTO
+        var result = operationTypes.Select(ot => new OperationTypeGetDTO
+        {
+            Name = ot.Name,
+            Duration = ot.Duration,
+            IsActive = ot.IsActive,
+            SpecializedStaff = _context.Type_Staff
+                .Where(ots => ots.OperationTypeId == ot.Id)
+                .Select(ots => new
+                {
+                    Role = _context.SpecializedStaff
+                                .Where(ss => ss.Id == ots.SpecializedStaffId)
+                                .Select(ss => ss.Role)
+                                .FirstOrDefault(),
+                    Specialization = _context.Specializations
+                                .Where(s => s.SpecId == _context.SpecializedStaff
+                                                 .Where(ss => ss.Id == ots.SpecializedStaffId)
+                                                 .Select(ss => ss.SpecializationId)
+                                                 .FirstOrDefault())
+                                .Select(s => s.SpecDescription)
+                                .FirstOrDefault()
+                })
+                .Select(ss => $"{ss.Role} -> {ss.Specialization}")
+                .ToList()
+        }).ToList();
+
         return result;
     }
+
+
 
     public async Task<OperationType> GetTypeById(long id)
     {
@@ -246,61 +264,61 @@ public async Task<bool> DeleteOperationRequestByIdAsync(long id)
     }
 
     public async Task<bool> DeactivateOperationTypeAsync(long id)
-{
-    // Check if the operation type exists
-    var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
-
-    if (operationType == null)
     {
-        return false; // Operation type not found
-    }
+        // Check if the operation type exists
+        var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
 
-    if (!operationType.IsActive)
-    {
-        throw new InvalidOperationException("Operation type is already inactive."); // Already inactive
-    }
-
-    // Mark the operation type as inactive
-    operationType.IsActive = false;
-
-    _context.Entry(operationType).State = EntityState.Modified;
-
-    try
-    {
-        // Save the changes to the database
-        await _context.SaveChangesAsync();
-
-        // Log the deactivation (optional, for audit purposes)
-        var logEntry = new AuditLogOperationType
+        if (operationType == null)
         {
-            EntityId = operationType.Id,
-            EntityName = nameof(OperationType),
-            Action = "Deactivated",
-            ChangeDate = DateTime.UtcNow,
-            Description = $"Operation type '{operationType.Name}' deactivated by admin."
-        };
-
-        _context.AuditLogOperationTypes.Add(logEntry);
-        await _context.SaveChangesAsync();
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!await OperationTypeExistsAsync(id))
-        {
-            return false;
+            return false; // Operation type not found
         }
-        else
+
+        if (!operationType.IsActive)
         {
-            throw;
+            throw new InvalidOperationException("Operation type is already inactive."); // Already inactive
         }
+
+        // Mark the operation type as inactive
+        operationType.IsActive = false;
+
+        _context.Entry(operationType).State = EntityState.Modified;
+
+        try
+        {
+            // Save the changes to the database
+            await _context.SaveChangesAsync();
+
+            // Log the deactivation (optional, for audit purposes)
+            var logEntry = new AuditLogOperationType
+            {
+                EntityId = operationType.Id,
+                EntityName = nameof(OperationType),
+                Action = "Deactivated",
+                ChangeDate = DateTime.UtcNow,
+                Description = $"Operation type '{operationType.Name}' deactivated by admin."
+            };
+
+            _context.AuditLogOperationTypes.Add(logEntry);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await OperationTypeExistsAsync(id))
+            {
+                return false;
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return true;
     }
 
-    return true;
-}
-
-private async Task<bool> OperationTypeExistsAsync(long id)
-{
-    return await _context.Types.AnyAsync(e => e.Id == id);
-}
+    private async Task<bool> OperationTypeExistsAsync(long id)
+    {
+        return await _context.Types.AnyAsync(e => e.Id == id);
+    }
 
 }
