@@ -52,13 +52,20 @@ account.
 
 ### Level 1
 
-#### Scenario view
-
-![Case Diagram](views/case-diagram.svg)
 
 #### Logic view
 
 ![Logic View](views/level1-logic.svg)
+
+
+#### Scenario view
+
+![Case Diagram](views/case-diagram.svg)
+
+#### Process view
+
+![Sequence Diagram](views/sequence-diagram.svg)
+
 
 ### Level 2
 
@@ -66,9 +73,6 @@ account.
 
 ![Logic View](views/logic-view-lvl2.svg)
 
-#### Process view
-
-![Sequence Diagram](views/sequence-diagram.svg)
 
 ### Level 3
 

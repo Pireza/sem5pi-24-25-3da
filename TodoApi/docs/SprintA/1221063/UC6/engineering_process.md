@@ -41,39 +41,39 @@ There is a dependency to US1 because the user needs to be registered to log in t
 
 ### Level 1
 
+#### Logic view
+
+![Logic View](../UC1/views/level1-logic.svg)
+
 #### Scenario view
 
 ![Case Diagram](views/case-diagram.svg)
-
-#### Logic view
-
-![Logic View](views/level1-logic.svg)
-
-### Level 2
-
-#### Logic View
-
-![Logic View](views/logic-view-lvl2.svg)
 
 #### Process view
 
 ![Sequence Diagram](views/sequence-diagram.svg)
 
+### Level 2
+
+#### Logic View
+
+![Logic View](../UC1/views/logic-view-lvl2.svg)
+
 ### Level 3
 
 #### Logic view
 
-![Logic View](views/logic-view-lvl3.svg)
+![Logic View](../UC1/views/logic-view-lvl3.svg)
 
 
 #### Development view
 
-![Development View](views/dev-view-lvl3.svg)
+![Development View](../UC1/views/dev-view-lvl3.svg)
 
 ### Level 4
 
 #### Logic view
 
-![Logic View](views/logic-view-lvl4.svg)
+![Logic View](../UC1/views/logic-view-lvl4.svg)
 
 
