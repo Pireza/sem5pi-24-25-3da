@@ -21,7 +21,7 @@ public class OperationRequestsControllerUnitTests
 
         // Setup in-memory database
         var options = new DbContextOptionsBuilder<UserContext>()
-            .UseInMemoryDatabase(databaseName: "TestDatabaseDoctor")
+            .UseInMemoryDatabase(databaseName: "TestDatabaseDoctor2")
             .Options;
 
         _context = new UserContext(options);
@@ -73,6 +73,7 @@ public class OperationRequestsControllerUnitTests
         // Optional: You can also check the properties of the createdAtActionResult if necessary
         Assert.Equal("GetType", createdAtActionResult.ActionName);
     }
+    //UC17
     [Fact]
     public async Task UpdateOperationRequest_ReturnsNotFound_WhenRequestDoesNotExist()
     {
@@ -85,6 +86,7 @@ public class OperationRequestsControllerUnitTests
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
+    //UC17
 
     [Fact]
     public async Task UpdateOperationRequest_UpdatesRequest_WhenAuthorized()
@@ -94,27 +96,28 @@ public class OperationRequestsControllerUnitTests
         var doctor = new Staff { Email = doctorEmail, Role = "Doctor", UserName = "john.doe" };
 
         // Seed the in-memory database
-        _context.Requests.Add(new OperationRequest
-        {
-            Id = 1,
-            Doctor = doctor,
-            Patient = new Patient
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "john@example.com",
-                Birthday = DateTime.Parse("1990-01-01"),
-                EmergencyContact = "Jane Doe",
-                Gender = "Male",
-                Phone = "1234567890",
-                Role = "Patient",
-                UserName = "john.doe"
-            },
-            OperationType = new OperationType("test", "01:00:00", "active"),
-            Deadline = "2024-12-31",
-            Status = "Pending",
-            Priority = new OperationPriority { Id = 1, Priority = 1, Description = "High" }
-        });
+       
+_context.Requests.Add(new OperationRequest
+{
+    Id = 1,
+    Doctor = doctor,
+    Patient = new Patient
+    {
+        FirstName = "John",
+        LastName = "Doe",
+        Email = "john@example.com",
+        Birthday = DateTime.Parse("1990-01-01"),
+        EmergencyContact = "966966967",
+        Gender = "Male",
+        Phone = "966966966",
+        Role = "Patient", // Explicitly setting Role to "Patient"
+        UserName = "john.doe"
+    },
+    OperationType = new OperationType("test", "01:00:00", "active"),
+    Deadline = "2024-12-31",
+    Status = "Pending",
+    Priority = new OperationPriority { Id = 1, Priority = 1, Description = "High" }
+});
         _context.SaveChanges();
 
         // Seed a new operation priority for the test
@@ -131,6 +134,7 @@ public class OperationRequestsControllerUnitTests
         Assert.Equal(2, updatedRequest.Priority.Id); // Check that the priority ID has been updated
         Assert.Equal("2025-01-01", updatedRequest.Deadline); // Check that the deadline is updated
     }
+    //UC17
 
     [Fact]
     public async Task UpdateOperationRequest_UsesMockRepository()
@@ -165,9 +169,9 @@ public class OperationRequestsControllerUnitTests
                 LastName = "Doe",
                 Email = "john@example.com",
                 Birthday = DateTime.Parse("1990-01-01"),
-                EmergencyContact = "Jane Doe",
+                EmergencyContact = "966966967",
                 Gender = "Male",
-                Phone = "1234567890",
+                Phone = "966966966",
                 Role = "Patient",
                 UserName = "john.doe"
             },

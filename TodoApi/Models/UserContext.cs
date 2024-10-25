@@ -53,6 +53,10 @@ public class UserContext : DbContext
        modelBuilder.Entity<OperationType_Staff>()
             .HasKey(ots => new { ots.OperationTypeId, ots.SpecializedStaffId });
 
+    modelBuilder.Entity<Patient>()
+        .Property(p => p.Role)
+        .HasDefaultValue("Patient");
+
       
         modelBuilder.Entity<Patient>()
             .HasMany(p => p.Appointments); // A patient has many appointments
