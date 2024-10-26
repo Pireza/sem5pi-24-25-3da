@@ -264,6 +264,53 @@ public class OperationRequestRepository
         return result;
     }
 
+        public async Task<OperationType> UpdateOperationTypeAsync(long id, OperationTypeDTO dto)
+    {
+        var operationType = await _context.Types.FindAsync(id);
+        
+        if (operationType == null)
+        {
+            throw new NotFoundResource("Operation type not found.");
+        }
+
+        // Update the properties
+        operationType.Name = dto.Name;
+        operationType.Duration = dto.Duration;
+        
+        // Clear current associations and re-add them
+        var existingStaff = _context.Type_Staff.Where(ots => ots.OperationTypeId == id);
+        _context.Type_Staff.RemoveRange(existingStaff);
+
+        foreach (var staffId in dto.Staff)
+        {
+            var association = new OperationType_Staff
+            {
+                SpecializedStaffId = staffId,
+                OperationTypeId = operationType.Id
+            };
+            _context.Type_Staff.Add(association);
+        }
+
+        // Save the changes
+        await _context.SaveChangesAsync();
+
+        // Log the update action
+        var logEntry = new AuditLogOperationType
+        {
+            EntityId = operationType.Id,
+            EntityName = nameof(OperationType),
+            Action = "Updated",
+            ChangeDate = DateTime.UtcNow,
+            Description = $"Operation type '{operationType.Name}' updated by admin."
+        };
+
+        _context.AuditLogOperationTypes.Add(logEntry);
+        await _context.SaveChangesAsync();
+
+        return operationType;
+    }
+
+
     public async Task<bool> DeactivateOperationTypeAsync(long id)
     {
         // Check if the operation type exists
