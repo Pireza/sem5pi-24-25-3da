@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-using TodoApi.Services; // Ensure to include this namespace
+using TodoApi.Services; 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -654,7 +654,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         // DELETE: api/Patients/email/{email}
         [HttpDelete("deleteUserByEmail/{email}")]
         [Authorize(Policy = "PatientOnly")]
-        public async Task<IActionResult> DeletePatientByEmail(string email)
+        public async Task<IActionResult> DeletePatientByEmai(string email)
         {
             var patient = await _repository.GetPatientByEmailAsync(email);
             if (patient == null)
@@ -676,5 +676,33 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         {
             return _context.Patients.Any(e => e.Id == id);
         }
+    
+
+    // DELETE: api/Patients/email/{email}
+    [HttpDelete("email/{email}/delete")]
+    [Authorize(Policy = "AdminOnly")]
+    public async Task<IActionResult> DeletePatientByEmail(string email)
+    {
+        // Find the patient by email
+        var patient = await _repository.GetPatientByEmailAsync(email);
+        if (patient == null)
+        {
+            return NotFound("Patient not found.");
+        }
+
+        // Log the deletion request
+        await _repository.AddAuditLogForDeletionAsync(email);
+        
+        // Log permanent deletion
+        await _repository.LogAuditForPermanentDeletionAsync(email);
+
+        // Remove the patient from the database
+        _context.Patients.Remove(patient);
+        await _context.SaveChangesAsync();
+
+        return NoContent(); // Respond with 204 No Content
     }
+}
+
+
 }

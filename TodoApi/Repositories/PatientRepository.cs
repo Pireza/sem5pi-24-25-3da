@@ -47,23 +47,6 @@ private void MarkPatientAsModified(Patient patient)
 {
     _context.Entry(patient).State = EntityState.Modified;
 }
-public async Task AddAuditLogForDeletionAsync(string email)
-{
-    var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
-    
-    if (patient != null)
-    {
-        var auditLog = new AuditLog
-        {
-            PatientId = patient.Id,
-            ChangeDate = DateTime.UtcNow,
-            ChangeDescription = $"Patient with Email {email} will be deleted in 30 days."
-        };
-        
-        _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
-    }
-}
 public IQueryable<Patient> GetPatientsQueryable()
 {
     var query = _context.Patients.AsQueryable();
@@ -75,6 +58,42 @@ public IQueryable<Patient> GetPatientsQueryable()
     {
         return await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
+    }
+
+    public async Task AddAuditLogForDeletionAsync(string email)
+    {
+        var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+        
+        if (patient != null)
+        {
+            var auditLog = new AuditLog
+            {
+                PatientId = patient.Id,
+                ChangeDate = DateTime.UtcNow,
+                ChangeDescription = $"Patient with Email {email} will be deleted in 30 days."
+            };
+            
+            _context.AuditLogs.Add(auditLog);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task LogAuditForPermanentDeletionAsync(string email)
+    {
+        var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+        
+        if (patient != null)
+        {
+            var auditLog = new AuditLog
+            {
+                PatientId = patient.Id,
+                ChangeDate = DateTime.UtcNow,
+                ChangeDescription = $"Patient with Email {email} has been permanently deleted."
+            };
+            
+            _context.AuditLogs.Add(auditLog);
+            await _context.SaveChangesAsync();
+        }
     }
 
 }

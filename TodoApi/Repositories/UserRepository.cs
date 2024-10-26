@@ -139,5 +139,23 @@ public class UserRepository
         return _context.Staff.Include(s => s.Specialization).AsQueryable();
     }
 
+       public async Task LogAuditForPermanentDeletionAsync(string email)
+    {
+        var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
+        
+        if (patient != null)
+        {
+            var auditLog = new AuditLog
+            {
+                PatientId = patient.Id,
+                ChangeDate = DateTime.UtcNow,
+                ChangeDescription = $"Patient with Email {email} has been permanently deleted."
+            };
+            
+            _context.AuditLogs.Add(auditLog);
+            await _context.SaveChangesAsync();
+        }
+    }
+
 
 }
