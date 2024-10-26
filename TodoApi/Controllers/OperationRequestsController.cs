@@ -19,6 +19,70 @@ public class OperationRequestsController : ControllerBase
         _repository=repository;
     }
 
+    // POST: api/OperationRequests
+    [HttpPost]
+    [Authorize(Policy = "DoctorOnly")]
+    public async Task<IActionResult> CreateOperationRequest(
+        [FromBody] OperationRequestCreateDTO requestDto)
+    {
+        // Retrieve the logged-in doctor's email and validate their identity
+        var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        loggedInDoctorEmail = loggedInDoctorEmail?.Split('|').LastOrDefault();
+        
+        if (string.IsNullOrEmpty(loggedInDoctorEmail))
+        {
+            return Unauthorized("Doctor's identity could not be confirmed.");
+        }
+
+        // Fetch the doctor from the repository using the email
+        var doctor = await _repository.GetDoctorByEmailAsync(loggedInDoctorEmail);
+        if (doctor == null)
+        {
+            return Unauthorized("Doctor not found.");
+        }
+
+        // Ensure the selected operation type matches the doctor's specialization
+        var operationType = await _repository.GetOperationTypeByIdAsync(requestDto.OperationTypeId);
+        if (operationType == null || operationType.Specialization != doctor.Specialization)
+        {
+            return BadRequest("Selected operation type does not match the doctor's specialization.");
+        }
+
+        // Validate the patient ID exists in the system
+        var patient = await _repository.GetPatientByIdAsync(requestDto.PatientId);
+        if (patient == null)
+        {
+            return BadRequest("Patient not found.");
+        }
+
+        // Create the operation request object
+        var operationRequest = new OperationRequest
+        {
+            Patient = patient,
+            Doctor = doctor,
+            OperationType = operationType,
+            Deadline = requestDto.Deadline,
+            Priority = requestDto.PriorityId,
+            Status = "Pending"
+        };
+
+        // Add the operation request to the repository
+        await _repository.AddOperationRequestAsync(operationRequest);
+
+        // Log the request in the patient's medical history
+        var requestLog = new RequestsLog
+        {
+            RequestId = operationRequest.Id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = $"Operation request created by Doctor {doctor.FirstName} for Patient {patient.FirstName}."
+        };
+        await _repository.LogRequestChangeAsync(operationRequest.Id, new List<string> { requestLog.ChangeDescription });
+
+        // Return a success response with the created operation request's details
+        return CreatedAtAction(nameof(_repository.GetOperationRequestByIdAsync), new { id = operationRequest.Id }, operationRequest);
+    }
+
+
     // PUT: api/OperationRequests/{id}
     [HttpPut("{id}")]
     [Authorize(Policy = "DoctorOnly")]

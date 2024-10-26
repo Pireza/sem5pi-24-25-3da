@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.Models;
 
 [Index(nameof(Name), IsUnique = true)]
 public class OperationType
@@ -9,6 +10,7 @@ public class OperationType
     public string Duration { get; set; }
     public string Status { get; set; }
     public bool IsActive { get; set; } = true; // Add an IsActive flag
+    public Specialization? Specialization { get; set; }
     public OperationType() { }
     public OperationType(string Name, string Duration, string Status)
     {
