@@ -351,7 +351,7 @@ public async Task DeletePatientByEmail_IntegrationTest_WithIsolation_ReturnsNoCo
     var controller = new PatientsController(null, null, null, repository);
 
     // Act
-    var result = await controller.DeletePatientByEmai("john@example.com");
+    var result = await controller.DeletePatientByEmail("john@example.com");
 
     // Assert
     Assert.IsType<NoContentResult>(result); // Check for No Content response
@@ -390,7 +390,7 @@ public async Task DeletePatientByEmail_UnitTest_UsingMock_ReturnsNoContent_WhenP
     _repositoryMock.Setup(repo => repo.UpdatePatientAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
 
     // Act
-    var result = await _controller.DeletePatientByEmai(email);
+    var result = await _controller.DeletePatientByEmail(email);
 
     // Assert
     Assert.IsType<NoContentResult>(result); // Check for No Content response
@@ -411,7 +411,7 @@ public async Task DeletePatientByEmail_UnitTest_ReturnsNotFound_WhenPatientDoesN
     _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync((Patient)null);
 
     // Act
-    var result = await _controller.DeletePatientByEmai(email);
+    var result = await _controller.DeletePatientByEmail(email);
 
     // Assert
     Assert.IsType<NotFoundResult>(result); // Check for Not Found response
