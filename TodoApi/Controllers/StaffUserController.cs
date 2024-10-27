@@ -305,18 +305,15 @@ public class StaffUserController : ControllerBase
         {
             query = query.Where(s => s.FirstName.Contains(name) || s.LastName.Contains(name));
         }
-
         if (!string.IsNullOrEmpty(email))
         {
             query = query.Where(s => s.Email.Contains(email));
         }
-
         if (!string.IsNullOrEmpty(specialization))
         {
             query = query.Where(s => s.Specialization != null && 
                                     s.Specialization.SpecDescription.Contains(specialization));
         }
-
         // Paginate results
         var paginatedResults = await query
             .Skip((pageNumber - 1) * pageSize)
@@ -330,7 +327,6 @@ public class StaffUserController : ControllerBase
                 Specialization = s.Specialization != null ? s.Specialization.SpecDescription : null
             })
             .ToListAsync();
-
         // Return paginated staff profiles
         return Ok(paginatedResults);
     }
