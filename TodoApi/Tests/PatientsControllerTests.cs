@@ -421,9 +421,7 @@ public async Task DeletePatientByEmail_UnitTest_ReturnsNotFound_WhenPatientDoesN
     _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.IsAny<Patient>()), Times.Never); // Ensure update method was not called
 }
 
-//UC8
-
-
+// UC8 - Unit Tests for CreatePatientAsAdmin
 [Fact]
 public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenRequiredFieldsAreMissing()
 {
@@ -431,7 +429,11 @@ public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenRequiredFieldsAreMi
     var request = new CreatePatientRequest
     {
         FirstName = "", // Missing required field
-        LastName = "Doe"
+        LastName = "Doe",
+        Birthday = "10/10/1990",
+        Phone = "123456789",
+        EmergencyContact = "987654321",
+        Gender = "Male"
     };
 
     // Act
@@ -450,7 +452,10 @@ public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenInvalidDateFormat()
     {
         FirstName = "John",
         LastName = "Doe",
-        Birthday = "1990-01-01" // Invalid format
+        Birthday = "1990-01-01", // Invalid format
+        Phone = "123456789",
+        EmergencyContact = "987654321",
+        Gender = "Male"
     };
 
     // Act
@@ -461,8 +466,51 @@ public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenInvalidDateFormat()
     Assert.Equal("Invalid date format. Use DD/MM/YYYY.", ((BadRequestObjectResult)result.Result).Value);
 }
 
+[Fact]
+public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenPhoneOrEmergencyContactIsMissing()
+{
+    // Arrange
+    var request = new CreatePatientRequest
+    {
+        FirstName = "John",
+        LastName = "Doe",
+        Birthday = "10/10/1990",
+        Phone = "", // Missing phone
+        EmergencyContact = "987654321",
+        Gender = "Male"
+    };
 
-//US9
+    // Act
+    var result = await _controller.CreatePatientAsAdmin(request);
 
+    // Assert
+    Assert.IsType<BadRequestObjectResult>(result.Result);
+    Assert.Equal("The phone number and emergency contact should be provided.", ((BadRequestObjectResult)result.Result).Value);
+}
 
+[Fact]
+public async Task CreatePatientAsAdmin_ReturnsConflict_WhenPatientAlreadyExists()
+{
+    // Arrange
+    var request = new CreatePatientRequest
+    {
+        FirstName = "John",
+        LastName = "Doe",
+        Birthday = "10/10/1990",
+        Phone = "123456789",
+        EmergencyContact = "987654321",
+        Gender = "Male",
+        Email = "john@example.com",
+        MedicalNumber = 12345
+    };
+
+    _repositoryMock.Setup(repo => repo.checkEmail(request)).ReturnsAsync(new Patient());
+
+    // Act
+    var result = await _controller.CreatePatientAsAdmin(request);
+
+    // Assert
+    Assert.IsType<ConflictObjectResult>(result.Result);
+    Assert.Equal("A patient with the same medical number or email already exists.", ((ConflictObjectResult)result.Result).Value);
+}
 }
