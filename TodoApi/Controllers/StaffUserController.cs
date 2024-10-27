@@ -16,11 +16,13 @@ public class StaffUserController : ControllerBase
     private readonly UserContext _context;
     private UserRepository _repository;
 
-    public StaffUserController(Auth0UserService auth0Service, PasswordGeneratorService passService, UserContext context)
+    public StaffUserController(Auth0UserService auth0Service, PasswordGeneratorService passService, UserContext context, UserRepository repository)
     {
         _auth0Service = auth0Service;
         _passService = passService;
         _context = context;
+        _repository = repository;
+
     }
 
     // GET: api/Staff/{id}
@@ -286,6 +288,7 @@ public class StaffUserController : ControllerBase
 
         return Ok("Staff member has been successfully deactivated.");
     }
+    
     
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("search")]
