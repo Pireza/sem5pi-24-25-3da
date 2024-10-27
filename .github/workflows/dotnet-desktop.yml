@@ -70,10 +70,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # Execute all unit tests
     - name: Execute unit tests
       run: dotnet test
-      working-directory: ./sem5pi-24-25-3da/TodoApi  # Adjust based on the root directory of your project
+      working-directory: ./TodoApi/tests
+
 
     # Restore the application
     - name: Restore dependencies
