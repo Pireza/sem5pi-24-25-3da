@@ -21,6 +21,7 @@ public class StaffUserController : ControllerBase
         _auth0Service = auth0Service;
         _passService = passService;
         _context = context;
+        _repository = repository;
     }
 
     // GET: api/Staff/{id}
@@ -245,7 +246,7 @@ public class StaffUserController : ControllerBase
         return NoContent();
     }
 
-// PUT: api/Staffs/deactivate/{id}
+    // PUT: api/Staffs/deactivate/{id}
     [Authorize(Policy = "AdminOnly")]
     [HttpPut("deactivate/{id}")]
     public async Task<IActionResult> DeactivateStaff(long id)
