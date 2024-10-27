@@ -421,4 +421,128 @@ public async Task DeletePatientByEmail_UnitTest_ReturnsNotFound_WhenPatientDoesN
     _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.IsAny<Patient>()), Times.Never); // Ensure update method was not called
 }
 
+// UC10 - Unit Test for Deleting a Patient by Email
+[Fact]
+public async Task DeletePatientByEmailAsAdmin_UnitTest_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var email = "john@example.com";
+    var patient = new Patient
+    {
+        FirstName = "John",
+        LastName = "Doe",
+        Email = email,
+        Birthday = DateTime.Parse("1990-01-01"),
+        EmergencyContact = "966966967",
+        Gender = "Male",
+        Phone = "966966966",
+        Role = "Patient",
+        UserName = "john.doe"
+    };
+
+    // Set up the repository mock to return the existing patient
+    _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync(patient);
+    _repositoryMock.Setup(repo => repo.AddAuditLogForDeletionAsync(email)).Returns(Task.CompletedTask);
+    _repositoryMock.Setup(repo => repo.UpdatePatientAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
+
+    // Act
+    var result = await _controller.DeletePatientByEmailAsAdmin(email);
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+
+    // Verify that the patient was marked for deletion
+    _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.Is<Patient>(p => p.Email == email && p.PendingDeletionDate != null)), Times.Once);
+    _repositoryMock.Verify(repo => repo.AddAuditLogForDeletionAsync(email), Times.Once); // Ensure that the audit log method was called
+}
+
+// UC10 - Unit Test for Attempting to Delete a Non-Existing Patient
+[Fact]
+public async Task DeletePatientByEmailAsAdmin_UnitTest_ReturnsNotFound_WhenPatientDoesNotExist()
+{
+    // Arrange
+    var email = "nonexistent@example.com";
+
+    // Set up the repository mock to return null for the non-existent patient
+    _repositoryMock.Setup(repo => repo.GetPatientByEmailAsync(email)).ReturnsAsync((Patient)null);
+
+    // Act
+    var result = await _controller.DeletePatientByEmailAsAdmin(email);
+
+    // Assert
+    var notFoundResult = Assert.IsType<NotFoundObjectResult>(result); // Change to NotFoundObjectResult
+    Assert.Equal("Patient not found.", notFoundResult.Value); // Check if the returned message is correct
+
+    // Verify that no other methods were called
+    _repositoryMock.Verify(repo => repo.AddAuditLogForDeletionAsync(email), Times.Never); // Ensure audit log method was not called
+    _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.IsAny<Patient>()), Times.Never); // Ensure update method was not called
+}
+
+// UC10 - Integration Test for Deleting a Patient by Email
+[Fact]
+public async Task DeletePatientByEmailAsAdmin_IntegrationTest_WithIsolation_ReturnsNoContent_WhenPatientExists()
+{
+    // Arrange
+    var options = new DbContextOptionsBuilder<UserContext>()
+        .UseInMemoryDatabase(databaseName: "IsolationDeletePatientTestDb") // Unique name for this test
+        .Options;
+
+    // Seed the in-memory database
+    using (var context = new UserContext(options))
+    {
+        context.Patients.Add(new Patient
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john@example.com",
+            Birthday = DateTime.Parse("1990-01-01"),
+            EmergencyContact = "966966967",
+            Gender = "Male",
+            Phone = "966966966",
+            Role = "Patient",
+            UserName = "john.doe"
+        });
+        context.SaveChanges();
+    }
+
+    // Setup repository with the seeded database
+    var repository = new UserRepository(new UserContext(options));
+    var controller = new PatientsController(null, null, null, repository);
+
+    // Act
+    var result = await controller.DeletePatientByEmailAsAdmin("john@example.com");
+
+    // Assert
+    Assert.IsType<NoContentResult>(result); // Check for No Content response
+
+    // Verify the patient was marked for deletion
+    using (var context = new UserContext(options))
+    {
+        var deletedPatient = await context.Patients.FirstOrDefaultAsync(p => p.Email == "john@example.com");
+        Assert.NotNull(deletedPatient); // Ensure the patient exists
+        Assert.NotNull(deletedPatient.PendingDeletionDate); // Ensure the deletion date is set
+    }
+}
+
+// UC10 - Integration Test for Deleting a Non-Existing Patient
+[Fact]
+public async Task DeletePatientByEmailAsAdmin_IntegrationTest_ReturnsNotFound_WhenPatientDoesNotExist()
+{
+    // Arrange
+    var options = new DbContextOptionsBuilder<UserContext>()
+        .UseInMemoryDatabase(databaseName: "NoPatientsDb") // Unique name for this test
+        .Options;
+
+    // Setup repository with the seeded database
+    var repository = new UserRepository(new UserContext(options));
+    var controller = new PatientsController(null, null, null, repository);
+
+    // Act
+    var result = await controller.DeletePatientByEmailAsAdmin("nonexistent@example.com");
+
+    // Assert
+    Assert.IsType<NotFoundObjectResult>(result); // Check for Not Found response
+}
+
+
 }
