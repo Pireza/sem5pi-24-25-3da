@@ -21,8 +21,6 @@ public class StaffUserController : ControllerBase
         _auth0Service = auth0Service;
         _passService = passService;
         _context = context;
-        _repository = repository;
-
     }
 
     // GET: api/Staff/{id}
