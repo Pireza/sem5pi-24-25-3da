@@ -654,7 +654,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         // DELETE: api/Patients/email/{email}
         [HttpDelete("deleteUserByEmail/{email}")]
         [Authorize(Policy = "PatientOnly")]
-        public async Task<IActionResult> DeletePatientByEmai(string email)
+        public async Task<IActionResult> DeletePatientByEmail(string email)
         {
             var patient = await _repository.GetPatientByEmailAsync(email);
             if (patient == null)
@@ -679,9 +679,9 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
     
 
     // DELETE: api/Patients/email/{email}
-    [HttpDelete("email/{email}/delete")]
+    [HttpDelete("deleteUserByEmailAsAdmin/{email}/delete")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> DeletePatientByEmail(string email)
+    public async Task<IActionResult> DeletePatientByEmailAsAdmin(string email)
     {
         // Find the patient by email
         var patient = await _repository.GetPatientByEmailAsync(email);
@@ -690,15 +690,14 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             return NotFound("Patient not found.");
         }
 
+        patient.PendingDeletionDate = DateTime.UtcNow;
+
+
         // Log the deletion request
         await _repository.AddAuditLogForDeletionAsync(email);
-        
-        // Log permanent deletion
-        await _repository.LogAuditForPermanentDeletionAsync(email);
 
-        // Remove the patient from the database
-        _context.Patients.Remove(patient);
-        await _context.SaveChangesAsync();
+        // Update Patient 
+        await _repository.UpdatePatientAsync(patient);
 
         return NoContent(); // Respond with 204 No Content
     }
