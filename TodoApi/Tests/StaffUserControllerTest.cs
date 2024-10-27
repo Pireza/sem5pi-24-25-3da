@@ -134,18 +134,83 @@ using Xunit;
             Assert.Equal(2, returnedStaff.Count);
         }
 
-        [Fact]
-        public async Task SearchStaff_ReturnsEmptyList_WhenNoStaffMatchesFilters()
-        {
-            var options = CreateNewContextOptions();
-            var context = new UserContext(options);
-            await SeedDataAsync(context);
-            _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
 
-            var result = await _controller.SearchStaff(name: "NonExistent");
+    [Fact]
+    public async Task SearchStaff_ReturnsPaginatedResults()
+    {
+        var options = CreateNewContextOptions();
+        var context = new UserContext(options);
+        await SeedDataAsync(context);
+        _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
-            Assert.Empty(returnedStaff); // Expecting an empty list
-        }
+        var result = await _controller.SearchStaff(pageNumber: 1, pageSize: 2); // First page with 2 items
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
+        Assert.Equal(2, returnedStaff.Count); // Expecting 2 items on the first page
     }
+
+    [Fact]
+    public async Task SearchStaff_ReturnsPaginatedResults_SecondPage()
+    {
+        var options = CreateNewContextOptions();
+        var context = new UserContext(options);
+        await SeedDataAsync(context);
+        _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
+
+        var result = await _controller.SearchStaff(pageNumber: 2, pageSize: 2); // Second page with 2 items
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
+        Assert.Equal(2, returnedStaff.Count); // Expecting 2 items on the second page
+    }
+
+    [Fact]
+    public async Task SearchStaff_ReturnsFilteredResults_WhenMultipleFiltersProvided()
+    {
+        var options = CreateNewContextOptions();
+        var context = new UserContext(options);
+        await SeedDataAsync(context);
+        _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
+
+        var result = await _controller.SearchStaff(name: "John", specialization: "Cardiology");
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
+        Assert.Single(returnedStaff);
+        Assert.Equal("John", returnedStaff.First().FirstName);
+    }
+
+    [Fact]
+    public async Task SearchStaff_UsesDefaultPagination_WhenNotSpecified()
+    {
+        var options = CreateNewContextOptions();
+        var context = new UserContext(options);
+        await SeedDataAsync(context);
+        _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
+
+        var result = await _controller.SearchStaff();
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
+        Assert.Equal(10, returnedStaff.Count); // Expecting default page size of 10
+    }
+
+    // Existing tests...
+    
+    [Fact]
+    public async Task SearchStaff_ReturnsEmptyList_WhenNoStaffMatchesFilters()
+    {
+        var options = CreateNewContextOptions();
+        var context = new UserContext(options);
+        await SeedDataAsync(context);
+        _repositoryMock.Setup(repo => repo.GetStaffQueryable()).Returns(context.Staff.AsQueryable());
+
+        var result = await _controller.SearchStaff(name: "NonExistent");
+
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedStaff = Assert.IsAssignableFrom<List<Staff>>(okResult.Value);
+        Assert.Empty(returnedStaff); // Expecting an empty list
+    }
+    
+}
