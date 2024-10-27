@@ -42,8 +42,7 @@ public class OperationTypeController : ControllerBase
         }
     }
 
-   // PUT: api/OperationType/deactivate/{id}
-[HttpDelete("removeOperationTypeAsAdmin{id}")]
+[HttpDelete("removeOperationTypeAsAdmin/{id}")] // Correcting route to be DELETE and using path variable
 [Authorize(Policy = "AdminOnly")]
 public async Task<IActionResult> DeactivateOperationType(long id)
 {
@@ -54,19 +53,22 @@ public async Task<IActionResult> DeactivateOperationType(long id)
 
         if (!deactivated)
         {
-            return NotFound(); // Operation type not found or doesn't exist
+            return NotFound("Operation type not found or does not exist."); // Provide a message with NotFound
         }
 
-        return NoContent();
+        return NoContent(); // Return No Content status on success
     }
     catch (InvalidOperationException ex)
     {
-        return BadRequest(ex.Message);
+        return BadRequest($"Invalid operation: {ex.Message}"); // Provide more context in the response
     }
-    catch (Exception)
+    catch (Exception ex) // Catch all other exceptions
     {
-        // Handle any other exceptions that may occur
+        // Log the exception here (you can use a logging framework)
+        // e.g., _logger.LogError(ex, "An error occurred while deactivating operation type");
         return StatusCode(500, "An error occurred while processing your request.");
     }
 }
+
+
 }

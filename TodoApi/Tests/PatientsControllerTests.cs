@@ -421,4 +421,48 @@ public async Task DeletePatientByEmail_UnitTest_ReturnsNotFound_WhenPatientDoesN
     _repositoryMock.Verify(repo => repo.UpdatePatientAsync(It.IsAny<Patient>()), Times.Never); // Ensure update method was not called
 }
 
+//UC8
+
+
+[Fact]
+public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenRequiredFieldsAreMissing()
+{
+    // Arrange
+    var request = new CreatePatientRequest
+    {
+        FirstName = "", // Missing required field
+        LastName = "Doe"
+    };
+
+    // Act
+    var result = await _controller.CreatePatientAsAdmin(request);
+
+    // Assert
+    Assert.IsType<BadRequestObjectResult>(result.Result);
+    Assert.Equal("First name and last name are required.", ((BadRequestObjectResult)result.Result).Value);
+}
+
+[Fact]
+public async Task CreatePatientAsAdmin_ReturnsBadRequest_WhenInvalidDateFormat()
+{
+    // Arrange
+    var request = new CreatePatientRequest
+    {
+        FirstName = "John",
+        LastName = "Doe",
+        Birthday = "1990-01-01" // Invalid format
+    };
+
+    // Act
+    var result = await _controller.CreatePatientAsAdmin(request);
+
+    // Assert
+    Assert.IsType<BadRequestObjectResult>(result.Result);
+    Assert.Equal("Invalid date format. Use DD/MM/YYYY.", ((BadRequestObjectResult)result.Result).Value);
+}
+
+
+//US9
+
+
 }
