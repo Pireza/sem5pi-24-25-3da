@@ -19,67 +19,91 @@ public class OperationRequestsController : ControllerBase
         _repository=repository;
     }
 
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetOperationRequestByIdAsync(long id)
+    {
+        var operationRequest = await _repository.GetOperationRequestByIdAsync(id);
+        if (operationRequest == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(operationRequest);
+    }
+
     // POST: api/OperationRequests
     [HttpPost]
     [Authorize(Policy = "DoctorOnly")]
-    public async Task<IActionResult> CreateOperationRequest(
-        [FromBody] OperationRequestCreateDTO requestDto)
+    public async Task<IActionResult> CreateOperationRequest([FromBody] OperationRequestCreateDTO requestDto)
     {
-        // Retrieve the logged-in doctor's email and validate their identity
-        var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        loggedInDoctorEmail = loggedInDoctorEmail?.Split('|').LastOrDefault();
-        
-        if (string.IsNullOrEmpty(loggedInDoctorEmail))
+        try
         {
-            return Unauthorized("Doctor's identity could not be confirmed.");
+            var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value?.Split('|').LastOrDefault();
+            if (string.IsNullOrEmpty(loggedInDoctorEmail))
+            {
+                return Unauthorized("Doctor's identity could not be confirmed.");
+            }
+
+            var doctor = await _repository.GetDoctorByEmailAsync(loggedInDoctorEmail);
+            if (doctor == null)
+            {
+                return Unauthorized("Doctor not found.");
+            }
+
+            var operationType = await _repository.GetOperationTypeByIdAsync(requestDto.OperationTypeId);
+            if (operationType == null || operationType.Specialization != doctor.Specialization)
+            {
+                return BadRequest("Selected operation type does not match the doctor's specialization.");
+            }
+
+            var patient = await _repository.GetPatientByIdAsync(requestDto.PatientId);
+            if (patient == null)
+            {
+                return BadRequest("Patient not found.");
+            }
+
+            var operationPriority = await _repository.GetOperationPriorityByIdAsync(requestDto.PriorityId);
+            if (operationPriority == null)
+            {
+                return BadRequest("Invalid operation priority.");
+            }
+
+            var operationRequest = new OperationRequest
+            {
+                Patient = patient,
+                Doctor = doctor,
+                OperationType = operationType,
+                Deadline = requestDto.Deadline,
+                Priority = operationPriority,
+                Status = "Pending"
+            };
+
+            await _repository.AddOperationRequestAsync(operationRequest);
+
+            var logEntry = new RequestsLog
+            {
+                RequestId = operationRequest.Id,
+                ChangeDate = DateTime.UtcNow,
+                ChangeDescription = $"Operation request created by Doctor {doctor.FirstName} for Patient {patient.FirstName}."
+            };
+            await _repository.LogRequestChangeAsync(operationRequest.Id, new List<string> { logEntry.ChangeDescription });
+
+            return CreatedAtAction(nameof(GetOperationRequestByIdAsync), new { id = operationRequest.Id }, operationRequest);
         }
 
-        // Fetch the doctor from the repository using the email
-        var doctor = await _repository.GetDoctorByEmailAsync(loggedInDoctorEmail);
-        if (doctor == null)
+        catch (DbUpdateException dbEx)
         {
-            return Unauthorized("Doctor not found.");
+            return StatusCode(500, $"Database error: {dbEx.Message}");
         }
-
-        // Ensure the selected operation type matches the doctor's specialization
-        var operationType = await _repository.GetOperationTypeByIdAsync(requestDto.OperationTypeId);
-        if (operationType == null || operationType.Specialization != doctor.Specialization)
+        catch (InvalidOperationException invalidOpEx)
         {
-            return BadRequest("Selected operation type does not match the doctor's specialization.");
+            return BadRequest($"Operation error: {invalidOpEx.Message}");
         }
-
-        // Validate the patient ID exists in the system
-        var patient = await _repository.GetPatientByIdAsync(requestDto.PatientId);
-        if (patient == null)
+        catch (Exception ex)
         {
-            return BadRequest("Patient not found.");
+            return StatusCode(500, $"An error occurred: {ex.Message}");
         }
-
-        // Create the operation request object
-        var operationRequest = new OperationRequest
-        {
-            Patient = patient,
-            Doctor = doctor,
-            OperationType = operationType,
-            Deadline = requestDto.Deadline,
-            Priority = requestDto.PriorityId,
-            Status = "Pending"
-        };
-
-        // Add the operation request to the repository
-        await _repository.AddOperationRequestAsync(operationRequest);
-
-        // Log the request in the patient's medical history
-        var requestLog = new RequestsLog
-        {
-            RequestId = operationRequest.Id,
-            ChangeDate = DateTime.UtcNow,
-            ChangeDescription = $"Operation request created by Doctor {doctor.FirstName} for Patient {patient.FirstName}."
-        };
-        await _repository.LogRequestChangeAsync(operationRequest.Id, new List<string> { requestLog.ChangeDescription });
-
-        // Return a success response with the created operation request's details
-        return CreatedAtAction(nameof(_repository.GetOperationRequestByIdAsync), new { id = operationRequest.Id }, operationRequest);
     }
 
 

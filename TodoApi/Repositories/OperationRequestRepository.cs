@@ -394,6 +394,5 @@ public async Task<bool> DeactivateOperationTypeAsync(long id)
         await _context.Requests.AddAsync(operationRequest);
         await _context.SaveChangesAsync();
     }
-    
 
 }
