@@ -264,10 +264,12 @@ public class OperationRequestRepository
         return result;
     }
 
-        public async Task<OperationType> UpdateOperationTypeAsync(long id, OperationTypeDTO dto)
+    public async Task<OperationType> UpdateOperationTypeAsync(long id, OperationTypeGetDTO dto)
     {
-        var operationType = await _context.Types.FindAsync(id);
-        
+        // Find the operation type by id
+        var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
+
+        // Check if the operation type exists
         if (operationType == null)
         {
             throw new NotFoundResource("Operation type not found.");
@@ -276,22 +278,32 @@ public class OperationRequestRepository
         // Update the properties
         operationType.Name = dto.Name;
         operationType.Duration = dto.Duration;
-        
-        // Clear current associations and re-add them
+        operationType.IsActive = dto.IsActive; // Update IsActive property
+
+        // Clear current associations in the Type_Staff table for this operation type
         var existingStaff = _context.Type_Staff.Where(ots => ots.OperationTypeId == id);
         _context.Type_Staff.RemoveRange(existingStaff);
 
-        foreach (var staffId in dto.Staff)
+        // Re-add specialized staff associations
+        foreach (var staffId in dto.SpecializedStaff)
         {
-            var association = new OperationType_Staff
+            // Assuming staffId is a string and needs to be parsed to long
+            if (long.TryParse(staffId, out long specializedStaffId))
             {
-                SpecializedStaffId = staffId,
-                OperationTypeId = operationType.Id
-            };
-            _context.Type_Staff.Add(association);
+                var association = new OperationType_Staff
+                {
+                    SpecializedStaffId = specializedStaffId, 
+                    OperationTypeId = operationType.Id
+                };
+                _context.Type_Staff.Add(association);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid Specialized Staff ID: {staffId}");
+            }
         }
 
-        // Save the changes
+        // Save the changes to the operation type and staff associations
         await _context.SaveChangesAsync();
 
         // Log the update action
@@ -309,6 +321,7 @@ public class OperationRequestRepository
 
         return operationType;
     }
+
 
 public async Task<bool> DeactivateOperationTypeAsync(long id)
 {

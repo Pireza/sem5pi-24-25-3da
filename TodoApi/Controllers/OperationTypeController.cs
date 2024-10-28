@@ -21,7 +21,7 @@ public class OperationTypeController : ControllerBase
     // PUT: api/operation/type/{id}
     [Authorize(Policy = "AdminOnly")]
     [HttpPut("UpdateOperationTypeAsAdmin/{id}")]
-    public async Task<IActionResult> UpdateOperationType(long id, OperationTypeDTO typeDTO)
+    public async Task<IActionResult> UpdateOperationType(long id, OperationTypeGetDTO typeDTO)
     {
         try
         {
