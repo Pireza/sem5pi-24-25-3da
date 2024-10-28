@@ -20,8 +20,7 @@ As an Admin, I want to deactivate a staff profile, so that I can remove them fro
 
 ### 1.3. Found out Dependencies
 
-* There is a dependency with US 5.1.12 "As an Admin, I want to create a new staff profile, so that I can add them to the
-hospital’s roster."
+* There is a dependency with US 5.1.12 "As an Admin, I want to create a new staff profile, so that I can add them to the hospital’s roster."
 
 ### 1.4 Input and Output Data
 
