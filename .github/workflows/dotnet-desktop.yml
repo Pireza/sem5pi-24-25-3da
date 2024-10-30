@@ -11,7 +11,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+        
+      - name: Add .NET to PATH
+        run: echo "PATH=\$PATH:\$HOME/.dotnet" >> $GITHUB_ENV
+        
       - name: Install dependencies
         run: dotnet restore
 
