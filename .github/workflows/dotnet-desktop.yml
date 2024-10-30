@@ -11,15 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      - name: Add .NET to PATH
-        run: echo "PATH=\$PATH:\$HOME/.dotnet" >> $GITHUB_ENV
-        
+
       - name: Install dependencies
-        run: dotnet restore
+        run: PATH=$PATH:$HOME/.dotnet dotnet restore
 
       - name: Build the application
-        run: dotnet build --configuration Release
+        run: PATH=$PATH:$HOME/.dotnet dotnet build --configuration Release
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: PATH=$PATH:$HOME/.dotnet dotnet test --no-build --verbosity normal
