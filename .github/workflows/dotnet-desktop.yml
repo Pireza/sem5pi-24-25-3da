@@ -19,4 +19,4 @@ jobs:
         run: PATH=$PATH:$HOME/.dotnet dotnet build ./TodoApi --configuration Release
 
       - name: Run tests
-        run: PATH=$PATH:$HOME/.dotnet dotnet test ./TodoApi --no-build --verbosity normal
+        run: PATH=$PATH:$HOME/.dotnet dotnet test ./TodoApi
