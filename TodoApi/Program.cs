@@ -10,27 +10,31 @@ using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Add services to the container.
 builder.Services.AddControllers();
 
-
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder
+            .AllowAnyOrigin()  // Allow any origin
+            .AllowAnyMethod()  // Allow any HTTP method (GET, POST, etc.)
+            .AllowAnyHeader(); // Allow any header
+    });
+});
 
 // Configure MySQL as the database provider
 builder.Services.AddDbContext<UserContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("UserContext"),
         new MySqlServerVersion(new Version(8, 0, 39)), // Use your MySQL version
-            mysqlOptions => mysqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5, // The maximum number of retry attempts
-                maxRetryDelay: TimeSpan.FromSeconds(30), // The delay between retries
-                errorNumbersToAdd: null // Specify any error numbers you want to retry on
-            )));
-    
-
-
-
+        mysqlOptions => mysqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5, // The maximum number of retry attempts
+            maxRetryDelay: TimeSpan.FromSeconds(30), // The delay between retries
+            errorNumbersToAdd: null // Specify any error numbers you want to retry on
+        )));
 
 // Register AuthServicePatient with HttpClient
 builder.Services.AddHttpClient<AuthServicePatient>();
@@ -91,9 +95,9 @@ builder.Services.AddHostedService<DeletionService>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("PatientOnly", policy =>
-        {
-            policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Patient");
-        });
+    {
+        policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Patient");
+    });
     options.AddPolicy("AdminOnly", policy =>
     {
         policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Admin");
@@ -103,21 +107,6 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(AuthenticationConstants.ROLES_URL, "Doctor");
     });
 });
-
-
-
-// Add other services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<OperationService>();
-builder.Services.AddTransient<Auth0UserService>();
-builder.Services.AddTransient<PasswordGeneratorService>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<OperationRequestRepository>();
-
-var app = builder.Build();
-
-
 
 /*
 
@@ -212,20 +201,44 @@ bool IsInDEINetwork(IPAddress ip)
 
 
 
+// Add other services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<OperationService>();
+builder.Services.AddTransient<Auth0UserService>();
+builder.Services.AddTransient<PasswordGeneratorService>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<OperationRequestRepository>();
+
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+// Enable CORS
+app.UseCors("AllowAllOrigins");
+
+app.UseRouting();
 
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization(); // Enable authorization
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
-
