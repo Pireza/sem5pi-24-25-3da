@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-patient-ui',
-  template: `
-    <div class="patient-ui">
-      <h1>Login Successful!</h1>
-      <p>Welcome to the Patient Dashboard.</p>
-    </div>
-  `,
-  styles: [`
-    .patient-ui {
-      text-align: center;
-      margin-top: 50px;
-    }
-  `],
+  templateUrl: './patient-ui.component.html', // Adjust the path as necessary
+  styleUrls: ['./patient-ui.component.css'] // Adjust the path as necessary
 })
-export class PatientUIComponent {}
+export class PatientUIComponent implements OnInit {
+  userEmail: string | null = null; // To hold the user's email
+  userRole: string | null = null;   // To hold the user's role
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.userEmail = this.authService.userEmail; // Get the user's email from AuthService
+    this.userRole = this.authService.userRole;   // Get the user's role from AuthService
+  }
+}

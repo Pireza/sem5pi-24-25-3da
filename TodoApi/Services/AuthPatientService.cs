@@ -174,7 +174,17 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
   public async Task RegisterNewPatient(CreatePatientRequest model, string password)
     {
 
-    
+        Console.WriteLine(model.Username);
+        Console.WriteLine(model.FirstName);
+        Console.WriteLine(model.LastName);
+        Console.WriteLine(model.Email);
+        Console.WriteLine(model.EmergencyContact);
+        Console.WriteLine(model.Gender);
+        Console.WriteLine(model.Birthday);
+        Console.WriteLine(model.MedicalConditions);
+        Console.WriteLine(model.MedicalNumber);
+        Console.WriteLine(model.Phone);
+      
 
         // Validação do formato da data de nascimento
             if (!DateTime.TryParseExact(model.Birthday, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out var dob))
