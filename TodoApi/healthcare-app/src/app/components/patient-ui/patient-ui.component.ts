@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router'; // Import Router
+import { UserService } from '../../services/userService'; // Import UserService
 
 
 @Component({
@@ -12,11 +13,11 @@ export class PatientUIComponent implements OnInit {
   userEmail: string | null = null; // To hold the user's email
   userRole: string | null = null;   // To hold the user's role
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userEmail = this.authService.userEmail; // Get the user's email from AuthService
-    this.userRole = this.authService.userRole;   // Get the user's role from AuthService
+    this.userEmail = this.userService.userEmail; // Get the user's email from AuthService
+    this.userRole = this.userService.userRole;   // Get the user's role from AuthService
   }
   onDeletePatient(): void {
     if (this.userEmail) {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/userService'; // Import UserService
 
 @Component({
   selector: 'app-update-profile',
@@ -14,7 +15,7 @@ export class UpdateProfileComponent implements OnInit {
   updateProfileForm: FormGroup;
   userEmail: string | null = null; // To hold the user's email
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private userService: UserService) {
     this.updateProfileForm = this.fb.group({
       newEmail: [''],
       firstName: [''],
@@ -25,7 +26,7 @@ export class UpdateProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userEmail = this.authService.userEmail; // Get the user's email from AuthService
+    this.userEmail = this.userService.userEmail; // Get the user's email from AuthService
   }
 
   onSubmit() {

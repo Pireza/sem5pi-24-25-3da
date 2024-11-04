@@ -1,0 +1,30 @@
+<div class="getProfile">
+    <h2>Search Patient Profiles</h2>
+    <form (ngSubmit)="onSearch()">
+      <div>
+        <label for="name">Name:</label>
+        <input id="name" [(ngModel)]="name" name="name" />
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input id="email" [(ngModel)]="email" name="email" />
+      </div>
+      <div>
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" id="dateOfBirth" [(ngModel)]="dateOfBirth" name="dateOfBirth" />
+      </div>
+      <div>
+        <label for="medicalNumber">Medical Number:</label>
+        <input id="medicalNumber" type="number" [(ngModel)]="medicalNumber" name="medicalNumber" />
+      </div>
+      <button type="submit">Search</button>
+    </form>
+  
+    <div *ngIf="searchResults">
+      <h3>Search Results:</h3>
+      <pre>{{ searchResults | json }}</pre>
+    </div>
+  
+    <button (click)="onGoBack()">Go Back</button>
+  </div>
+  
