@@ -1,0 +1,46 @@
+.update-profile-form {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    max-width: 400px; /* Set a maximum width for the form */
+    margin: 20px auto; /* Center the form horizontally with margin */
+    padding: 20px; /* Add padding inside the form */
+    border: 1px solid #ddd; /* Light border around the form */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+label {
+    margin-bottom: 5px; /* Space below the label */
+    font-weight: bold; /* Bold labels */
+    color: #333; /* Dark color for labels */
+}
+
+input {
+    margin-bottom: 15px; /* Space below each input */
+    padding: 10px; /* Padding inside the inputs */
+    border: 1px solid #ccc; /* Light border for inputs */
+    border-radius: 4px; /* Rounded corners for inputs */
+    font-size: 16px; /* Font size for input text */
+    color: #333; /* Text color for inputs */
+}
+
+input:focus {
+    border-color: #007bff; /* Border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.submit-button {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text color */
+    padding: 10px 15px; /* Padding for button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size for button text */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}

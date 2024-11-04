@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router'; // Import Router
+
 
 @Component({
   selector: 'app-patient-ui',
@@ -10,7 +12,7 @@ export class PatientUIComponent implements OnInit {
   userEmail: string | null = null; // To hold the user's email
   userRole: string | null = null;   // To hold the user's role
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.userEmail = this.authService.userEmail; // Get the user's email from AuthService
@@ -31,6 +33,9 @@ export class PatientUIComponent implements OnInit {
     } else {
       alert('User email is not available.');
     }
+  }
+  onUpdateProfile(): void {
+    this.router.navigate(['/update-profile']); // Navigate to Update Profile component
   }
 
 }
