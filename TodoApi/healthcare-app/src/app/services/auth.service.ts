@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { CreatePatientRequest } from '../Models/CreatePatientRequest';
 import jwt_decode from 'jwt-decode'; // Use wildcard import
@@ -15,10 +15,12 @@ export interface DecodedToken {
 })
 export class AuthService {
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
-  public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0'; // Registration endpoint
+  public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0'; 
+  public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail'; 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
   public userRole: string | null = null;   // To store the decoded role
+  private accessToken: string | null = null; // Store the access token
 
   constructor(private http: HttpClient) {}
 
@@ -28,6 +30,7 @@ export class AuthService {
       tap((response: any) => {
         if (response && response.accessToken) {
           this.isAuthenticated = true;
+          this.accessToken = response.accessToken; // Save the access token
 
           // Decode the token
           const decodedToken: any = jwt_decode(response.accessToken);
@@ -42,6 +45,12 @@ export class AuthService {
         }
       })
     );
+  }
+  deletePatientByEmail(email: string): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
+    });
+    return this.http.delete<void>(`${this.deletePatientUrl}/${email}`, { headers });
   }
 
   // Registration method
