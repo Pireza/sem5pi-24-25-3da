@@ -20,6 +20,7 @@ export class AuthService {
   public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail'; 
   public updateProfileAsPatientUrl = 'http://localhost:5174/api/Patients/email/UpdateProfile';
   public searchPatientProfilesUrl = 'http://localhost:5174/api/Patients/searchPatientProfiles'; 
+  public createPatientProfileAsAdmin = 'http://localhost:5174/api/Patients/createPatientAsAdmin';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -110,4 +111,15 @@ export class AuthService {
 
     return this.http.get<any>(`${this.searchPatientProfilesUrl}?${params.toString()}`, { headers });
   }
+
+// Registration method as admin
+createPatientAsAdmin(patientData: CreatePatientRequest): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.accessToken}` // Define o cabeçalho Authorization
+  });
+
+  return this.http.post(this.createPatientProfileAsAdmin, patientData, { headers });
+}
+
+  
 }
