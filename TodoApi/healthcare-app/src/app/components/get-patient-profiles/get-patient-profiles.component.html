@@ -1,0 +1,61 @@
+<div class="getProfile">
+  <h2>Search Patient Profiles</h2>
+  <form (ngSubmit)="onSearch()">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" [(ngModel)]="name" name="name" />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" [(ngModel)]="email" name="email" />
+    </div>
+    <div>
+      <label for="dateOfBirth">Date of Birth:</label>
+      <input type="date" id="dateOfBirth" [(ngModel)]="dateOfBirth" name="dateOfBirth" />
+    </div>
+    <div>
+      <label for="medicalNumber">Medical Number:</label>
+      <input id="medicalNumber" type="number" [(ngModel)]="medicalNumber" name="medicalNumber" />
+    </div>
+    <div>
+      <label for="pageSize">Page Size:</label>
+      <input id="pageSize" type="number" [(ngModel)]="pageSize" name="pageSize" min="1" />
+    </div>
+    <button type="submit">Search</button>
+  </form>
+
+  <div *ngIf="searchResults.length > 0; else noResults">
+    <h3>Search Results:</h3>
+    <p>Results count: {{ searchResults.length }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Date of Birth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let result of searchResults">
+          <td>{{ result.firstName }}</td>  
+          <td>{{ result.lastName }}</td>    
+          <td>{{ result.email }}</td>
+          <td>{{ result.birthday }}</td>    
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noResults>
+    <p>No results found.</p>
+  </ng-template>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="searchResults.length > 0">
+    <button (click)="previousPage()" [disabled]="page === 1">Previous</button>
+    <button (click)="nextPage()">Next</button>
+  </div>
+
+  <button (click)="onGoBack()">Go Back</button>
+</div>

@@ -1,0 +1,71 @@
+<p>create-patient-admin works!</p>
+<div class="register-container">
+    <h2>Create Patient As Admin</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" [(ngModel)]="client.username" name="username" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" [(ngModel)]="client.firstName" name="firstName" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" [(ngModel)]="client.lastName" name="lastName" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="client.email" name="email" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="birthday">Birthday</label>
+        <input type="date" id="birthday" [(ngModel)]="client.birthday" name="birthday" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" [(ngModel)]="client.gender" name="gender" required>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="medicalNumber">Medical Number</label>
+        <input type="number" id="medicalNumber" [(ngModel)]="client.medicalNumber" name="medicalNumber" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" [(ngModel)]="client.phone" name="phone" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="emergencyContact">Emergency Contact</label>
+        <input type="tel" id="emergencyContact" [(ngModel)]="client.emergencyContact" name="emergencyContact" required />
+      </div>
+  
+      <div class="form-group">
+        <label>Medical Conditions</label>
+        <div class="medical-conditions">
+          <input type="text" [(ngModel)]="newCondition" placeholder="Add condition" name="newCondition" />
+          <button type="button" (click)="addCondition()">Add</button>
+        </div>
+        <ul>
+          <li *ngFor="let condition of client.medicalConditions; let i = index">
+            {{ condition }}
+            <button type="button" (click)="removeCondition(i)">Remove</button>
+          </li>
+        </ul>
+      </div>
+  
+      <button type="submit" class="submit-btn">Register</button>
+    </form>
+  </div>
+  

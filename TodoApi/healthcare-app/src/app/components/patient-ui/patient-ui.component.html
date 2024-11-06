@@ -1,0 +1,15 @@
+<div class="patient-ui">
+  <h1>Login Successful!</h1>
+  <p>Welcome to the Patient Dashboard.</p>
+  <p><strong>Email:</strong> {{ userEmail }}</p> <!-- Display the user's email -->
+  <p><strong>Role:</strong> {{ userRole }}</p>    <!-- Display the user's role -->
+  
+  <button class="update-button" (click)="onUpdateProfile()">
+    Update Profile
+  </button>
+  
+  <!-- Red button to trigger the deletion action -->
+  <button class="delete-button" (click)="onDeletePatient()">
+    Delete Account
+  </button>
+</div>

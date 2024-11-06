@@ -1,0 +1,58 @@
+.patient-ui {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 400px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #555;
+  font-size: 16px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 30px; /* Increased space between buttons */
+  margin-top: 20px; /* Space above the button container */
+}
+
+.update-button,
+.delete-button {
+  width: 100%; /* Make buttons take full width of container */
+  padding: 10px 0; /* Adjust padding for button height */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.update-button {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  margin-bottom: 15px; /* Add margin below the Update Profile button */
+}
+
+.update-button:hover {
+  background-color: #0056b3; /* Darker shade for hover effect */
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
