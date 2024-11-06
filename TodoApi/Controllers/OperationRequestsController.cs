@@ -5,23 +5,24 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 [Route("api/[controller]")]
 [ApiController]
 public class OperationRequestsController : ControllerBase
 {
-    private readonly UserContext _context; 
+    private readonly UserContext _context;
     private OperationRequestRepository _repository;
 
     public OperationRequestsController(UserContext context, OperationRequestRepository repository)
     {
         _context = context;
-        _repository=repository;
+        _repository = repository;
     }
 
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOperationRequestByIdAsync(long id)
+    public async Task<ActionResult<OperationRequest>> GetOperationRequestByIdAsync(long id)
     {
         var operationRequest = await _repository.GetOperationRequestByIdAsync(id);
         if (operationRequest == null)
@@ -29,13 +30,13 @@ public class OperationRequestsController : ControllerBase
             return NotFound();
         }
 
-        return Ok(operationRequest);
+        return operationRequest;
     }
 
     // POST: api/OperationRequests
-    [HttpPost]
+    [HttpPost("CreateOperationRequest")]
     [Authorize(Policy = "DoctorOnly")]
-    public async Task<IActionResult> CreateOperationRequest([FromBody] OperationRequestCreateDTO requestDto)
+    public async Task<ActionResult> CreateOperationRequest(OperationRequestCreateDTO requestDto)
     {
         try
         {
@@ -68,6 +69,7 @@ public class OperationRequestsController : ControllerBase
             {
                 return BadRequest("Invalid operation priority.");
             }
+            
 
             var operationRequest = new OperationRequest
             {
@@ -78,7 +80,6 @@ public class OperationRequestsController : ControllerBase
                 Priority = operationPriority,
                 Status = "Pending"
             };
-
             await _repository.AddOperationRequestAsync(operationRequest);
 
             var logEntry = new RequestsLog
@@ -89,7 +90,7 @@ public class OperationRequestsController : ControllerBase
             };
             await _repository.LogRequestChangeAsync(operationRequest.Id, new List<string> { logEntry.ChangeDescription });
 
-            return CreatedAtAction(nameof(GetOperationRequestByIdAsync), new { id = operationRequest.Id }, operationRequest);
+            return Ok("Operation request created successfully");
         }
 
         catch (DbUpdateException dbEx)
@@ -112,53 +113,53 @@ public class OperationRequestsController : ControllerBase
     [Authorize(Policy = "DoctorOnly")]
     public async Task<IActionResult> UpdateOperationRequest(
         long id,
-        [FromQuery] long? operationPriorityId = null, 
+        [FromQuery] long? operationPriorityId = null,
         [FromQuery] string? deadline = null)
     {
-    var operationRequest = await _repository.GetOperationRequestByIdAsync(id);
-    var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-     loggedInDoctorEmail = loggedInDoctorEmail?.Split('|').LastOrDefault();
+        var operationRequest = await _repository.GetOperationRequestByIdAsync(id);
+        var loggedInDoctorEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        loggedInDoctorEmail = loggedInDoctorEmail?.Split('|').LastOrDefault();
 
-    
+
         if (operationRequest == null)
         {
             return NotFound();
         }
-         if (operationRequest.Doctor == null || operationRequest.Doctor.Email != loggedInDoctorEmail)
-    {
-        return BadRequest("You are not authorized to update this operation request. Reason: You are not the doctor that created this request!");
-    }
-                var changes = new List<string>();
-
-      if (operationPriorityId.HasValue)
-    {
-        var operationPriority = await _repository.GetOperationPriorityByIdAsync(operationPriorityId.Value);
-        if (operationPriority == null)
+        if (operationRequest.Doctor == null || operationRequest.Doctor.Email != loggedInDoctorEmail)
         {
-            return BadRequest($"OperationPriority with ID {operationPriorityId.Value} does not exist.");
+            return BadRequest("You are not authorized to update this operation request. Reason: You are not the doctor that created this request!");
+        }
+        var changes = new List<string>();
+
+        if (operationPriorityId.HasValue)
+        {
+            var operationPriority = await _repository.GetOperationPriorityByIdAsync(operationPriorityId.Value);
+            if (operationPriority == null)
+            {
+                return BadRequest($"OperationPriority with ID {operationPriorityId.Value} does not exist.");
+            }
+
+            if (operationRequest.Priority.Id != operationPriorityId.Value)
+            {
+                changes.Add($"Operation Priority changed from ID {operationRequest.Priority?.Id ?? 0} to ID {operationPriorityId.Value}");
+                operationRequest.Priority = operationPriority;
+            }
         }
 
-        if ( operationRequest.Priority.Id != operationPriorityId.Value)
-        {
-            changes.Add($"Operation Priority changed from ID {operationRequest.Priority?.Id ?? 0} to ID {operationPriorityId.Value}");
-            operationRequest.Priority = operationPriority;
-        }
-    }
 
 
-
-        if (!string.IsNullOrEmpty(deadline) && operationRequest.Deadline!= deadline)
+        if (!string.IsNullOrEmpty(deadline) && operationRequest.Deadline != deadline)
         {
             changes.Add($"Deadline changed from {operationRequest.Deadline} to {deadline}.");
             operationRequest.Deadline = deadline;
         }
 
-        
+
         await _repository.UpdateOperationRequestAsync(operationRequest);
-        
+
         try
         {
-           await _repository.LogRequestChangeAsync(id, changes);
+            await _repository.LogRequestChangeAsync(id, changes);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -181,41 +182,41 @@ public class OperationRequestsController : ControllerBase
     }
 
 
-// DELETE: api/OperationRequests/{id}
-[HttpDelete("id/deleteOperationRequestAsDoctor{id}")]
-[Authorize(Policy = "DoctorOnly")]
-public async Task<IActionResult> DeleteOperationRequest(long id)
-{
-    try
+    // DELETE: api/OperationRequests/{id}
+    [HttpDelete("id/deleteOperationRequestAsDoctor{id}")]
+    [Authorize(Policy = "DoctorOnly")]
+    public async Task<IActionResult> DeleteOperationRequest(long id)
     {
-        // Call repository to delete the operation request by ID
-        var deleted = await _repository.DeleteOperationRequestByIdAsync(id);
-
-        if (!deleted)
+        try
         {
-            return NotFound(); // Request not found
+            // Call repository to delete the operation request by ID
+            var deleted = await _repository.DeleteOperationRequestByIdAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(); // Request not found
+            }
+
+            // Notify the Planning Module (this can be an external service call)
+            NotifyPlanningModule(id);
+
+            return NoContent();
         }
-
-        // Notify the Planning Module (this can be an external service call)
-        NotifyPlanningModule(id);
-
-        return NoContent();
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception)
+        {
+            // Handle any other exceptions that may occur
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
-    catch (InvalidOperationException ex)
+
+    private void NotifyPlanningModule(long operationRequestId)
     {
-        return BadRequest(ex.Message);
+        Console.WriteLine($"Notifying Planning Module: Operation request {operationRequestId} has been deleted.");
     }
-    catch (Exception)
-    {
-        // Handle any other exceptions that may occur
-        return StatusCode(500, "An error occurred while processing your request.");
-    }
-}
-
-private void NotifyPlanningModule(long operationRequestId)
-{
-    Console.WriteLine($"Notifying Planning Module: Operation request {operationRequestId} has been deleted.");
-}
 
 
 }
