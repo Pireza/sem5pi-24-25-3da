@@ -28,6 +28,9 @@ export class AdminUiComponent implements OnInit {
     this.router.navigate(['/create-patient-admin']);
   }
   redirectToListOperationTypes() : void {
-    this.router.navigate(['/list-operation-types'])
+    this.router.navigate(['/list-operation-types']);
+  }
+  redirectToAddOperationTypes() : void{
+    this.router.navigate(['/add-operation-type']);
   }
 }
