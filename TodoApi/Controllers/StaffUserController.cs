@@ -39,14 +39,14 @@ public class StaffUserController : ControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromBody] string email)
+    public async Task<IActionResult> ResetPassword([FromBody] EmailRequest request)
     {
-        if (string.IsNullOrEmpty(email))
+        if (string.IsNullOrEmpty(request.Email))
             return BadRequest("Email must not be empty");
 
         try
         {
-            MailAddress mail = new MailAddress(email);
+            MailAddress mail = new MailAddress(request.Email);
         }
         catch (FormatException)
         {
@@ -55,7 +55,7 @@ public class StaffUserController : ControllerBase
 
         try
         {
-            await _auth0Service.ResetPasswordAsync(email);
+            await _auth0Service.ResetPasswordAsync(request.Email);
             return Ok("Password reset email sent successfuly");
         }
         catch (Exception)

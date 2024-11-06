@@ -38,7 +38,10 @@ export class AuthComponent {
   
   onCreateAccountClient(){
     this.router.navigate(['/registerClient']);
+  }
 
+  onPasswordReset(){
+    this.router.navigate(['/reset-password'])
   }
 
 }

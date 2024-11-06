@@ -16,18 +16,19 @@ export interface DecodedToken {
 })
 export class AuthService {
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
-  public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0'; 
-  public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail'; 
+  public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0';
+  public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail';
   public updateProfileAsPatientUrl = 'http://localhost:5174/api/Patients/email/UpdateProfile';
-  public searchPatientProfilesUrl = 'http://localhost:5174/api/Patients/searchPatientProfiles'; 
+  public searchPatientProfilesUrl = 'http://localhost:5174/api/Patients/searchPatientProfiles';
   public createPatientProfileAsAdmin = 'http://localhost:5174/api/Patients/createPatientAsAdmin';
+  public resetPasswordEP = 'http://localhost:5174/api/StaffUser/reset-password'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
   public userRole: string | null = null;   // To store the decoded role
   private accessToken: string | null = null; // Store the access token
 
-  constructor(private http: HttpClient,private userService: UserService) {}
+  constructor(private http: HttpClient, private userService: UserService) { }
 
   // Authentication method
   authenticateUser(): Observable<any> {
@@ -43,16 +44,26 @@ export class AuthService {
 
           // Extract the email and roles from the decoded token
           this.userEmail = decodedToken.email; // Extract the email
-          this.userService.userEmail= this.userEmail;
+          this.userService.userEmail = this.userEmail;
           // Check for the roles in the correct key
           this.userRole = decodedToken['http://dev-b2f7avjyddz6kpot.us.auth0.comroles']?.[0] || null; // Extract the first role
-          this.userService.userRole= this.userRole;
+          this.userService.userRole = this.userRole;
           console.log(this.userRole);
 
         }
       })
     );
   }
+
+  resetPassword(email: String): Observable<any> {
+    const body = { email: email };
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(this.resetPasswordEP, body, { headers, responseType: 'text' });
+  }
+
+
   deletePatientByEmail(email: string): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
@@ -112,14 +123,14 @@ export class AuthService {
     return this.http.get<any>(`${this.searchPatientProfilesUrl}?${params.toString()}`, { headers });
   }
 
-// Registration method as admin
-createPatientAsAdmin(patientData: CreatePatientRequest): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.accessToken}` // Define o cabeçalho Authorization
-  });
+  // Registration method as admin
+  createPatientAsAdmin(patientData: CreatePatientRequest): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}` // Define o cabeçalho Authorization
+    });
 
-  return this.http.post(this.createPatientProfileAsAdmin, patientData, { headers });
-}
+    return this.http.post(this.createPatientProfileAsAdmin, patientData, { headers });
+  }
 
-  
+
 }
