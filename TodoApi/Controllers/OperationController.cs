@@ -129,7 +129,7 @@ public class OperationController : ControllerBase
     [Authorize(Policy = "DoctorOnly")]
     [HttpGet("request/filter")]
 
-    public async Task<ActionResult<IEnumerable<OperationRequestDTO>>> GetRequestFilter(OperationRequestSearch search)
+    public async Task<ActionResult<IEnumerable<OperationRequestDTO>>> GetRequestFilter([FromQuery] OperationRequestSearch search)
     {
         var requests = await _service.GetAllRequestFilterAsync(search);
 

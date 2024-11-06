@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { CreatePatientRequest } from '../Models/CreatePatientRequest';
 import jwt_decode from 'jwt-decode'; // Use wildcard import
 import { UserService } from './userService'; // Import UserService
 import { CreateOperationTypeRequest } from '../Models/CreateOperationTypeRequest';
+import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -72,7 +73,24 @@ export class AuthService {
     return this.http.get<any>(this.allSpecializedStaffEP);
   }
 
+  searchOperationRequests(search: OperationRequestSearch): Observable<any> {
+    // Construct the query parameters from the search object
+    let params = new HttpParams();
 
+    if (search.patientName) params = params.set('patientName', search.patientName);
+    if (search.operationType) params = params.set('operationType', search.operationType);
+    if (search.priority) params = params.set('priority', search.priority);
+    if (search.status) params = params.set('status', search.status);
+
+    // Set headers for authorization
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+
+    // Perform the GET request with query parameters and headers
+    return this.http.get<any>(this.listRequestsEP, { headers, params });
+  }
 
 
   deletePatientByEmail(email: string): Observable<void> {

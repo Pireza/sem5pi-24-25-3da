@@ -1,1 +1,53 @@
-<p>filter-requests works!</p>
+<!-- operation-request.component.html -->
+<div class="container">
+  <h2>Search Operation Requests</h2>
+  
+  <form (ngSubmit)="onSearch()" #searchForm="ngForm">
+    <div class="form-group">
+      <label for="patientName">Patient Name</label>
+      <input type="text" id="patientName" class="form-control" [(ngModel)]="search.patientName" name="patientName">
+    </div>
+    
+    <div class="form-group">
+      <label for="operationType">Operation Type</label>
+      <input type="text" id="operationType" class="form-control" [(ngModel)]="search.operationType" name="operationType">
+    </div>
+    
+    <div class="form-group">
+      <label for="priority">Priority</label>
+      <input type="text" id="priority" class="form-control" [(ngModel)]="search.priority" name="priority">
+    </div>
+    
+    <div class="form-group">
+      <label for="status">Status</label>
+      <input type="text" id="status" class="form-control" [(ngModel)]="search.status" name="status">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div *ngIf="requests && requests.length">
+    <table class="table mt-4">
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Doctor Name</th>
+          <th>Operation Type</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of requests">
+          <td>{{ request.patientName }}</td>
+          <td>{{ request.doctorName }}</td>
+          <td>{{ request.operationType }}</td>
+          <td>{{ request.deadline }}</td>
+          <td>{{ request.status }}</td>
+          <td>{{ request.priorityName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

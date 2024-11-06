@@ -1,12 +1,38 @@
+// operation-request.component.ts
 import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service'; // Import the AuthService
+import { OperationRequestSearch } from '../../Models/OperationRequestSearch'; // Import the interface
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-filter-requests',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
+  selector: 'app-filter-requests',
   templateUrl: './filter-requests.component.html',
-  styleUrl: './filter-requests.component.css'
+  styleUrls: ['./filter-requests.component.css'],
 })
 export class FilterRequestsComponent {
+  search: OperationRequestSearch = {
+    patientName: '',
+    operationType: '',
+    priority: '',
+    status: ''
+  }; // Initialize with empty search criteria
+  requests: any[] = []; // Holds the filtered requests
 
+  constructor(private authService: AuthService) {}
+
+  // Method called when the search form is submitted
+  onSearch(): void {
+
+    this.authService.searchOperationRequests(this.search).subscribe(
+      (response) => {
+        this.requests = response; // Store the response data in the requests array
+      },
+      (error) => {
+        console.error('Error fetching operation requests:', error);
+      }
+    );
+  }
 }
