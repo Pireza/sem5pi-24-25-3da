@@ -1,3 +1,4 @@
+using System.Data.OleDb;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -279,11 +280,12 @@ public class OperationRequestRepository
         operationType.Name = dto.Name;
         operationType.Duration = dto.Duration;
         operationType.IsActive = dto.IsActive; // Update IsActive property
+ Console.WriteLine("ola");
 
         // Clear current associations in the Type_Staff table for this operation type
         var existingStaff = _context.Type_Staff.Where(ots => ots.OperationTypeId == id);
         _context.Type_Staff.RemoveRange(existingStaff);
-
+ Console.WriteLine("adeus");
         // Re-add specialized staff associations
         foreach (var staffId in dto.SpecializedStaff)
         {
@@ -407,5 +409,6 @@ public async Task<bool> DeactivateOperationTypeAsync(long id)
         await _context.Requests.AddAsync(operationRequest);
         await _context.SaveChangesAsync();
     }
+
 
 }

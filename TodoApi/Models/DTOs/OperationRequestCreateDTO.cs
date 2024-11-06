@@ -1,4 +1,5 @@
 public class OperationRequestCreateDTO
+
 {
     public long PatientId { get; set; }
     public long OperationTypeId { get; set; }
