@@ -12,6 +12,7 @@ import { ListOperationTypesComponent } from './components/list-operation-types/l
 import { AddOperationTypeComponent } from './components/add-operation-type/add-operation-type.component';
 import { ListOperationRequestsComponent } from './components/list-operation-requests/list-operation-requests.component';
 import { DoctorUiComponent } from './components/doctor-ui/doctor-ui.component';
+import { FilterRequestsComponent } from './components/filter-requests/filter-requests.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'add-operation-type', component: AddOperationTypeComponent },
   { path: 'list-operation-requests', component: ListOperationRequestsComponent },
   { path: 'doctor-ui', component: DoctorUiComponent },
+  { path: 'filter-requests', component: FilterRequestsComponent },
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
