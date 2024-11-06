@@ -16,7 +16,7 @@ public class OperationRequestsController : ControllerBase
     public OperationRequestsController(UserContext context, OperationRequestRepository repository)
     {
         _context = context;
-        _repository=repository;
+        _repository = repository;
     }
 
 
@@ -89,7 +89,7 @@ public class OperationRequestsController : ControllerBase
             };
             await _repository.LogRequestChangeAsync(operationRequest.Id, new List<string> { logEntry.ChangeDescription });
 
-            return CreatedAtAction(nameof(GetOperationRequestByIdAsync), new { id = operationRequest.Id }, operationRequest);
+            return Ok("Operation request created successfully");
         }
 
         catch (DbUpdateException dbEx)
