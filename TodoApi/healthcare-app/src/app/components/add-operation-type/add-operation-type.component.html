@@ -1,1 +1,37 @@
-<p>add-operation-type works!</p>
+<div class="container">
+  <h2>Create Operation Type</h2>
+
+  <form [formGroup]="operationTypeForm" (ngSubmit)="onSubmit()">
+    <!-- Name field -->
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name" type="text" placeholder="Enter operation type name" />
+    </div>
+
+    <!-- Duration field -->
+    <div class="form-group">
+      <label for="duration">Duration (HH:mm:ss):</label>
+      <input id="duration" formControlName="duration" type="text" placeholder="e.g., 01:30:00" />
+    </div>
+
+    <!-- Dynamic list of Staff IDs -->
+    <div class="form-group">
+      <label>Staff IDs:</label>
+      <div formArrayName="staff">
+        <div *ngFor="let staffControl of staff.controls; let i = index" class="form-group">
+          <input [formControlName]="i" type="number" placeholder="Enter staff ID" />
+          <button type="button" (click)="removeStaffField(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" (click)="addStaffField()">Add Staff ID</button>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="submit-btn">Create Operation Type</button>
+  </form>
+
+  <!-- Display success or error message outside the form -->
+  <div *ngIf="message" [ngClass]="{'popup': true, 'success': message.includes('successfully'), 'error': !message.includes('successfully')}">
+    {{ message }}
+  </div>
+</div>

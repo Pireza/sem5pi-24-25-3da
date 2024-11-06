@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { CreatePatientRequest } from '../Models/CreatePatientRequest';
 import jwt_decode from 'jwt-decode'; // Use wildcard import
 import { UserService } from './userService'; // Import UserService
+import { CreateOperationTypeRequest } from '../Models/CreateOperationTypeRequest';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -21,7 +22,10 @@ export class AuthService {
   public updateProfileAsPatientUrl = 'http://localhost:5174/api/Patients/email/UpdateProfile';
   public searchPatientProfilesUrl = 'http://localhost:5174/api/Patients/searchPatientProfiles';
   public createPatientProfileAsAdmin = 'http://localhost:5174/api/Patients/createPatientAsAdmin';
-  public resetPasswordEP = 'http://localhost:5174/api/StaffUser/reset-password'
+  public resetPasswordEP = 'http://localhost:5174/api/StaffUser/reset-password';
+  public listTypesEP = 'http://localhost:5174/api/Operation/type/filter';
+  public addTypeEP = 'http://localhost:5174/api/Operation/type';
+  public listRequestsEP = 'http://localhost:5174/api/request/filter';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -75,6 +79,16 @@ export class AuthService {
   registerPatient(patientData: CreatePatientRequest): Observable<any> {
     return this.http.post(this.registerUrl, patientData);
   }
+
+  addOperationType(typeData: CreateOperationTypeRequest) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Include token if required
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(this.addTypeEP, typeData, { headers });
+  }
+
 
   updatePatientProfile(
     email: string,
