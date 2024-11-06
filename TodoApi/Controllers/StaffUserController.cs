@@ -28,7 +28,7 @@ public class StaffUserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Staff>> GetStaff(long id)
     {
-       var staff = await _repository.getStaff(id);
+        var staff = await _repository.getStaff(id);
 
         if (staff == null)
         {
@@ -151,7 +151,7 @@ public class StaffUserController : ControllerBase
     }
 
 
-// PUT: api/Staffs/email/Admin{email}
+    // PUT: api/Staffs/email/Admin{email}
     [HttpPut("email/UpdateStaffProfileAsAdmin{email}")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> PutStaffUpdateAsAdmin(
@@ -229,7 +229,7 @@ public class StaffUserController : ControllerBase
                 ChangeDescription = string.Join(", ", changes)
             };
 
-            _repository.LogAuditChangeAsync(staff.Id,changes);
+            _repository.LogAuditChangeAsync(staff.Id, changes);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -287,8 +287,8 @@ public class StaffUserController : ControllerBase
 
         return Ok("Staff member has been successfully deactivated.");
     }
-    
-    
+
+
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("search")]
     public async Task<ActionResult<IEnumerable<Staff>>> SearchStaff(
@@ -311,7 +311,7 @@ public class StaffUserController : ControllerBase
         }
         if (!string.IsNullOrEmpty(specialization))
         {
-            query = query.Where(s => s.Specialization != null && 
+            query = query.Where(s => s.Specialization != null &&
                                     s.Specialization.SpecDescription.Contains(specialization));
         }
         // Paginate results
@@ -330,7 +330,7 @@ public class StaffUserController : ControllerBase
         // Return paginated staff profiles
         return Ok(paginatedResults);
     }
-    
+
 }
 
 

@@ -25,7 +25,8 @@ export class AuthService {
   public resetPasswordEP = 'http://localhost:5174/api/StaffUser/reset-password';
   public listTypesEP = 'http://localhost:5174/api/Operation/type/filter';
   public addTypeEP = 'http://localhost:5174/api/Operation/type';
-  public listRequestsEP = 'http://localhost:5174/api/request/filter';
+  public listRequestsEP = 'http://localhost:5174/api/Operation/request/filter';
+  public allSpecializedStaffEP = 'http://localhost:5174/api/Specialization/staff-complete';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -66,6 +67,12 @@ export class AuthService {
     });
     return this.http.post(this.resetPasswordEP, body, { headers, responseType: 'text' });
   }
+
+  getSpecializedStaff(): Observable<any> {
+    return this.http.get<any>(this.allSpecializedStaffEP);
+  }
+
+
 
 
   deletePatientByEmail(email: string): Observable<void> {

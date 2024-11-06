@@ -1,125 +1,131 @@
+/* General Container Styling */
 .container {
-  max-width: 500px;
-  margin: auto;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 
+/* Header Styling */
 h2 {
   text-align: center;
   color: #333;
+  margin-bottom: 20px;
 }
 
+/* Form Group Styling */
 .form-group {
   margin-bottom: 15px;
 }
 
+/* Labels */
 label {
-  display: block;
   font-weight: bold;
+  color: #555;
+  display: block;
   margin-bottom: 5px;
-  color: #333;
 }
 
+/* Input Fields */
 input[type="text"],
-input[type="email"],
-select,
 input[type="number"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
-  margin-bottom: 5px; /* Space between inputs */
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
+/* Staff Array Buttons */
 button {
-  padding: 8px 15px;
-  border: none;
   cursor: pointer;
+  padding: 8px 12px;
   border-radius: 4px;
+  border: none;
+  font-size: 14px;
 }
 
-.submit-btn {
+/* Remove Staff Field Button */
+button[type="button"] {
+  background-color: #e74c3c;
+  color: #fff;
+  margin-left: 5px;
+}
+
+/* Add Staff ID Button */
+button.add-staff-btn {
+  background-color: #3498db;
+  color: #fff;
   display: block;
   width: 100%;
-  padding: 10px;
-  background-color: #288ca7;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.submit-btn:hover {
-  background-color: #218838;
-}
-
-.popup {
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  border-radius: 5px;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.popup.success {
-  background-color: #4caf50;
-  color: white;
-}
-
-.popup.error {
-  background-color: #f44336;
-  color: white;
-}
-
-.popup button {
   margin-top: 10px;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
 }
 
-.add-staff-btn {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 14px;
-  margin-top: 5px;
+/* View Staff List Button */
+/* CSS for View Staff List button */
+button.view-staff-btn {
+  background-color: #2ecc71;
+  color: #fff;
+  display: inline-block;
+  margin-top: 15px;
+  width: 100%;
 }
 
-.add-staff-btn:hover {
-  background-color: #45a049;
+
+/* Submit Button */
+button.submit-btn {
+  background-color: #27ae60;
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  transition: background-color 0.3s;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+button.submit-btn:hover {
+  background-color: #219150;
 }
 
-ul li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Message Popup Styling */
+.popup {
+  text-align: center;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 4px;
+}
+
+.success {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+.error {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+/* Staff List Table (In New Tab) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
   background-color: #f1f1f1;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 4px;
-}
-
-ul li button {
-  background-color: #f44336;
-  color: white;
-  font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-ul li button:hover {
-  background-color: #d32f2f;
 }

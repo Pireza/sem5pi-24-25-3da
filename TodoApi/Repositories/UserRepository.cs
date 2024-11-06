@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
 
-public class UserRepository 
+public class UserRepository
 {
     private readonly UserContext _context;
 
@@ -64,13 +64,13 @@ public class UserRepository
             await _context.SaveChangesAsync();
         }
     }
-    
+
     public virtual IQueryable<Patient> GetPatientsQueryable()
     {
         var query = _context.Patients.AsQueryable();
         return query;
     }
-      public virtual async Task<Patient?> checkEmail(CreatePatientRequest request)
+    public virtual async Task<Patient?> checkEmail(CreatePatientRequest request)
     {
         return await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
@@ -80,7 +80,7 @@ public class UserRepository
 
     public async Task AddStaff(RegisterUserDto model)
     {
-        
+
         var staff = new Staff
         {
             Email = model.Email,
@@ -92,32 +92,36 @@ public class UserRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Staff>> getStaff()
+    {
+        return await _context.Staff.ToListAsync();
+    }
     public async Task<Staff?> getStaff(long id)
     {
         return await _context.Staff.FindAsync(id);
     }
 
-public async Task<Staff?> checkStaff(CreateStaffRequest request)
-{
-    return await _context.Staff
-        .FirstOrDefaultAsync(s => s.LicenseNumber == request.LicenseNumber || s.Phone == request.Phone || s.Email == request.Email);
-}
+    public async Task<Staff?> checkStaff(CreateStaffRequest request)
+    {
+        return await _context.Staff
+            .FirstOrDefaultAsync(s => s.LicenseNumber == request.LicenseNumber || s.Phone == request.Phone || s.Email == request.Email);
+    }
 
 
     public async Task<Specialization?> specChange(long? specializationId)
     {
-            return await _context.Specializations
-                .FirstOrDefaultAsync(s => s.SpecId == specializationId);
+        return await _context.Specializations
+            .FirstOrDefaultAsync(s => s.SpecId == specializationId);
     }
 
-        public bool StaffExists(long id)
+    public bool StaffExists(long id)
     {
         return _context.Staff.Any(e => e.Id == id);
     }
 
     public async void LogAuditChangeAsyncStaff(long id, List<string> changes)
     {
-         var auditLog = new AuditLogStaff
+        var auditLog = new AuditLogStaff
         {
             StaffId = id,
             ChangeDate = DateTime.UtcNow,
@@ -127,16 +131,17 @@ public async Task<Staff?> checkStaff(CreateStaffRequest request)
         {
             _context.AuditLogStaff.Add(auditLog);
             await _context.SaveChangesAsync();
-    }
-}
-
-    public async Task<Staff> checkStaffEmail(string email){
-         return await _context.Staff
-        .FirstOrDefaultAsync(s => s.Email == email);
-
+        }
     }
 
-     public virtual IQueryable<Staff> GetStaffQueryable()
+    public async Task<Staff> checkStaffEmail(string email)
+    {
+        return await _context.Staff
+       .FirstOrDefaultAsync(s => s.Email == email);
+
+    }
+
+    public virtual IQueryable<Staff> GetStaffQueryable()
     {
         return _context.Staff.Include(s => s.Specialization).AsQueryable();
     }
