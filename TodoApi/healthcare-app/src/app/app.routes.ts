@@ -11,6 +11,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ListOperationTypesComponent } from './components/list-operation-types/list-operation-types.component';
 import { AddOperationTypeComponent } from './components/add-operation-type/add-operation-type.component';
 import { ListOperationRequestsComponent } from './components/list-operation-requests/list-operation-requests.component';
+import { DoctorUiComponent } from './components/doctor-ui/doctor-ui.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'list-operation-types', component: ListOperationTypesComponent },
   { path: 'add-operation-type', component: AddOperationTypeComponent },
   { path: 'list-operation-requests', component: ListOperationRequestsComponent },
+  { path: 'doctor-ui', component: DoctorUiComponent },
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
