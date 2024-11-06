@@ -1,11 +1,11 @@
 <div class="admin-ui">
-    <h1>Login Successful!</h1>
-    <p>Welcome to the Admin Dashboard.</p>
-    <p><strong>Email:</strong> {{ userEmail }}</p> <!-- Display the user's email -->
-    <p><strong>Role:</strong> {{ userRole }}</p>    <!-- Display the user's role -->
-    
-    <button (click)="redirectToPatientProfiles()">Search Patients</button>
-    <button (click)="redirectToCreatePatientProfiles()">Create Patient Profile</button>
+  <h1>Login Successful!</h1>
+  <p>Welcome to the Admin Dashboard.</p>
+  <p><strong>Email:</strong> {{ userEmail }}</p> <!-- Display the user's email -->
+  <p><strong>Role:</strong> {{ userRole }}</p> <!-- Display the user's role -->
 
-  </div>
-  
+  <button (click)="redirectToPatientProfiles()">Search Patients</button>
+  <button (click)="redirectToListOperationTypes()">List Operation Types</button>
+  <button (click)="redirectToCreatePatientProfiles()">Create Patient Profile</button>
+
+</div>

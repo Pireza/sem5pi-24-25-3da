@@ -8,6 +8,7 @@ import { AdminUiComponent } from './components/admin-ui/admin-ui.component'; // 
 import { GetPatientProfilesComponent } from './components/get-patient-profiles/get-patient-profiles.component'; // Adjust the path as necessary
 import { CreatePatientAdminComponent } from './components/create-patient-admin/create-patient-admin.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ListOperationTypesComponent } from './components/list-operation-types/list-operation-types.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'get-patient-profiles', component: GetPatientProfilesComponent },
   { path: 'create-patient-admin', component: CreatePatientAdminComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'list-operation-types', component: ListOperationTypesComponent },
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load

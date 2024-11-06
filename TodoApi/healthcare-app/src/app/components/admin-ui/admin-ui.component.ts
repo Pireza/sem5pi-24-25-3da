@@ -14,7 +14,7 @@ export class AdminUiComponent implements OnInit {
   userEmail: string | null = null; // To hold the user's email
   userRole: string | null = null;   // To hold the user's role
 
-  constructor(private authService: AuthService, private router: Router, private userService: UserService) {}
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.userEmail = this.userService.userEmail; // Get the user's email from AuthService
@@ -24,7 +24,10 @@ export class AdminUiComponent implements OnInit {
     this.router.navigate(['/get-patient-profiles']);
   }
 
-  redirectToCreatePatientProfiles(): void{
+  redirectToCreatePatientProfiles(): void {
     this.router.navigate(['/create-patient-admin']);
+  }
+  redirectToListOperationTypes() : void {
+    this.router.navigate(['/list-operation-types'])
   }
 }
