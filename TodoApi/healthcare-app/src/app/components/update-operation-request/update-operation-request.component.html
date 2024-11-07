@@ -1,0 +1,38 @@
+<form (ngSubmit)="updateOperationRequestAsDoctor()">
+
+  <!-- Dropdown for selecting Operation Request -->
+<div *ngIf="operationRequests.length > 0">
+  <label for="operationRequest">Select Operation Request:</label>
+  <select id="operationRequest" [(ngModel)]="selectedRequestId" name="operationRequest" required>
+    <option value="" disabled selected>Select an Operation Request</option>
+    <option *ngFor="let request of operationRequests" [value]="request.id">
+     Doctor: {{ request.doctor.fullName }} - Deadline: {{ request.deadline }} - Patient: {{ request.patient.firstName }}, {{ request.patient.lastName }} - Priority: {{ request.priority.description }} - Status: {{ request.status }}
+    </option>
+  </select>
+</div>
+
+<!-- Dropdown for selecting Priority -->
+<div>
+  <label for="operationPriority">Select Priority:</label>
+  <select id="operationPriority" [(ngModel)]="selectedPriorityId" name="operationPriority" required>
+    <option value="" disabled selected>Select Priority</option>
+    <option *ngFor="let priority of priorities" [value]="priority.id">
+      {{ priority.priority }} - {{ priority.description }}
+    </option>
+  </select>
+</div>
+
+
+
+  <!-- Input for Deadline -->
+  <div>
+    <label for="deadline">Deadline:</label>
+    <input id="deadline" [(ngModel)]="deadline" name="deadline" type="date" required />
+  </div>
+
+  <button type="submit">Update Operation Request</button>
+
+
+<!-- Back Button -->
+<button type="button"  (click)="goBack()">Back to Doctor Dashboard</button>
+</form>
