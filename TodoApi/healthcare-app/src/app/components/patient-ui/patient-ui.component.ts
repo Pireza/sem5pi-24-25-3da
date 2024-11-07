@@ -43,5 +43,7 @@ export class PatientUIComponent implements OnInit {
   onUpdateProfile(): void {
     this.router.navigate(['/update-profile']); // Navigate to Update Profile component
   }
-
+  goBack(): void {
+    this.router.navigate(['/auth']);
+  }
 }
