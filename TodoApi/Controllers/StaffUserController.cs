@@ -89,7 +89,7 @@ public class StaffUserController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest("ERROR: User could not be added");
         }
     }
     [Authorize(Policy = "AdminOnly")]

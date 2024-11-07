@@ -33,4 +33,7 @@ export class AdminUiComponent implements OnInit {
   redirectToAddOperationTypes() : void{
     this.router.navigate(['/add-operation-type']);
   }
+  redirectToRegisterStaff() : void {
+    this.router.navigate(['/register-staff']);
+  }
 }

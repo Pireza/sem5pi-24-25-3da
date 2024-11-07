@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode'; // Use wildcard import
 import { UserService } from './userService'; // Import UserService
 import { CreateOperationTypeRequest } from '../Models/CreateOperationTypeRequest';
 import { OperationRequestSearch } from '../Models/OperationRequestSearch';
+import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -28,6 +29,7 @@ export class AuthService {
   public addTypeEP = 'http://localhost:5174/api/Operation/type';
   public listRequestsEP = 'http://localhost:5174/api/Operation/request/filter';
   public allSpecializedStaffEP = 'http://localhost:5174/api/Specialization/staff-complete';
+  public registerStaffEp = 'http://localhost:5174/api/StaffUser/register';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -67,6 +69,15 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
     return this.http.post(this.resetPasswordEP, body, { headers, responseType: 'text' });
+  }
+
+  registerStaff(staffData: RegisterStaffRequest): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Include token if needed
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(this.registerStaffEp, staffData, { headers });
   }
 
   getSpecializedStaff(): Observable<any> {
