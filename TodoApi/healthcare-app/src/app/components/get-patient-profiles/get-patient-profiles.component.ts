@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { Router } from '@angular/router'; // Import Router
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-get-patient-profiles',
   standalone: true,
-  imports: [FormsModule, CommonModule], // Include FormsModule in imports
+  imports: [FormsModule, CommonModule],
   templateUrl: './get-patient-profiles.component.html',
-  styleUrls: ['./get-patient-profiles.component.css'] // Correct property name
+  styleUrls: ['./get-patient-profiles.component.css']
 })
 export class GetPatientProfilesComponent {
   name: string = '';
@@ -19,8 +18,8 @@ export class GetPatientProfilesComponent {
   medicalNumber: number | null = null;
   page: number = 1;
   pageSize: number = 10;
-
-  searchResults: any[] = []; // Initialize as an empty array
+  totalRecords: number = 0;
+  searchResults: any[] = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -34,6 +33,7 @@ export class GetPatientProfilesComponent {
     this.dateOfBirth = '';
     this.medicalNumber = null;
     this.searchResults = [];
+    this.totalRecords = 0;
   }
 
   onGoBack(): void {
@@ -41,7 +41,7 @@ export class GetPatientProfilesComponent {
   }
 
   onSearch(): void {
-    this.page=1;
+    this.page = 1;
     this.search();
   }
 
@@ -51,9 +51,9 @@ export class GetPatientProfilesComponent {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  search():void{
 
-    this.searchResults = []; // Reset search results before new search
+  search(): void {
+    this.searchResults = [];
     const formattedDateOfBirth = this.dateOfBirth 
       ? this.formatDateToDDMMYYYY(new Date(this.dateOfBirth))
       : undefined;
@@ -68,6 +68,7 @@ export class GetPatientProfilesComponent {
     ).subscribe(
       response => {
         console.log('Full response:', response); 
+        this.totalRecords = response.totalRecords;
         this.searchResults = Array.isArray(response.patients) ? response.patients : [];
       },
       error => {
@@ -75,10 +76,11 @@ export class GetPatientProfilesComponent {
       }
     );
   }
+
   nextPage(): void {
-    if (this.searchResults.length >= this.pageSize) { 
-    this.page++;
-    this.search();
+    if (this.page * this.pageSize < this.totalRecords) {  
+      this.page++;
+      this.search();
     }
   }
 
