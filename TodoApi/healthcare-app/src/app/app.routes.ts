@@ -13,6 +13,7 @@ import { AddOperationTypeComponent } from './components/add-operation-type/add-o
 import { ListOperationRequestsComponent } from './components/list-operation-requests/list-operation-requests.component';
 import { DoctorUiComponent } from './components/doctor-ui/doctor-ui.component';
 import { FilterRequestsComponent } from './components/filter-requests/filter-requests.component';
+import { RegisterStaffComponent } from './components/register-staff/register-staff.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -28,7 +29,7 @@ export const routes: Routes = [
   { path: 'list-operation-requests', component: ListOperationRequestsComponent },
   { path: 'doctor-ui', component: DoctorUiComponent },
   { path: 'filter-requests', component: FilterRequestsComponent },
-
+  { path: 'register-staff', component: RegisterStaffComponent },
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
 ];
