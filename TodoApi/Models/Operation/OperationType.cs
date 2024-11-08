@@ -12,6 +12,12 @@ public class OperationType
     public bool IsActive { get; set; } = true; // Add an IsActive flag
     public Specialization? Specialization { get; set; }
     public OperationType() { }
+    /// <summary>
+    /// Basic constructor for this class which calls ValidDuration()
+    /// which ensures the Duration argument is correctly formatted
+    /// </summary>
+    /// <param name="Name">Name of the type</param>
+    /// <param name="Duration">Duration of the type in format HH:mm:ss</param>
     public OperationType(string Name, string Duration, string Status)
     {
         if (ValidDuration(Duration))
