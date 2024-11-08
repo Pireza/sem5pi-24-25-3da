@@ -26,6 +26,14 @@ public class StaffUserController : ControllerBase
 
     // GET: api/Staff/{id}
     [HttpGet("{id}")]
+    /// <summary>
+    /// This method returns the staff user that has the Id passed as argument
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// If the User is found in the system -> Staff object
+    /// Else -> Not Found
+    /// </returns>
     public async Task<ActionResult<Staff>> GetStaff(long id)
     {
         var staff = await _repository.getStaff(id);
@@ -37,7 +45,16 @@ public class StaffUserController : ControllerBase
 
         return staff;
     }
-
+    /// <summary>
+    /// This method allows the user to send a password reset link to their personal email
+    /// which is passed as the argument for the method itself
+    /// </summary>
+    /// <param name="request">User email</param>
+    /// <returns> 
+    /// If the email is not correctly formatted or empty -> Bad Request
+    /// Else if the request is correct -> Ok
+    /// In case an unexpected error occurs -> Bad Request
+    /// </returns>
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] EmailRequest request)
     {
@@ -66,6 +83,22 @@ public class StaffUserController : ControllerBase
 
     [Authorize(Policy = "AdminOnly")]
     [HttpPost("register")]
+    /// <summary>
+    /// This method is used to register new Backoffice (Staff) Users in the system
+    /// </summary>
+    /// <param name="model">
+    /// This model is a structure with the following fields:
+    ///     - Username : string
+    ///     - Email : string
+    ///     - Role : string
+    /// </param>
+    /// <returns>
+    /// If the argument is NULL, or the role specified doesn't exist or there
+    /// is already a User in the system with unique attributes as the one passed
+    /// returns -> Bad Request
+    /// 
+    /// Else -> Ok
+    /// </returns>
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
     {
         if (model == null)
