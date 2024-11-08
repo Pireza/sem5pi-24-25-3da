@@ -7,6 +7,7 @@ import { UserService } from './userService'; // Import UserService
 import { CreateOperationTypeRequest } from '../Models/CreateOperationTypeRequest';
 import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
+import { OperationTypeSearch } from '../Models/OperationTypeSearch';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -33,7 +34,7 @@ export class AuthService {
   public updateOperationRequestDoctor = 'http://localhost:5174/api/OperationRequests';
   public listPrioritiesEP = 'http://localhost:5174/api/OperationRequests/Priorities';
   public listAllRequestsEP = 'http://localhost:5174/api/OperationRequests/All';
- 
+
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
   public userRole: string | null = null;   // To store the decoded role
@@ -190,16 +191,16 @@ export class AuthService {
     deadline?: string
   ): Observable<void> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.accessToken}` 
-  
+      Authorization: `Bearer ${this.accessToken}`
+
     });
-  
+
     // Constrói a URL com os parâmetros de consulta dinamicamente
     const params = new URLSearchParams();
     if (operationPriorityId) params.append('operationPriorityId', operationPriorityId.toString());
     if (deadline) params.append('deadline', deadline);
-  
-    
+
+
     const requestUrl = `${this.updateOperationRequestDoctor}/${id}?${params.toString()}`;
 
     // Faz a solicitação PUT para atualizar a operação
@@ -219,6 +220,24 @@ export class AuthService {
     });
 
     return this.http.get<any>(this.listAllRequestsEP, { headers });
+  }
+  /**
+   * This methods is responsible for sending the request to the Web API
+   * @param search according to which the filtering shall be done
+   * @returns a list with types matching the filters
+   */
+  getFilteredOperationTypes(search: OperationTypeSearch): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
+      'Content-Type': 'application/json',
+    });
+
+    let params = new HttpParams();
+    if (search.name) params = params.set('name', search.name);
+    if (search.specialization) params = params.set('specialization', search.specialization);
+    params = params.set('status', search.status);
+
+    return this.http.get<any[]>(this.listTypesEP, { headers, params });
   }
 
 }

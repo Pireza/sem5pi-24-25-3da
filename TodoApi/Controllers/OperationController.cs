@@ -115,7 +115,7 @@ public class OperationController : ControllerBase
     /// If the search structure is null -> Not Found
     /// Else -> List of Types
     /// </returns>
-    public async Task<ActionResult<IEnumerable<OperationTypeGetDTO>>> GetTypeFilter(OperationTypeSearch search)
+    public async Task<ActionResult<IEnumerable<OperationTypeGetDTO>>> GetTypeFilter([FromQuery] OperationTypeSearch search)
     {
         var type = await _service.GetAllTypeFilterAsync(search);
 

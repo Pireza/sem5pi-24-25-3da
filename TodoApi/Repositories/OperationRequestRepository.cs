@@ -217,7 +217,7 @@ public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsyn
                                 .Select(s => s.SpecDescription)
                                 .FirstOrDefault()
                 })
-                .Select(ss => $"{ss.Role} -> {ss.Specialization}")
+                .Select(ss => $"{ss.Role} - {ss.Specialization}")
                 .ToList()
         }).ToList();
 
@@ -326,12 +326,10 @@ public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsyn
         operationType.Name = dto.Name;
         operationType.Duration = dto.Duration;
         operationType.IsActive = dto.IsActive; // Update IsActive property
- Console.WriteLine("ola");
 
         // Clear current associations in the Type_Staff table for this operation type
         var existingStaff = _context.Type_Staff.Where(ots => ots.OperationTypeId == id);
         _context.Type_Staff.RemoveRange(existingStaff);
- Console.WriteLine("adeus");
         // Re-add specialized staff associations
         foreach (var staffId in dto.SpecializedStaff)
         {
