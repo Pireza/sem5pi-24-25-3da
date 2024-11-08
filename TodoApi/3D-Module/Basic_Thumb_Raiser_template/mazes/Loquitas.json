@@ -19,14 +19,14 @@
     ],
     "rooms" : [
         {
-            "bedX" : 2.0,
-            "bedY" : 4.0,
-            "bedDirection" :0.0,
-            "isOccupied": false
+            "bedX" : 5.0,
+            "bedY" : 5.0,
+            "bedDirection" :30.0,
+            "isOccupied": true
         },
         {
-            "bedX" : 0.0,
-            "bedY" : 0.0,
+            "bedX" : 2.0,
+            "bedY" : 2.0,
             "bedDirection" : -90.0,
             "isOccupied": false
         },
