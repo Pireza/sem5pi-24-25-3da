@@ -24,6 +24,52 @@ public class OperationRequestRepository
         _context.Entry(operationRequest).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
+    public virtual async Task<List<OperationRequest>> GetAllOperationRequestsAsync()
+{
+    var operationRequests = await _context.Requests
+        .Include(r => r.Priority)
+        .Include(d => d.Doctor)
+        .Include(p => p.Patient).Include(o=> o.OperationType) 
+        .ToListAsync();
+
+    // Remove circular reference (Patient.Operations) temporarily for this method
+    foreach (var request in operationRequests)
+    {
+        if (request.Patient != null)
+        {
+            // Create a shallow copy of the Patient object without the Operations property
+            var patientWithoutOperations = new Patient
+            {
+                Id = request.Patient.Id,
+                FirstName = request.Patient.FirstName,
+                LastName = request.Patient.LastName,
+                Email = request.Patient.Email,
+                Phone = request.Patient.Phone,
+                EmergencyContact= request.Patient.EmergencyContact,
+                Appointments= request.Patient.Appointments,
+                Birthday = request.Patient.Birthday,
+                Gender = request.Patient.Gender,
+                MedicalNumber = request.Patient.MedicalNumber,
+                MedicalConditions= request.Patient.MedicalConditions
+
+            };
+
+            // Replace the Patient in the OperationRequest with the modified one
+            request.Patient = patientWithoutOperations;
+        }
+    }
+
+     return operationRequests;
+}
+
+
+
+
+public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsync()
+{
+    return await _context.Priorities.ToListAsync();
+}
+
     public virtual async Task LogRequestChangeAsync(long requestId, List<string> changes)
     {
         var requestLog = new RequestsLog
