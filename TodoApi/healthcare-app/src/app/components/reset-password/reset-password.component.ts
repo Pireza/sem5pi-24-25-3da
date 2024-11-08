@@ -20,6 +20,9 @@ export class ResetPasswordComponent {
 
   constructor(private authService: AuthService, private router: Router) { }
 
+  /**
+   * Sends the request according to the endpoint, passing the user email
+   */
   onSubmit() {
     this.authService.resetPassword(this.email).subscribe({
       next: (response: any) => {

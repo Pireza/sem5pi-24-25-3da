@@ -23,7 +23,9 @@ export class FilterRequestsComponent {
 
   constructor(private authService: AuthService) {}
 
-  // Method called when the search form is submitted
+  /**
+   * This will make the 
+   */
   onSearch(): void {
 
     this.authService.searchOperationRequests(this.search).subscribe(

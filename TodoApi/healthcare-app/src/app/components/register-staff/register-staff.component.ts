@@ -23,6 +23,10 @@ export class RegisterStaffComponent {
     });
   }
 
+  /**
+   * This will send the request, then wait for the request return
+   upon which it will notify the user about success or insuccess
+   */
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.loading = true; // Start loading

@@ -28,7 +28,9 @@ export class AddOperationTypeComponent implements OnInit {
       staff: this.fb.array([])
     });
   }
-
+  /**
+   * This is the method that upon initialization, fetches the specialized staff list
+   */
   ngOnInit(): void {
     // Fetch the staff list on component load
     this.fetchStaffList();
@@ -62,12 +64,15 @@ export class AddOperationTypeComponent implements OnInit {
     });
   }
 
-  // Open a new tab with the staff list
+  /**
+   * This will send a request to get all Specialized staff in the system, and open a new tab
+   with those returning values in a table.
+   */
   openStaffListTab(): void {
-  // Open a new tab and write HTML to display the specialized staff list
-  const newWindow = window.open('', '_blank');
-  if (newWindow) {
-    newWindow.document.write(`
+    // Open a new tab and write HTML to display the specialized staff list
+    const newWindow = window.open('', '_blank');
+    if (newWindow) {
+      newWindow.document.write(`
       <html>
       <head>
         <title>Specializations List</title>
@@ -92,11 +97,14 @@ export class AddOperationTypeComponent implements OnInit {
       </body>
       </html>
     `);
-    newWindow.document.close();
+      newWindow.document.close();
+    }
   }
-}
 
-  // Submit form
+  /**
+   * This method will perform the request and display operation result on screen
+   * @returns 
+   */
   onSubmit(): void {
     const staffIds = this.operationTypeForm.value.staff;
     const hasDuplicates = this.hasDuplicateStaff(staffIds);
@@ -132,7 +140,9 @@ export class AddOperationTypeComponent implements OnInit {
     }
   }
 
-  // Function to clear message after 2 seconds
+  /**
+    * Function to clear message after 2 seconds
+  */
   private clearMessageAfterDelay(): void {
     setTimeout(() => {
       this.message = null;
