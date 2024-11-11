@@ -26,4 +26,7 @@ export class DoctorUiComponent implements OnInit {
   redirectToUpdateOperationRequests(): void {
     this.router.navigate(['/update-operation-request']);
     }
+    seeRepresentationOfTheClinic(): void{
+      window.open('http://192.168.56.1:5500/TodoApi/3D-Module/Basic_Thumb_Raiser_template/Thumb_Raiser.html', '_blank');
+    }
 }
