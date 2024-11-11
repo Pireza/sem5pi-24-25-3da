@@ -39,7 +39,14 @@ export default class Maze {
             // Create a wall
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
             // Create a bed
-            this.bed = new BedTemplate({textureUrl: description.bedTextureUrl});
+            this.bed = new BedTemplate({
+                textureUrls: {
+                    base: './textures/base.jpg',
+                    mate: './textures/mat.jpg',
+                    stand: './textures/stand.jpg',
+                    standBase: './textures/stand.jpg'
+                }
+            });
             // Create a person
              this.person = new Person({
                 textureUrls: {

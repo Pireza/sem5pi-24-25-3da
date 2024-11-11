@@ -55,7 +55,7 @@ export default class Person {
         head.rotation.x= -(Math.PI/2);
         head.rotation.y = -(Math.PI / 2);
         this.person.add(head);
-        
+        /*
         // Add a point light to illuminate the person
         const light = new THREE.PointLight(0xffffff, 1, 100);
         light.position.set(0, 10, 0); // Position it above the person
@@ -64,6 +64,6 @@ export default class Person {
         // Add ambient light to ensure there is some general illumination
         const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft white light
         this.person.add(ambientLight);
-        
+        */
     }
 }
