@@ -15,6 +15,7 @@ import { DoctorUiComponent } from './components/doctor-ui/doctor-ui.component';
 import { FilterRequestsComponent } from './components/filter-requests/filter-requests.component';
 import { RegisterStaffComponent } from './components/register-staff/register-staff.component';
 import { UpdateOperationRequestComponent } from './components/update-operation-request/update-operation-request.component';
+import { EditPatientProfileAdminComponent } from './components/edit-patient-profile-admin/edit-patient-profile-admin.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -32,6 +33,7 @@ export const routes: Routes = [
   { path: 'filter-requests', component: FilterRequestsComponent },
   { path: 'register-staff', component: RegisterStaffComponent },
   { path: 'update-operation-request', component: UpdateOperationRequestComponent },
+  { path: 'edit-patient-profile-admin', component: EditPatientProfileAdminComponent },
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
 ];

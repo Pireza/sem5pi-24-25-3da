@@ -1,0 +1,127 @@
+/* Overall container for the form */
+.register-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Title styling */
+.register-container h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form group styling for labels and inputs */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Label styling */
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* Input field styling */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Styling for the medical conditions section */
+.medical-conditions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.medical-conditions input {
+  flex: 1;
+}
+
+.medical-conditions button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.medical-conditions button:hover {
+  background-color: #218838;
+}
+
+/* Styling for the list of medical conditions */
+.medical-conditions ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.medical-conditions li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.medical-conditions li button {
+  padding: 4px 8px;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.medical-conditions li button:hover {
+  background-color: #c82333;
+}
+
+/* Submit button styling */
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) {
+  .register-container {
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 16px;
+  }
+
+  .medical-conditions input,
+  .medical-conditions button {
+    font-size: 16px;
+  }
+}

@@ -8,6 +8,7 @@ import { CreateOperationTypeRequest } from '../Models/CreateOperationTypeRequest
 import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
 import { OperationTypeSearch } from '../Models/OperationTypeSearch';
+import { Patient } from '../Models/Patient';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -34,6 +35,8 @@ export class AuthService {
   public updateOperationRequestDoctor = 'http://localhost:5174/api/OperationRequests';
   public listPrioritiesEP = 'http://localhost:5174/api/OperationRequests/Priorities';
   public listAllRequestsEP = 'http://localhost:5174/api/OperationRequests/All';
+  public editPatientProfileAdmin = 'http://localhost:5174/api/Patients/email/UpdatePatientProfileAsAdmin'
+  public getPatientUrl = 'http://localhost:5174/api/Patients/email';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -239,5 +242,31 @@ export class AuthService {
 
     return this.http.get<any[]>(this.listTypesEP, { headers, params });
   }
+  updatePatientAsAdmin(patient: Patient): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+  
+    // Ensure that email is provided
+    if (!patient.email) {
+      throw new Error('Patient email is required.');
+    }
+  
+    // Construct query parameters based on Patient properties
+    const params = new URLSearchParams();
+    if (patient.firstName) params.append('firstName', patient.firstName);
+    if (patient.lastName) params.append('lastName', patient.lastName);
+    if (patient.phone) params.append('phone', patient.phone);
+    if (patient.emergencyContact) params.append('emergencyContact', patient.emergencyContact);
+    
+    const requestUrl = `${this.editPatientProfileAdmin}/${patient.email}?${params.toString()}`;
+  
+    return this.http.put<void>(requestUrl, {}, { headers });
+  }
 
+  getAllPatientEmails() {
+    return this.http.get<string[]>('http://localhost:5174/api/Patients/allEmails'); // Example endpoint
+  }
+  
 }

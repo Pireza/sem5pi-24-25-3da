@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoApi.Models;
@@ -19,7 +18,7 @@ public class PatientRepository
         await _context.SaveChangesAsync();
     }
 
-     public async Task<Patient?> GetPatientByEmailAsync(string email)
+    public async Task<Patient?> GetPatientByEmailAsync(string email)
     {
         return await _context.Patients.FirstOrDefaultAsync(p => p.Email == email);
     }
@@ -32,29 +31,31 @@ public class PatientRepository
             ChangeDate = DateTime.UtcNow,
             ChangeDescription = string.Join(", ", changes)
         };
-        if(!changes.IsNullOrEmpty()){
+        if (!changes.IsNullOrEmpty())
+        {
             _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
-        
     }
+
     public async Task UpdatePatientAsync(Patient patient)
-{
-    MarkPatientAsModified(patient); 
-    await _context.SaveChangesAsync(); 
-}
-private void MarkPatientAsModified(Patient patient)
-{
-    _context.Entry(patient).State = EntityState.Modified;
-}
-public IQueryable<Patient> GetPatientsQueryable()
-{
-    var query = _context.Patients.AsQueryable();
-    return query;
-}
+    {
+        MarkPatientAsModified(patient);
+        await _context.SaveChangesAsync();
+    }
 
+    private void MarkPatientAsModified(Patient patient)
+    {
+        _context.Entry(patient).State = EntityState.Modified;
+    }
 
-    public async Task<Patient?> checkEmail(CreatePatientRequest request)
+    public IQueryable<Patient> GetPatientsQueryable()
+    {
+        var query = _context.Patients.AsQueryable();
+        return query;
+    }
+
+    public async Task<Patient?> CheckEmailAsync(CreatePatientRequest request)
     {
         return await _context.Patients
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
@@ -78,5 +79,15 @@ public IQueryable<Patient> GetPatientsQueryable()
         }
     }
 
-}
+    // Method to get all patient emails for the admin
+    public async Task<List<string>> GetAllPatientEmailsAsync()
+    {
+        // Retrieve all patients' emails from the database
+        var patientEmails = await _context.Patients
+            .Where(p => !string.IsNullOrEmpty(p.Email)) // Ensure no null or empty emails
+            .Select(p => p.Email) // Only select the Email field
+            .ToListAsync();
 
+        return patientEmails;
+    }
+}

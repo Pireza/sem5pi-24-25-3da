@@ -36,4 +36,7 @@ export class AdminUiComponent implements OnInit {
   redirectToRegisterStaff() : void {
     this.router.navigate(['/register-staff']);
   }
+  redirectToEditPatientProfile() : void {
+    this.router.navigate(['/edit-patient-profile-admin']);
+  }
 }
