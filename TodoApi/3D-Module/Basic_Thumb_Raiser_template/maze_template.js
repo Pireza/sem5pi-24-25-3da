@@ -45,8 +45,8 @@ export default class Maze {
                 textureUrls: {
                     body: './textures/shirt.jpg',
                     arms: './textures/arm.jpg',
-                    legs: 'path_to_legs_texture.png',
-                    head: 'path_to_head_texture.png'
+                    legs: './textures/pants.jpg',
+                    head: './textures/head.jpg'
                 }
             });
             
