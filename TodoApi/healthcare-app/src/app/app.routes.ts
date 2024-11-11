@@ -16,6 +16,7 @@ import { FilterRequestsComponent } from './components/filter-requests/filter-req
 import { RegisterStaffComponent } from './components/register-staff/register-staff.component';
 import { UpdateOperationRequestComponent } from './components/update-operation-request/update-operation-request.component';
 import { EditPatientProfileAdminComponent } from './components/edit-patient-profile-admin/edit-patient-profile-admin.component';
+import { CreateStaffAdminComponent } from './components/create-staff-admin/create-staff-admin.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'register-staff', component: RegisterStaffComponent },
   { path: 'update-operation-request', component: UpdateOperationRequestComponent },
   { path: 'edit-patient-profile-admin', component: EditPatientProfileAdminComponent },
+  {path: 'create-staff-admin', component: CreateStaffAdminComponent},
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
 ];

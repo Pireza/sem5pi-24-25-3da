@@ -9,6 +9,7 @@ import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
 import { OperationTypeSearch } from '../Models/OperationTypeSearch';
 import { Patient } from '../Models/Patient';
+import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -37,6 +38,7 @@ export class AuthService {
   public listAllRequestsEP = 'http://localhost:5174/api/OperationRequests/All';
   public editPatientProfileAdmin = 'http://localhost:5174/api/Patients/email/UpdatePatientProfileAsAdmin'
   public getPatientUrl = 'http://localhost:5174/api/Patients/email';
+  public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -275,4 +277,14 @@ export class AuthService {
     // Send the PUT request with query parameters and no body (empty object as body)
     return this.http.put<void>(requestUrl, {}, { headers });
   }
+
+  createStaffAsAdmin(request: CreateStaffRequest): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post<void>(this.createStaffAdmin, request, { headers });
+  }
+  
 }
