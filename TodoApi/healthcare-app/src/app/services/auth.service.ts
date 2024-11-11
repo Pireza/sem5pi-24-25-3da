@@ -39,6 +39,7 @@ export class AuthService {
   public editPatientProfileAdmin = 'http://localhost:5174/api/Patients/email/UpdatePatientProfileAsAdmin'
   public getPatientUrl = 'http://localhost:5174/api/Patients/email';
   public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin'
+  public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -286,5 +287,40 @@ export class AuthService {
   
     return this.http.post<void>(this.createStaffAdmin, request, { headers });
   }
+
+
+  updateStaffProfileAsAdmin(
+    email: string,
+    firstName?: string,
+    lastName?: string,
+    phone?: string,
+    specializationId?: number,
+    role?: string,
+    availabilitySlots?: any[]
+  ): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+  
+  
+let queryParams = '';
+
+if (firstName) queryParams += `firstName=${encodeURIComponent(firstName)}`;
+if (lastName) queryParams += `${queryParams ? '&' : '?'}lastName=${encodeURIComponent(lastName)}`;
+if (phone) queryParams += `${queryParams ? '&' : '?'}phone=${encodeURIComponent(phone)}`;
+if (specializationId != null) queryParams += `${queryParams ? '&' : '?'}specializationId=${specializationId}`;
+if (role) queryParams += `${queryParams ? '&' : '?'}role=${encodeURIComponent(role)}`;
+if (availabilitySlots) queryParams += `${queryParams ? '&' : '?'}availabilitySlots=${encodeURIComponent(JSON.stringify(availabilitySlots))}`;
+
+// Correct URL construction
+let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
+
+    
+    console.log(url);
+  
+    return this.http.put<void>(url, queryParams, { headers });
+  }
+  
   
 }

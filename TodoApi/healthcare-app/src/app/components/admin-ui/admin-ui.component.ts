@@ -42,4 +42,7 @@ export class AdminUiComponent implements OnInit {
   redirectToCreateStaff() : void {
     this.router.navigate(['/create-staff-admin']);
   }
+  redirectToEditStaff() : void{
+    this.router.navigate(['/edit-staff-admin']);
+  }
 }
