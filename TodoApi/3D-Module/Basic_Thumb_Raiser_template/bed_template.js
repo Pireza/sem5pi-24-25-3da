@@ -15,31 +15,49 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
  */
 
 export default class BedTemplate {
-    constructor() {
+    constructor(parameters) { 
+        for (const [key, value] of Object.entries(parameters)) {
+            this[key] = value;
+        }
+
+        // Check if textureUrl is provided
+        if (this.textureUrl) {
+            console.log("texture working");
+
+            const texture = new THREE.TextureLoader().load(this.textureUrl);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.magFilter = THREE.LinearFilter;
+            texture.minFilter = THREE.LinearMipmapLinearFilter;
+
+            // Apply texture to the materials
+            this.material1 = new THREE.MeshStandardMaterial({ map: texture });
+            this.material2 = new THREE.MeshStandardMaterial({  map: texture });
+            this.material3 = new THREE.MeshStandardMaterial({  map: texture });
+            this.material4 = new THREE.MeshStandardMaterial({  map: texture });
+        } else {
+            console.warn("No textureUrl provided. Texture will not be applied.");
+            this.material1 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
+            this.material2 = new THREE.MeshStandardMaterial({ color: 'black' });
+            this.material3 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
+            this.material4 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
+        }
+
         this.bed = new THREE.Group();
 
-        const geometry1 = new THREE.BoxGeometry(15, 3, 35);
-        const material1 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-        const base = new THREE.Mesh(geometry1, material1);
+        const base = new THREE.Mesh(new THREE.BoxGeometry(15, 3, 35), this.material1);
         base.position.set(-7, 11, -5);
         this.bed.scale.set(.03, .03, .03);
         this.bed.add(base);
 
-        const geometry2 = new THREE.BoxGeometry(15, 2, 35);
-        const material2 = new THREE.MeshStandardMaterial({ color: 'black' });
-        const mat = new THREE.Mesh(geometry2, material2);
+        const mat = new THREE.Mesh(new THREE.BoxGeometry(15, 2, 35), this.material2);
         mat.position.set(-7, 14, -5);
         this.bed.add(mat);
 
-        const geometry3 = new THREE.BoxGeometry(4, 11, 4);
-        const material3 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-        const stand = new THREE.Mesh(geometry3, material3);
+        const stand = new THREE.Mesh(new THREE.BoxGeometry(4, 11, 4), this.material3);
         stand.position.set(-7, 6, -5);
         this.bed.add(stand);
 
-        const geometry4 = new THREE.BoxGeometry(13, 3, 13);
-        const material4 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-        const standBase = new THREE.Mesh(geometry4, material4);
+        const standBase = new THREE.Mesh(new THREE.BoxGeometry(13, 3, 13), this.material4);
         standBase.position.set(-7, 2, -5);
         this.bed.add(standBase);
 

@@ -39,10 +39,18 @@ export default class Maze {
             // Create a wall
             this.wall = new Wall({ textureUrl: description.wallTextureUrl });
             // Create a bed
-            this.bed = new BedTemplate();
+            this.bed = new BedTemplate({textureUrl: description.bedTextureUrl});
             // Create a person
-            this.person = new Person();
-            // Build the maze
+             this.person = new Person({
+                textureUrls: {
+                    body: './textures/shirt.jpg',
+                    arms: './textures/arm.jpg',
+                    legs: 'path_to_legs_texture.png',
+                    head: 'path_to_head_texture.png'
+                }
+            });
+            
+                        // Build the maze
             let wallObject;
             for (let i = 0; i <= description.size.width; i++) {
                 for (let j = 0; j <= description.size.height; j++) {
