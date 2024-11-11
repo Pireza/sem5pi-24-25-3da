@@ -79,15 +79,4 @@ public class PatientRepository
         }
     }
 
-    // Method to get all patient emails for the admin
-    public async Task<List<string>> GetAllPatientEmailsAsync()
-    {
-        // Retrieve all patients' emails from the database
-        var patientEmails = await _context.Patients
-            .Where(p => !string.IsNullOrEmpty(p.Email)) // Ensure no null or empty emails
-            .Select(p => p.Email) // Only select the Email field
-            .ToListAsync();
-
-        return patientEmails;
-    }
 }

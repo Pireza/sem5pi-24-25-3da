@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Patient } from '../../Models/Patient';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-patient-profile-admin',
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './edit-patient-profile-admin.component.html',
   styleUrls: ['./edit-patient-profile-admin.component.css']
 })
-export class EditPatientProfileAdminComponent implements OnInit {
+export class EditPatientProfileAdminComponent {
   patient: Patient = {
     email: '',
     firstName: '',
@@ -22,37 +22,31 @@ export class EditPatientProfileAdminComponent implements OnInit {
     medicalConditions: []
   };
 
-  patientEmails: string[] = [];  // Store the list of patient emails
-  newCondition: string = '';
+  newCondition: string = '';  // Add newCondition property to bind to input
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Fetch the list of patient emails when the component initializes
-    this.authService.getAllPatientEmails().subscribe({
-      next: (emails) => {
-        this.patientEmails = emails;  // Store the emails in the patientEmails array
-      },
-      error: (error) => {
-        console.error('Error fetching patient emails:', error);
-        // Handle error (e.g., show a message to the user)
-      }
-    });
+    // Optionally, load the patient's data if needed for the initial form state
+    // This could be done by calling the API or pre-filling data
   }
 
   onSubmit() {
+    // Ensure the email is provided and is mandatory before making the request
     if (!this.patient.email) {
       alert('Email is required!');
       return;
     }
 
+    // Call AuthService to update patient details
     this.authService.updatePatientAsAdmin(this.patient).subscribe({
       next: () => {
         console.log('Patient updated successfully');
-        this.router.navigate(['/admin-ui']);
+        this.router.navigate(['/admin-ui']); // Navigate to the Admin UI or relevant page
       },
       error: (error) => {
         console.error('Error updating patient:', error);
+        alert('Error updating patient profile!'); // Optionally show an error message
       }
     });
   }
@@ -60,7 +54,7 @@ export class EditPatientProfileAdminComponent implements OnInit {
   addCondition() {
     if (this.newCondition.trim()) {
       this.patient.medicalConditions.push(this.newCondition.trim());
-      this.newCondition = '';
+      this.newCondition = '';  // Clear the input after adding the condition
     }
   }
 

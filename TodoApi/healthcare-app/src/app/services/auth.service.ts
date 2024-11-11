@@ -253,20 +253,26 @@ export class AuthService {
       throw new Error('Patient email is required.');
     }
   
-    // Construct query parameters based on Patient properties
+    // Construct query parameters
     const params = new URLSearchParams();
     if (patient.firstName) params.append('firstName', patient.firstName);
     if (patient.lastName) params.append('lastName', patient.lastName);
     if (patient.phone) params.append('phone', patient.phone);
     if (patient.emergencyContact) params.append('emergencyContact', patient.emergencyContact);
-    
+  
+    // Only append medicalConditions as individual parameters for each condition (not a single JSON string)
+    if (patient.medicalConditions && patient.medicalConditions.length > 0) {
+      patient.medicalConditions.forEach(condition => {
+        params.append('medicalConditions', condition);
+      });
+    }
+  
+    // Ensure that the URL is correctly formatted:
     const requestUrl = `${this.editPatientProfileAdmin}/${patient.email}?${params.toString()}`;
   
+    console.log("Request URL:", requestUrl);  // Log for debugging
+  
+    // Send the PUT request with query parameters and no body (empty object as body)
     return this.http.put<void>(requestUrl, {}, { headers });
   }
-
-  getAllPatientEmails() {
-    return this.http.get<string[]>('http://localhost:5174/api/Patients/allEmails'); // Example endpoint
-  }
-  
 }

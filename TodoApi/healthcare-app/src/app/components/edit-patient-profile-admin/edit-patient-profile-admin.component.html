@@ -1,45 +1,49 @@
-<div class="register-container">
-  <h2>Edit Patient Profile (Admin)</h2>
+<div class="edit-patient-container">
+  <h2>Edit Patient Profile</h2>
   <form (ngSubmit)="onSubmit()">
-    <!-- Email Input -->
-    <div class="form-group">
-      <label for="email">Email</label>
-      <select id="email" [(ngModel)]="patient.email" name="email" required>
-        <option *ngFor="let email of patientEmails" [value]="email">{{ email }}</option>
-      </select>
-    </div>
-
-    <!-- First Name Input -->
+    <!-- First Name -->
     <div class="form-group">
       <label for="firstName">First Name</label>
       <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" required />
     </div>
 
-    <!-- Last Name Input -->
+    <!-- Last Name -->
     <div class="form-group">
       <label for="lastName">Last Name</label>
       <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" required />
     </div>
 
-    <!-- Phone Input -->
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [(ngModel)]="patient.email" name="email" required />
+    </div>
+
+    <!-- Phone -->
     <div class="form-group">
       <label for="phone">Phone</label>
       <input type="tel" id="phone" [(ngModel)]="patient.phone" name="phone" required />
     </div>
 
-    <!-- Emergency Contact Input -->
+    <!-- Emergency Contact -->
     <div class="form-group">
       <label for="emergencyContact">Emergency Contact</label>
       <input type="tel" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" required />
     </div>
 
-    <!-- Medical Conditions Input -->
+    <!-- Medical Conditions -->
     <div class="form-group">
       <label>Medical Conditions</label>
       <div class="medical-conditions">
-        <input type="text" [(ngModel)]="newCondition" placeholder="Add condition" name="newCondition" />
+        <input 
+          type="text" 
+          [(ngModel)]="newCondition" 
+          name="newCondition" 
+          placeholder="Add a condition"
+        />
         <button type="button" (click)="addCondition()">Add</button>
       </div>
+
       <ul>
         <li *ngFor="let condition of patient.medicalConditions; let i = index">
           {{ condition }}
@@ -48,6 +52,7 @@
       </ul>
     </div>
 
+    <!-- Submit Button -->
     <button type="submit" class="submit-btn">Update Patient</button>
   </form>
 </div>

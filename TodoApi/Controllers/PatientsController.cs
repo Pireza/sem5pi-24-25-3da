@@ -571,7 +571,7 @@ namespace TodoApi.Controllers
 
 
 // PUT: api/Patients/email/Admin{email}
-[HttpPut("email/UpdatePatientProfileAsAdmin{email}")]
+[HttpPut("email/UpdatePatientProfileAsAdmin/{email}")]
 [Authorize(Policy = "AdminOnly")]
 public async Task<IActionResult> PutPatientUpdateAsAdmin(
     string email,
@@ -703,32 +703,6 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         return NoContent(); // Respond with 204 No Content
     }
 
-// GET: api/Patients/allEmails
-[HttpGet("allEmails")]
-public async Task<ActionResult<IEnumerable<string>>> GetAllPatientEmails()
-{
-    try
-    {
-        // Retrieve all patient emails using the PatientRepository
-        var patientEmails = await _patientRepository.GetAllPatientEmailsAsync();
-
-        // Check if emails were found
-        if (patientEmails == null || patientEmails.Count == 0)
-        {
-            return NotFound("No patient emails found.");
-        }
-
-        // Return the list of emails
-        return Ok(patientEmails);
-    }
-    catch (Exception ex)
-    {
-        // Handle any errors that may occur
-        return StatusCode(500, $"Internal server error: {ex.Message}");
-    }
-}
-
 }
 }
-
 
