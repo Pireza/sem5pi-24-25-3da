@@ -20,44 +20,35 @@ export default class BedTemplate {
             this[key] = value;
         }
 
-        // Check if textureUrl is provided
-        if (this.textureUrl) {
-            console.log("texture working");
-
-            const texture = new THREE.TextureLoader().load(this.textureUrl);
+        const loadTexture = (url) => {
+            const texture = new THREE.TextureLoader().load(url);
             texture.colorSpace = THREE.SRGBColorSpace;
             texture.magFilter = THREE.LinearFilter;
             texture.minFilter = THREE.LinearMipmapLinearFilter;
+            return new THREE.MeshStandardMaterial({ map: texture });
+        };
+        const baseMaterial = this.textureUrls?.base ? loadTexture(this.textureUrls.base) : new THREE.MeshStandardMaterial({ color: 'red' });
+        const matMaterial = this.textureUrls?.mate ? loadTexture(this.textureUrls.mate) : new THREE.MeshStandardMaterial({ color: 'blue' });
+        const standMaterial = this.textureUrls?.stand ? loadTexture(this.textureUrls.stand) : new THREE.MeshStandardMaterial({ color: 'green' });
+        const standBaseMaterial = this.textureUrls?.standBase ? loadTexture(this.textureUrls.standBase) : new THREE.MeshStandardMaterial({ color: '#ffdbac' });
 
-            // Apply texture to the materials
-            this.material1 = new THREE.MeshStandardMaterial({ map: texture });
-            this.material2 = new THREE.MeshStandardMaterial({  map: texture });
-            this.material3 = new THREE.MeshStandardMaterial({  map: texture });
-            this.material4 = new THREE.MeshStandardMaterial({  map: texture });
-        } else {
-            console.warn("No textureUrl provided. Texture will not be applied.");
-            this.material1 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-            this.material2 = new THREE.MeshStandardMaterial({ color: 'black' });
-            this.material3 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-            this.material4 = new THREE.MeshStandardMaterial({ color: '#BEBEBE' });
-        }
 
         this.bed = new THREE.Group();
 
-        const base = new THREE.Mesh(new THREE.BoxGeometry(15, 3, 35), this.material1);
+        const base = new THREE.Mesh(new THREE.BoxGeometry(15, 3, 35), baseMaterial);
         base.position.set(-7, 11, -5);
         this.bed.scale.set(.03, .03, .03);
         this.bed.add(base);
 
-        const mat = new THREE.Mesh(new THREE.BoxGeometry(15, 2, 35), this.material2);
+        const mat = new THREE.Mesh(new THREE.BoxGeometry(15, 2, 35), matMaterial);
         mat.position.set(-7, 14, -5);
         this.bed.add(mat);
 
-        const stand = new THREE.Mesh(new THREE.BoxGeometry(4, 11, 4), this.material3);
+        const stand = new THREE.Mesh(new THREE.BoxGeometry(4, 11, 4), standMaterial);
         stand.position.set(-7, 6, -5);
         this.bed.add(stand);
 
-        const standBase = new THREE.Mesh(new THREE.BoxGeometry(13, 3, 13), this.material4);
+        const standBase = new THREE.Mesh(new THREE.BoxGeometry(13, 3, 13), standBaseMaterial);
         standBase.position.set(-7, 2, -5);
         this.bed.add(standBase);
 

@@ -1,19 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-/*
- * parameters = {
- *  url: String,
- *  credits: String,
- *  scale: Vector3,
- *  walkingSpeed: Float,
- *  initialDirection: Float,
- *  turningSpeed: Float,
- *  runningFactor: Float,
- *  keyCodes: { fixedView: String, firstPersonView: String, thirdPersonView: String, topView: String, viewMode: String, userInterface: String, miniMap: String, help: String, statistics: String, run: String, left: String, right: String, backward: String, forward: String, jump: String, yes: String, no: String, wave: String, punch: String, thumbsUp: String }
- * }
- */
-
 export default class Person {
     constructor(parameters = {}) {
         // Loop through parameters and assign them to the instance
@@ -35,7 +22,7 @@ export default class Person {
         const bodyMaterial = this.textureUrls?.body ? loadTexture(this.textureUrls.body) : new THREE.MeshStandardMaterial({ color: 'red' });
         const armsMaterial = this.textureUrls?.arms ? loadTexture(this.textureUrls.arms) : new THREE.MeshStandardMaterial({ color: 'blue' });
         const legsMaterial = this.textureUrls?.legs ? loadTexture(this.textureUrls.legs) : new THREE.MeshStandardMaterial({ color: 'green' });
-        const headMaterial = this.textureUrls?.head ? loadTexture(this.textureUrls.head) : new THREE.MeshStandardMaterial({ color: 'ffdbac' });
+        const headMaterial = this.textureUrls?.head ? loadTexture(this.textureUrls.head) : new THREE.MeshStandardMaterial({ color: '#ffdbac' });
 
         // Create the geometry and meshes for the person
         const geometry1 = new THREE.BoxGeometry(7, 4, 14);
@@ -45,8 +32,7 @@ export default class Person {
         this.person.add(body);
 
         const geometry2 = new THREE.BoxGeometry(2.5, 2.5, 15);
-        const material2 = new THREE.MeshStandardMaterial({ color: 'gray' });
-        const leg = new THREE.Mesh(geometry2, material2);
+        const leg = new THREE.Mesh(geometry2, legsMaterial);
         leg.position.set(-5, 6, 6);
         this.person.add(leg);
 
@@ -64,11 +50,20 @@ export default class Person {
         this.person.add(otherArm);
 
         const geometry = new THREE.SphereGeometry(2.5, 32, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffdbac });
-        const head = new THREE.Mesh(geometry, material);
+        const head = new THREE.Mesh(geometry, headMaterial);
         head.position.set(-7, 6, -14);
+        head.rotation.x= -(Math.PI/2);
+        head.rotation.y = -(Math.PI / 2);
         this.person.add(head);
-    }
+        /*
+        // Add a point light to illuminate the person
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(0, 10, 0); // Position it above the person
+        this.person.add(light);
 
-   
+        // Add ambient light to ensure there is some general illumination
+        const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft white light
+        this.person.add(ambientLight);
+        */
+    }
 }
