@@ -32,6 +32,20 @@ public class OperationRequestsController : ControllerBase
 
         return operationRequest;
     }
+    [HttpGet("Priorities")]
+public async Task<ActionResult<List<OperationPriority>>> GetAllPriorities()
+{
+    var priorities = await _repository.GetAllOperationPrioritiesAsync();
+    return Ok(priorities);
+}
+
+// GET: api/OperationRequests/All
+[HttpGet("All")]
+public async Task<ActionResult<List<OperationRequest>>> GetAllOperationRequests()
+{
+    var operationRequests = await _repository.GetAllOperationRequestsAsync();
+    return Ok(operationRequests);
+}
 
     // POST: api/OperationRequests
     [HttpPost("CreateOperationRequest")]

@@ -1,0 +1,12 @@
+<div class="doctor-ui">
+  <h1>Login Successful!</h1>
+  <p>Welcome to the Doctor Dashboard.</p>
+  <p><strong>Email:</strong> {{ userEmail }}</p> <!-- Display the user's email -->
+  <p><strong>Role:</strong> {{ userRole }}</p> <!-- Display the user's role -->
+
+  <button (click)="redirectToFilterRequests()">Filter Operation Requests</button>
+  <button (click)="redirectToUpdateOperationRequests()">Update Operation Requests</button>
+  <button (click)="seeRepresentationOfTheClinic()">3D Clinic Representation</button>
+
+
+</div>

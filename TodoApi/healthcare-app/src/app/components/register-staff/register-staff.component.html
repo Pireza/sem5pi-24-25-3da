@@ -1,0 +1,40 @@
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <h2>Register Staff User</h2>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        placeholder="Enter username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        placeholder="Enter email"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" formControlName="role">
+        <option value="Admin">Admin</option>
+        <option value="Doctor">Doctor</option>
+        <option value="Nurse">Nurse</option>
+        <option value="Technician">Technician</option>
+      </select>
+    </div>
+
+    <!-- Update the button to show loading state -->
+    <button type="submit" [disabled]="registerForm.invalid || loading">
+      {{ loading ? 'Registering...' : 'Register' }}
+    </button>
+  </form>
+</div>

@@ -31,7 +31,7 @@ input:focus {
 }
 
 .submit-button {
-    background-color: #007bff; /* Bootstrap primary color */
+    background-color: #28a745; /* Bootstrap primary color */
     color: white; /* White text color */
     padding: 10px 15px; /* Padding for button */
     border: none; /* No border */
@@ -42,5 +42,21 @@ input:focus {
 }
 
 .submit-button:hover {
-    background-color: #0056b3; /* Darker shade for hover effect */
+    background-color: #218838; /* Darker shade for hover effect */
+}
+.back-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Blue color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.back-btn:hover {
+    background-color: #0056b3; /* Darker blue for hover effect */
 }

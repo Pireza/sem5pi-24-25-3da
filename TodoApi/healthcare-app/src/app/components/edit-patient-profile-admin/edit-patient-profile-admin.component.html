@@ -1,0 +1,58 @@
+<div class="edit-patient-container">
+  <h2>Edit Patient Profile</h2>
+  <form (ngSubmit)="onSubmit()">
+    <!-- First Name -->
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" required />
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" required />
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [(ngModel)]="patient.email" name="email" required />
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" [(ngModel)]="patient.phone" name="phone" required />
+    </div>
+
+    <!-- Emergency Contact -->
+    <div class="form-group">
+      <label for="emergencyContact">Emergency Contact</label>
+      <input type="tel" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" required />
+    </div>
+
+    <!-- Medical Conditions -->
+    <div class="form-group">
+      <label>Medical Conditions</label>
+      <div class="medical-conditions">
+        <input 
+          type="text" 
+          [(ngModel)]="newCondition" 
+          name="newCondition" 
+          placeholder="Add a condition"
+        />
+        <button type="button" (click)="addCondition()">Add</button>
+      </div>
+
+      <ul>
+        <li *ngFor="let condition of patient.medicalConditions; let i = index">
+          {{ condition }}
+          <button type="button" (click)="removeCondition(i)">Remove</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn">Update Patient</button>
+  </form>
+</div>

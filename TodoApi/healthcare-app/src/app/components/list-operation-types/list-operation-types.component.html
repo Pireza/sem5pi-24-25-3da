@@ -1,1 +1,53 @@
-<p>list-operation-types works!</p>
+<div class="container">
+  <h2>Filter Operation Types</h2>
+  <form (ngSubmit)="onSearch()" class="filter-form">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" [(ngModel)]="searchParams.name" name="name" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="specialization">Specialization</label>
+      <input type="text" id="specialization" [(ngModel)]="searchParams.specialization" name="specialization" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" [(ngModel)]="searchParams.status" name="status" class="form-control">
+        <option [value]="-1">None</option>
+        <option [value]="1">Active</option>
+        <option [value]="0">Inactive</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div *ngIf="operationTypes.length > 0" class="result-box">
+    <h3>Results</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Specialized Staff</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let type of operationTypes">
+          <td>{{ type.name }}</td>
+          <td>{{ type.duration }}</td>
+          <td>{{ type.isActive ? 'Active' : 'Inactive' }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let staff of type.specializedStaff">{{ staff }}</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

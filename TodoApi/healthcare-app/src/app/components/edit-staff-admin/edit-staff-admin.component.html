@@ -1,0 +1,43 @@
+<div class="register-container">
+    <h2>Update Staff Profile</h2>
+  
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" [(ngModel)]="staffUpdateRequest.email" name="email" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" [(ngModel)]="staffUpdateRequest.firstName" name="firstName" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" [(ngModel)]="staffUpdateRequest.lastName" name="lastName" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" [(ngModel)]="staffUpdateRequest.phone" name="phone" />
+      </div>
+  
+      <div class="form-group">
+        <label for="specializationId">Specialization:</label>
+        <input type="number" id="specializationId" [(ngModel)]="staffUpdateRequest.specializationId" name="specializationId" />
+      </div>
+  
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <input type="text" id="role" [(ngModel)]="staffUpdateRequest.role" name="role" />
+      </div>
+  
+      <div class="form-group">
+        <label for="availabilitySlots">Availability Slots (JSON format):</label>
+        <textarea id="availabilitySlots" [(ngModel)]="staffUpdateRequest.availabilitySlots" name="availabilitySlots"></textarea>
+      </div>
+  
+      <button type="submit" class="submit-btn">Update Staff</button>
+    </form>
+  </div>
+  

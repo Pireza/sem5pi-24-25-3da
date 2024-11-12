@@ -20,6 +20,8 @@ public class SpecializationController : ControllerBase
         return await _context.Specializations.ToListAsync();
     }
 
+
+
     // GET: api/Specialization/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Specialization>> GetSpecialization(long id)
@@ -57,6 +59,22 @@ public class SpecializationController : ControllerBase
         return await _context.SpecializedStaff.ToListAsync();
     }
 
+    [HttpGet("staff-complete")]
+    public async Task<ActionResult<IEnumerable<SpecializationDTO>>> GetSpecializedStaffFull()
+    {
+        return await (from staff in _context.SpecializedStaff
+                                          join specialization in _context.Specializations
+                                          on staff.SpecializationId equals specialization.SpecId
+                                          select new SpecializationDTO
+                                          {
+                                              Id = staff.Id,
+                                              Role = staff.Role,
+                                              Specialization = specialization.SpecDescription
+                                          }).ToListAsync();
+
+    }
+
+
     // GET: api/Specialization/{id}
     [HttpGet("staff/{id}")]
     public async Task<ActionResult<SpecializedStaff>> GetSpecializedStaff(long id)
@@ -79,7 +97,8 @@ public class SpecializationController : ControllerBase
     {
         var specialization = await _context.Specializations.FindAsync(staff.SpecializationId);
 
-        if(specialization == null){
+        if (specialization == null)
+        {
             return BadRequest("The specified Specialization doesn't exist");
         }
 

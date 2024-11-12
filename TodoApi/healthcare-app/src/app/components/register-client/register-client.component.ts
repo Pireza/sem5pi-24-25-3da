@@ -27,7 +27,7 @@ export class RegisterClientComponent {
   };
 
   newCondition = '';
-
+  errorMessage = '';
   constructor(private authService: AuthService, private router: Router) {}
 
   addCondition() {
@@ -59,13 +59,37 @@ export class RegisterClientComponent {
 
     this.authService.registerPatient(this.client).subscribe({
       next: () => {
+        this.errorMessage = '';
         this.authService.isAuthenticated=false;
+        alert('Patient registered successfully');
         this.router.navigate(['/auth']); 
       },
       error: (error) => {
-        console.error('Error registering patient:', error);
-        // Handle errors (e.g., show an error message to the user)
+        if (error.status === 400) {
+          // Check for specific error message from the server response
+          if (error.error) {
+            console.log(error.error);
+            switch (error.error) {
+              case 'User already exists in the system':
+                this.errorMessage = 'A user with this email or username already exists. Please use a different email or username.';
+                break;
+              case 'An error occurred while saving the entity changes. See the inner exception for details.':
+                this.errorMessage = 'A user with this telephone number or medical number already exists. Please use a different phone number or medical number.';
+                break;
+              default:
+                this.errorMessage = 'There was a problem with the information provided. Please check your details and try again.';
+            }
+          } else {
+            this.errorMessage = 'A validation error occurred. Please check your input.';
+          }
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
       }
     });
   }
+  goBack(): void {
+    this.router.navigate(['/auth']);
+  }
+
 }

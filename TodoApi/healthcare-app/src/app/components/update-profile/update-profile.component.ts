@@ -49,4 +49,7 @@ export class UpdateProfileComponent implements OnInit {
       alert('User email is not available. Please log in again.');
     }
   }
+  goBack(): void {
+    this.router.navigate(['/patient-ui']);
+  }
 }

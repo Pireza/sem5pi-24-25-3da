@@ -20,7 +20,6 @@ namespace TodoApi.Controllers
         private readonly AuthServicePatient _authServicePatient;
         private readonly PasswordGeneratorService _passService;
         private UserRepository _repository;
-        private PatientRepository patient_repository;
 
 
 
@@ -571,7 +570,7 @@ namespace TodoApi.Controllers
 
 
 // PUT: api/Patients/email/Admin{email}
-[HttpPut("email/UpdatePatientProfileAsAdmin{email}")]
+[HttpPut("email/UpdatePatientProfileAsAdmin/{email}")]
 [Authorize(Policy = "AdminOnly")]
 public async Task<IActionResult> PutPatientUpdateAsAdmin(
     string email,
@@ -704,8 +703,5 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
 
         return NoContent(); // Respond with 204 No Content
     }
-
-    }
-
-
 }
+

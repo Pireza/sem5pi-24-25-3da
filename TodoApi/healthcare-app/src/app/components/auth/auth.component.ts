@@ -11,7 +11,7 @@ import { UserService } from '../../services/userService'; // Import UserService
 export class AuthComponent {
   userEmail: string | null = null; // To hold the user's email
   userRole: string | null = null;   // To hold the user's role
-  constructor(private authService: AuthService, private router: Router, private userService: UserService) {} // Inject Router
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) { } // Inject Router
 
   onAuthenticate() {
     this.authService.authenticateUser().subscribe({
@@ -20,12 +20,14 @@ export class AuthComponent {
         if (this.authService.isAuthenticated) {
           this.userEmail = this.userService.userEmail; // Update email here
           this.userRole = this.userService.userRole;   // Update role here
-  
+
           // Now check the userRole
           if (this.userRole === 'Patient') {
             this.router.navigate(['/patient-ui']); // Navigate to Patient UI
-          }else if(this.userRole==='Admin'){
+          } else if (this.userRole === 'Admin') {
             this.router.navigate(['/admin-ui']);
+          } else if (this.userRole === 'Doctor') {
+            this.router.navigate(['/doctor-ui']);
           }
         }
       },
@@ -35,12 +37,12 @@ export class AuthComponent {
       }
     });
   }
-  
-  onCreateAccountClient(){
+
+  onCreateAccountClient() {
     this.router.navigate(['/registerClient']);
   }
 
-  onPasswordReset(){
+  onPasswordReset() {
     this.router.navigate(['/reset-password'])
   }
 

@@ -210,10 +210,10 @@ public async Task CreatePatientUser(CreatePatientRequest model, string password)
     };
 
 
-        await _patientrepository.AddPatientAsync(patient);
+       
 
                 await CreatePatientUser(model, password);
-
+                await _patientrepository.AddPatientAsync(patient);
 
         Console.WriteLine("User has been successfully registered.");
 
