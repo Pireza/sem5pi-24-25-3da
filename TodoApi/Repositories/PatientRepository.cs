@@ -61,16 +61,4 @@ public class PatientRepository
                 .FirstOrDefaultAsync(p => p.MedicalNumber == request.MedicalNumber || p.Email == request.Email);
     }
 
-    public async Task AddAuditLogAsync(AuditLog auditLog)
-    {
-        _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeletePatientAsync(Patient patient)
-    {
-        _context.Patients.Remove(patient);
-        await _context.SaveChangesAsync();
-    }
-
 }
