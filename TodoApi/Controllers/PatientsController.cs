@@ -20,6 +20,7 @@ namespace TodoApi.Controllers
         private readonly AuthServicePatient _authServicePatient;
         private readonly PasswordGeneratorService _passService;
         private UserRepository _repository;
+        private PatientRepository patient_repository;
 
 
 
@@ -679,7 +680,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
     
 
     // DELETE: api/Patients/email/{email}
-    [HttpDelete("deleteUserByEmailAsAdmin/{email}/delete")]
+    [HttpDelete("deletePatientByEmailAsAdmin/{email}/delete")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeletePatientByEmailAsAdmin(string email)
     {
@@ -690,18 +691,21 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             return NotFound("Patient not found.");
         }
 
-        patient.PendingDeletionDate = DateTime.UtcNow;
+        // Create an audit log entry before deletion
+        var auditLog = new AuditLog
+        {
+            PatientId = patient.Id,
+            ChangeDate = DateTime.UtcNow,
+            ChangeDescription = $"Patient with email {email} has been deleted by admin."
+        };
 
-
-        // Log the deletion request
-        await _repository.AddAuditLogForDeletionAsync(email);
-
-        // Update Patient 
-        await _repository.UpdatePatientAsync(patient);
+        // Remove the patient directly
+        await patient_repository.DeletePatientAsync(patient);
 
         return NoContent(); // Respond with 204 No Content
     }
-}
+
+    }
 
 
 }
