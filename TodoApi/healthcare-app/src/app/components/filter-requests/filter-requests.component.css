@@ -1,30 +1,33 @@
+/* Styles for the container */
 .container {
   margin-top: 20px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  max-width: 600px;
-  margin: 50px auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly larger shadow */
+  max-width: 800px; /* Slightly larger to fit content better */
+  margin: 50px auto; /* Centers the container horizontally */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Centered heading */
 h2 {
   color: #333;
   margin-bottom: 20px;
   text-align: center;
 }
 
+/* Form group styles */
 .form-group {
   margin-bottom: 15px;
-  width: 100%; /* Ensure the input fields take up the full width */
+  width: 100%;
 }
 
 label {
   font-weight: bold;
   color: #555;
   display: block;
-  margin-bottom: 8px; /* Space between label and input */
+  margin-bottom: 8px;
 }
 
 input.form-control {
@@ -33,9 +36,10 @@ input.form-control {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-sizing: border-box; /* Ensure padding is included in the width */
+  box-sizing: border-box;
 }
 
+/* Styles for the search and update buttons */
 button {
   width: 100%;
   padding: 12px 0;
@@ -52,6 +56,7 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Table styles */
 table {
   width: 100%;
   margin-top: 20px;
@@ -66,6 +71,8 @@ table th, table td {
 
 table th {
   background-color: #f8f9fa;
+  font-weight: bold;
+  color: #555;
 }
 
 table tr:nth-child(even) {
@@ -73,5 +80,24 @@ table tr:nth-child(even) {
 }
 
 table tr:hover {
-  background-color: #e9ecef; /* Add hover effect for rows */
+  background-color: #e9ecef;
+}
+
+/* Style adjustments for the input fields inside the table */
+table td input[type="number"], 
+table td input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
+
+/* Style adjustments for the update button inside table rows */
+table td button {
+  width: auto; /* Keep the button to its content size */
+  padding: 5px 10px;
+  font-size: 14px;
 }
