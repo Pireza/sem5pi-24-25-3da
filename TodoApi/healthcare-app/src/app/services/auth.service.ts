@@ -38,8 +38,9 @@ export class AuthService {
   public listAllRequestsEP = 'http://localhost:5174/api/OperationRequests/All';
   public editPatientProfileAdmin = 'http://localhost:5174/api/Patients/email/UpdatePatientProfileAsAdmin'
   public getPatientUrl = 'http://localhost:5174/api/Patients/email';
-  public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin'
-  public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin'
+  public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin';
+  public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin';
+  public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -313,14 +314,20 @@ if (specializationId != null) queryParams += `${queryParams ? '&' : '?'}speciali
 if (role) queryParams += `${queryParams ? '&' : '?'}role=${encodeURIComponent(role)}`;
 if (availabilitySlots) queryParams += `${queryParams ? '&' : '?'}availabilitySlots=${encodeURIComponent(JSON.stringify(availabilitySlots))}`;
 
-// Correct URL construction
 let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
-
-    
-    console.log(url);
-  
     return this.http.put<void>(url, queryParams, { headers });
+  }  
+
+  deleteOperationRequestAsDoctor(id: number): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.deleteOperationDoctor}${id}`;
+
+    return this.http.delete<void>(url, { headers });
   }
-  
-  
+
+
 }
