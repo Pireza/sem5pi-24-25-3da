@@ -48,4 +48,7 @@ export class AdminUiComponent implements OnInit {
   redirectToPlanning(): void {
     this.router.navigate(['/planning']);
   }
+  redirectToRemoveOperationType(): void{
+    this.router.navigate(['/remove-operation-type-admin']);
+  }
 }
