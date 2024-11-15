@@ -1,6 +1,40 @@
-<div class="container">
-  <h1>Healthcare App</h1>
-  <button (click)="onAuthenticate()" class="styled-button">Authenticate</button>
-  <button (click)="onCreateAccountClient()" class="styled-button">Create Account Patient</button>
-  <button (click)="onPasswordReset()" class="styled-button">Forgot your password?</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare</title>
+    <link rel="stylesheet" href="auth.component.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo-container">
+            <img src="https://i.pinimg.com/736x/10/fd/d0/10fdd07cd6c91db11aed4203ff718b4b.jpg" alt="Logo" class="logo-image">
+            <div class="logo-text">Healthcare</div>
+        </div>
+        <div class="nav-buttons">
+            <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
+            <button (click)="onAuthenticate()" class="styled-button">Login</button>
+            <div class="clickable-text" (click)="onPasswordReset()">Forgot Password?</div>
+        </div>
+    </div>
+
+    <!-- Welcome Text and Image Section -->
+    <div class="content-container">
+        <!-- Text Section -->
+        <div class="text-container">
+            <h1 class="welcome-text">Welcome to your<br><span class="highlight-text">Healthcare Application</span></h1>
+            <p class="explanation-text">
+                Here, you can manage your health records, schedule appointments, track your progress, and much more. Our platform is designed to help you take control of your healthcare journey with ease and convenience.
+            </p>
+        </div>
+
+        <!-- Image Section -->
+        <div class="image-container">
+            <img src="https://d31nhj1t453igc.cloudfront.net/cloudinary/2021/Dec/27/LnVtbNZgBzjmFWgrBgIt.jpg" alt="Healthcare Image" class="image">
+        </div>
+    </div>
+</body>
+</html>
