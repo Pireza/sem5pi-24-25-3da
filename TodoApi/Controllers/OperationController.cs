@@ -168,6 +168,30 @@ public class OperationController : ControllerBase
 
     }
 
+    // PUT: api/operation/type/{id}
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPut("UpdateOperationTypeAsAdmin/{id}")]
+    public async Task<IActionResult> PutType(long id, OperationTypeDTO typeDTO)
+    {
+        try
+        {
+            await _service.UpdateTypeAsync(id, typeDTO);
+            return NoContent(); // Successfully updated, no content to return
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Input duration format must be HH:mm:ss");
+        }
+        catch (NotFoundResource)
+        {
+            return NotFound("Operation type or specialized staff ID not found");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"An error occurred: {ex.Message}");
+        }
+    }
+
 
     // |=============================================|
     // | Following methods regard Operation Requests |
@@ -204,5 +228,7 @@ public class OperationController : ControllerBase
 
         return requests;
     }
+
+    
 
 }

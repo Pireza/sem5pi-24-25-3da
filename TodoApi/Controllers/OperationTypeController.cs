@@ -18,29 +18,6 @@ public class OperationTypeController : ControllerBase
     }
     private OperationRequestRepository _repository;
 
-    // PUT: api/operation/type/{id}
-    [Authorize(Policy = "AdminOnly")]
-    [HttpPut("UpdateOperationTypeAsAdmin/{id}")]
-    public async Task<IActionResult> UpdateOperationType(long id, OperationTypeGetDTO typeDTO)
-    {
-        try
-        {
-            var updatedType = await _repository.UpdateOperationTypeAsync(id, typeDTO);
-            return Ok(updatedType); // Return the updated operation type
-        }
-        catch (NotFoundResource)
-        {
-            return NotFound("Operation type not found.");
-        }
-        catch (FormatException)
-        {
-            return BadRequest("Input duration format must be HH:mm:ss");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"An error occurred: {ex.Message}");
-        }
-    }
 
 [HttpDelete("removeOperationTypeAsAdmin/{id}")] // Correcting route to be DELETE and using path variable
 [Authorize(Policy = "AdminOnly")]

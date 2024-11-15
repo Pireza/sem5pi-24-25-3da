@@ -146,16 +146,4 @@ public class UserRepository
         return _context.Staff.Include(s => s.Specialization).AsQueryable();
     }
 
-    public async Task AddAuditLogAsync(AuditLog auditLog)
-    {
-        _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeletePatientAsync(Patient patient)
-    {
-        _context.Patients.Remove(patient);
-        await _context.SaveChangesAsync();
-    }
-
 }

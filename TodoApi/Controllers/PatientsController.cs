@@ -691,28 +691,19 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             return NotFound("Patient not found.");
         }
 
-       
-        // Create an audit log entry before deletion
-        var auditLog = new AuditLog
-        {
-            PatientId = patient.Id,
-            ChangeDate = DateTime.UtcNow,
-            ChangeDescription = $"Patient with email {email} is deleted."
-        };
+        patient.PendingDeletionDate = DateTime.UtcNow;
 
-        // Add the audit log entry to the context
-        _context.AuditLogs.Add(auditLog);
 
-        // Save the audit log entry before deleting the patient
-        await _context.SaveChangesAsync();
+        // Log the deletion request
+        await _repository.AddAuditLogForDeletionAsync(email);
 
-        // Remove the patient directly
-        await _repository.DeletePatientAsync(patient);
+        // Update Patient 
+        await _repository.UpdatePatientAsync(patient);
 
         return NoContent(); // Respond with 204 No Content
     }
 
-}
+ }
 
 }
 
