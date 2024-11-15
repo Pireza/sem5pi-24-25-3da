@@ -1,44 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare</title>
-    <link rel="stylesheet" href="auth.component.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
 <body>
+    <!-- Sidebar Toggle Button (Visible Only When Authenticated) -->
+    <button class="sidebar-toggle-button" *ngIf="isAuthenticated" (click)="toggleSidebar()">
+        <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'" alt="Toggle Sidebar"
+            class="toggle-icon">
+    </button>
+
     <!-- Navigation Bar -->
-    <div class="navbar">
+    <div class="navbar" [class.navbar-wide]="isAuthenticated">
         <div class="logo-container">
-            <img src="https://i.pinimg.com/736x/10/fd/d0/10fdd07cd6c91db11aed4203ff718b4b.jpg" alt="Logo" class="logo-image">
+            <img src="https://i.pinimg.com/736x/10/fd/d0/10fdd07cd6c91db11aed4203ff718b4b.jpg" alt="Logo"
+                class="logo-image">
             <div class="logo-text">Healthcare</div>
         </div>
-        <div class="nav-buttons">
+
+        <!-- Buttons shown only if not authenticated -->
+        <div class="nav-buttons" *ngIf="!isAuthenticated">
             <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
             <button (click)="onAuthenticate()" class="styled-button">Login</button>
             <div class="clickable-text" (click)="onPasswordReset()">Forgot Password?</div>
         </div>
     </div>
 
-    <!-- Content Section for Welcome Text and Image or Reset Password -->
+    <!-- Sliding Menu (Visible after authentication) -->
+    <div class="sidebar" [class.sidebar-open]="isSidebarOpen">
+        <div class="sidebar-header">Menu</div>
+        <ul class="sidebar-menu">
+            <li>Dashboard</li>
+            <li>Profile</li>
+            <li>Settings</li>
+            <li>Logout</li>
+        </ul>
+    </div>
+
+    <!-- Content Section -->
     <div class="content-container" *ngIf="!isPasswordResetMode; else resetPasswordForm">
-        <!-- Welcome Text and Image Section -->
         <div class="text-container">
             <h1 class="welcome-text">Welcome to your<br><span class="highlight-text">Healthcare Application</span></h1>
             <p class="explanation-text">
-                Here, you can manage your health records, schedule appointments, track your progress, and much more. Our platform is designed to help you take control of your healthcare journey with ease and convenience.
+                Here, you can manage your health records, schedule appointments, track your progress, and much more.
             </p>
         </div>
         <div class="image-container">
-            <img src="https://d31nhj1t453igc.cloudfront.net/cloudinary/2021/Dec/27/LnVtbNZgBzjmFWgrBgIt.jpg" alt="Healthcare Image" class="image">
+            <img src="https://d31nhj1t453igc.cloudfront.net/cloudinary/2021/Dec/27/LnVtbNZgBzjmFWgrBgIt.jpg"
+                alt="Healthcare Image" class="image">
         </div>
     </div>
 
-    <!-- Reset Password Form (Will be shown when isPasswordResetMode is true) -->
+    <!-- Reset Password Form -->
     <ng-template #resetPasswordForm>
         <app-reset-password></app-reset-password>
     </ng-template>
-
 </body>
-</html>
