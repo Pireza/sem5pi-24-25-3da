@@ -18,6 +18,9 @@ import { UpdateOperationRequestComponent } from './components/update-operation-r
 import { EditPatientProfileAdminComponent } from './components/edit-patient-profile-admin/edit-patient-profile-admin.component';
 import { CreateStaffAdminComponent } from './components/create-staff-admin/create-staff-admin.component';
 import { EditStaffAdminComponent } from './components/edit-staff-admin/edit-staff-admin.component';
+import { PlanningComponent } from './components/planning/planning.component';
+import { DeleteOperationRequestComponent } from './components/remove-operation-doctor/remove-operation-doctor.component';
+import { RemoveOperationTypeAdminComponent } from './components/remove-operation-type-admin/remove-operation-type-admin.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -36,8 +39,14 @@ export const routes: Routes = [
   { path: 'register-staff', component: RegisterStaffComponent },
   { path: 'update-operation-request', component: UpdateOperationRequestComponent },
   { path: 'edit-patient-profile-admin', component: EditPatientProfileAdminComponent },
+  { path: 'create-staff-admin', component: CreateStaffAdminComponent },
+  { path: 'edit-staff-admin', component: EditStaffAdminComponent },
+  { path: 'planning', component: PlanningComponent },
   {path: 'create-staff-admin', component: CreateStaffAdminComponent},
   {path: 'edit-staff-admin', component : EditStaffAdminComponent},
+  {path: 'remove-operation-doctor', component :DeleteOperationRequestComponent },
+  {path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent},
+
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load

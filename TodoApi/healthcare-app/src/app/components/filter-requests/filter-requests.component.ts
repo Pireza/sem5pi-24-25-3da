@@ -1,4 +1,3 @@
-// operation-request.component.ts
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service'; // Import the AuthService
 import { OperationRequestSearch } from '../../Models/OperationRequestSearch'; // Import the interface
@@ -23,17 +22,36 @@ export class FilterRequestsComponent {
 
   constructor(private authService: AuthService) {}
 
-  /**
-   * This will make the 
-   */
+  // Search for requests based on criteria
   onSearch(): void {
-
     this.authService.searchOperationRequests(this.search).subscribe(
       (response) => {
         this.requests = response; // Store the response data in the requests array
       },
       (error) => {
         console.error('Error fetching operation requests:', error);
+      }
+    );
+  }
+
+  // Method to update a specific request
+  updateRequest(request: any): void {
+    const { id, operationPriorityId, deadline } = request;
+
+    if (!operationPriorityId || !deadline) {
+      console.warn('Both Priority ID and Deadline are required to update.');
+      return;
+    }
+
+    // Call the service to update the operation request
+    this.authService.updateOperationRequestAsDoctor(id, operationPriorityId, deadline).subscribe(
+      () => {
+        console.log(`Request ${id} updated successfully.`);
+        alert(`Request ${id} updated successfully.`);
+      },
+      (error) => {
+        console.error(`Error updating request ${id}:`, error);
+        alert(`Error updating request ${id}. Please try again.`);
       }
     );
   }

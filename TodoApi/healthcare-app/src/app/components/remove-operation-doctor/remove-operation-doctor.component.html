@@ -1,0 +1,11 @@
+<form (ngSubmit)="deleteOperationRequest()">
+  <label for="operationRequestId">Operation Request ID:</label>
+  <input
+    type="number"
+    id="operationRequestId"
+    [(ngModel)]="operationRequestId"
+    name="operationRequestId"
+    required
+  />
+  <button type="submit">Delete Operation Request</button>
+</form>

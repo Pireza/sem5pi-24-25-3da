@@ -1,31 +1,33 @@
 <!-- operation-request.component.html -->
 <div class="container">
   <h2>Search Operation Requests</h2>
-  
+
+  <!-- Search Form -->
   <form (ngSubmit)="onSearch()" #searchForm="ngForm">
     <div class="form-group">
       <label for="patientName">Patient Name</label>
       <input type="text" id="patientName" class="form-control" [(ngModel)]="search.patientName" name="patientName">
     </div>
-    
+
     <div class="form-group">
       <label for="operationType">Operation Type</label>
       <input type="text" id="operationType" class="form-control" [(ngModel)]="search.operationType" name="operationType">
     </div>
-    
+
     <div class="form-group">
       <label for="priority">Priority</label>
       <input type="text" id="priority" class="form-control" [(ngModel)]="search.priority" name="priority">
     </div>
-    
+
     <div class="form-group">
       <label for="status">Status</label>
       <input type="text" id="status" class="form-control" [(ngModel)]="search.status" name="status">
     </div>
-    
+
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
+  <!-- Results Table -->
   <div *ngIf="requests && requests.length">
     <table class="table mt-4">
       <thead>
@@ -36,6 +38,7 @@
           <th>Deadline</th>
           <th>Status</th>
           <th>Priority</th>
+          <th>Actions</th> <!-- New column for actions -->
         </tr>
       </thead>
       <tbody>
@@ -46,6 +49,14 @@
           <td>{{ request.deadline }}</td>
           <td>{{ request.status }}</td>
           <td>{{ request.priorityName }}</td>
+          <td>
+            <!-- Input Fields for Updating Operation Request -->
+            <input type="number" [(ngModel)]="request.operationPriorityId" placeholder="Priority ID" style="width: 100px; margin-bottom: 5px;" />
+            <input type="date" [(ngModel)]="request.deadline" placeholder="Deadline" style="width: 140px; margin-bottom: 5px;" />
+
+            <!-- Update Button -->
+            <button class="btn btn-sm btn-primary" (click)="updateRequest(request)">Update</button>
+          </td>
         </tr>
       </tbody>
     </table>
