@@ -703,7 +703,7 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         return NoContent(); // Respond with 204 No Content
     }
 
-}
+ }
 
 }
 

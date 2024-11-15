@@ -311,64 +311,6 @@ public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsyn
         return result;
     }
 
-    public async Task<OperationType> UpdateOperationTypeAsync(long id, OperationTypeGetDTO dto)
-    {
-        // Find the operation type by id
-        var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
-
-        // Check if the operation type exists
-        if (operationType == null)
-        {
-            throw new NotFoundResource("Operation type not found.");
-        }
-
-        // Update the properties
-        operationType.Name = dto.Name;
-        operationType.Duration = dto.Duration;
-        operationType.IsActive = dto.IsActive; // Update IsActive property
-
-        // Clear current associations in the Type_Staff table for this operation type
-        var existingStaff = _context.Type_Staff.Where(ots => ots.OperationTypeId == id);
-        _context.Type_Staff.RemoveRange(existingStaff);
-        // Re-add specialized staff associations
-        foreach (var staffId in dto.SpecializedStaff)
-        {
-            // Assuming staffId is a string and needs to be parsed to long
-            if (long.TryParse(staffId, out long specializedStaffId))
-            {
-                var association = new OperationType_Staff
-                {
-                    SpecializedStaffId = specializedStaffId, 
-                    OperationTypeId = operationType.Id
-                };
-                _context.Type_Staff.Add(association);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Invalid Specialized Staff ID: {staffId}");
-            }
-        }
-
-        // Save the changes to the operation type and staff associations
-        await _context.SaveChangesAsync();
-
-        // Log the update action
-        var logEntry = new AuditLogOperationType
-        {
-            EntityId = operationType.Id,
-            EntityName = nameof(OperationType),
-            Action = "Updated",
-            ChangeDate = DateTime.UtcNow,
-            Description = $"Operation type '{operationType.Name}' updated by admin."
-        };
-
-        _context.AuditLogOperationTypes.Add(logEntry);
-        await _context.SaveChangesAsync();
-
-        return operationType;
-    }
-
-
 public async Task<bool> DeactivateOperationTypeAsync(long id)
 {
     // Check if the operation type exists
@@ -454,5 +396,41 @@ public async Task<bool> DeactivateOperationTypeAsync(long id)
         await _context.SaveChangesAsync();
     }
 
+    public async Task<OperationType> GetTypeByIdAsync(long id)
+    {
+        return await _context.Types.FindAsync(id);
+    }
+
+    public async Task CheckStaffIdAsync(long id)
+    {
+        var specStaff = await _context.SpecializedStaff.FindAsync(id);
+        if (specStaff == null)
+            throw new NotFoundResource("Invalid specialized staff ID");
+    }
+
+     public async Task UpdateTypeAsync(OperationType existingType, IEnumerable<long> newStaffIds)
+    {
+        // Update the basic fields of OperationType
+        _context.Types.Update(existingType);
+
+        // Remove old staff associations
+        var existingAssociations = _context.Type_Staff
+            .Where(ts => ts.OperationTypeId == existingType.Id);
+        _context.Type_Staff.RemoveRange(existingAssociations);
+
+        // Add new staff associations
+        foreach (long staffId in newStaffIds)
+        {
+            var newAssociation = new OperationType_Staff
+            {
+                OperationTypeId = existingType.Id,
+                SpecializedStaffId = staffId
+            };
+            _context.Type_Staff.Add(newAssociation);
+        }
+
+        // Save all changes in a single transaction
+        await _context.SaveChangesAsync();
+    }
 
 }
