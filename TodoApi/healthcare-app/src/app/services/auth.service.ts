@@ -41,6 +41,7 @@ export class AuthService {
   public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin';
   public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin';
   public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
+  public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -329,5 +330,15 @@ let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
     return this.http.delete<void>(url, { headers });
   }
 
+  deactivateOperationTypeAsAdmin(id: number): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.removeOPerationType}/${id}`;
+
+    return this.http.delete<void>(url, { headers });
+  }
 
 }
