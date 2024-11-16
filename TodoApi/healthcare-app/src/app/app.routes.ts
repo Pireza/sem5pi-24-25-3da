@@ -22,6 +22,7 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { DeleteOperationRequestComponent } from './components/remove-operation-doctor/remove-operation-doctor.component';
 import { RemoveOperationTypeAdminComponent } from './components/remove-operation-type-admin/remove-operation-type-admin.component';
 
+
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   { path: 'patient-ui', component: PatientUIComponent },
@@ -46,6 +47,7 @@ export const routes: Routes = [
   {path: 'edit-staff-admin', component : EditStaffAdminComponent},
   {path: 'remove-operation-doctor', component :DeleteOperationRequestComponent },
   {path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent},
+
 
 
 

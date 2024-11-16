@@ -21,6 +21,9 @@ export interface DecodedToken {
   providedIn: 'root',
 })
 export class AuthService {
+  deactivatePatientProfileAsAdmin(patientEmail: string) {
+    throw new Error('Method not implemented.');
+  }
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
   public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0';
   public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail';
@@ -42,6 +45,7 @@ export class AuthService {
   public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin';
   public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
   public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin'
+  public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientProfileAsAdmin'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -121,6 +125,13 @@ export class AuthService {
       Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
     });
     return this.http.delete<void>(`${this.deletePatientUrl}/${email}`, { headers });
+  }
+
+  deletePatientByEmailAsAdmin(email: string): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
+    });
+    return this.http.delete<void>(`${this.deletePatientProfile}/${email}`, { headers });
   }
 
   // Registration method

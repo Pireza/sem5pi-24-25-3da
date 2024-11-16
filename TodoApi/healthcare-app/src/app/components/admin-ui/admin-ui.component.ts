@@ -51,4 +51,8 @@ export class AdminUiComponent implements OnInit {
   redirectToRemoveOperationType(): void{
     this.router.navigate(['/remove-operation-type-admin']);
   }
+  redirectToDeletePatientProfile(): void{
+    this.router.navigate(['/delete-patient-profile-admin']);
+  }
+  
 }
