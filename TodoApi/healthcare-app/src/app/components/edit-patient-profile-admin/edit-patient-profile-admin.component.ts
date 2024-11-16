@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './edit-patient-profile-admin.component.html',
   styleUrls: ['./edit-patient-profile-admin.component.css']
 })
-export class EditPatientProfileAdminComponent {
+export class EditPatientProfileAdminComponent implements OnInit {
   patient: Patient = {
     email: '',
     firstName: '',
@@ -22,31 +22,60 @@ export class EditPatientProfileAdminComponent {
     medicalConditions: []
   };
 
-  newCondition: string = '';  // Add newCondition property to bind to input
+  availableEmails: string[] = [];  // To store available emails
+  newCondition: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Optionally, load the patient's data if needed for the initial form state
-    // This could be done by calling the API or pre-filling data
+    this.loadAvailableEmails();
+  }
+
+  // Load the list of available patient emails
+  loadAvailableEmails() {
+    this.authService.getPatientEmails().subscribe({
+      next: (emails) => {
+        this.availableEmails = emails;  // Assuming the API returns a list of emails
+      },
+      error: (error) => {
+        console.error('Error fetching emails:', error);
+      }
+    });
+  }
+
+  // Load patient data based on selected email
+  loadPatientData(email: string) {
+    if (email) {
+      this.authService.getPatientByEmail(email).subscribe({
+        next: (data) => {
+          // Auto-fill the form with the patient data
+          this.patient.firstName = data.firstName;
+          this.patient.lastName = data.lastName;
+          this.patient.phone = data.phone;
+          this.patient.emergencyContact = data.emergencyContact;
+          this.patient.medicalConditions = data.medicalConditions || [];
+        },
+        error: (error) => {
+          console.error('Error loading patient data:', error);
+        }
+      });
+    }
   }
 
   onSubmit() {
-    // Ensure the email is provided and is mandatory before making the request
     if (!this.patient.email) {
       alert('Email is required!');
       return;
     }
 
-    // Call AuthService to update patient details
     this.authService.updatePatientAsAdmin(this.patient).subscribe({
       next: () => {
         console.log('Patient updated successfully');
-        this.router.navigate(['/admin-ui']); // Navigate to the Admin UI or relevant page
+        this.router.navigate(['/admin-ui']);
       },
       error: (error) => {
         console.error('Error updating patient:', error);
-        alert('Error updating patient profile!'); // Optionally show an error message
+        alert('Error updating patient profile!');
       }
     });
   }
@@ -54,7 +83,7 @@ export class EditPatientProfileAdminComponent {
   addCondition() {
     if (this.newCondition.trim()) {
       this.patient.medicalConditions.push(this.newCondition.trim());
-      this.newCondition = '';  // Clear the input after adding the condition
+      this.newCondition = '';
     }
   }
 

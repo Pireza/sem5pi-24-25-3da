@@ -1,69 +1,125 @@
-.edit-patient-container {
-  width: 60%;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 40px 60px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 h2 {
-  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
   margin-bottom: 20px;
+  color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 label {
-  font-weight: bold;
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
 }
 
 input[type="text"],
-input[type="email"],
-input[type="tel"] {
+input[type="email"] {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  font-size: 14px;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+  outline: none;
+  border-color: #98d478;
+}
+
+button {
+  cursor: pointer;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  border: 2px solid #a7e784;
+  background-color: #98d478;
+  color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #86ba6a;
+  border-color: #76a156;
+  transform: translateY(-2px);
 }
 
 button[type="button"] {
-  padding: 6px 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
+  background-color: #e74c3c;
+  color: #fff;
+  margin-left: 5px;
 }
 
-button[type="button"]:hover {
+button.submit-btn {
+  background-color: #27ae60;
+  color: #fff;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.medical-conditions {
+  margin-top: 20px;
+}
+
+.medical-conditions ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.medical-conditions li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.medical-conditions input {
+  width: 80%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button:hover {
   background-color: #0056b3;
 }
 
 button.submit-btn {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  width: 100%;
-}
-
-button.submit-btn:hover {
-  background-color: #218838;
-}
-
-.medical-conditions {
-  display: flex;
-  align-items: center;
-}
-
-.medical-conditions input {
-  flex: 1;
-}
-
-.medical-conditions button {
-  margin-left: 10px;
+  background-color: #27ae60;
 }

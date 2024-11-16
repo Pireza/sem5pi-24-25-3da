@@ -1,28 +1,86 @@
-<form (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input type="text" id="firstName" [(ngModel)]="staffRequest.firstName" name="firstName" required />
+<div class="container">
+  <div class="form-wrapper">
+    <h2>Create Staff Profile</h2>
+    <form (ngSubmit)="onSubmit()" #staffForm="ngForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          class="form-control"
+          [(ngModel)]="staffRequest.firstName"
+          name="firstName"
+          placeholder="Enter First Name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          class="form-control"
+          [(ngModel)]="staffRequest.lastName"
+          name="lastName"
+          placeholder="Enter Last Name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="licenseNumber">License Number</label>
+        <input
+          type="text"
+          id="licenseNumber"
+          class="form-control"
+          [(ngModel)]="staffRequest.licenseNumber"
+          name="licenseNumber"
+          placeholder="Enter License Number"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input
+          type="text"
+          id="phone"
+          class="form-control"
+          [(ngModel)]="staffRequest.phone"
+          name="phone"
+          placeholder="Enter Phone Number"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          [(ngModel)]="staffRequest.email"
+          name="email"
+          placeholder="Enter Email Address"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          [(ngModel)]="staffRequest.username"
+          name="username"
+          placeholder="Enter Username"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-success">Create Staff</button>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" [(ngModel)]="staffRequest.lastName" name="lastName" required />
-  </div>
-  <div class="form-group">
-    <label for="licenseNumber">License Number</label>
-    <input type="text" id="licenseNumber" [(ngModel)]="staffRequest.licenseNumber" name="licenseNumber" required />
-  </div>
-  <div class="form-group">
-    <label for="phone">Phone</label>
-    <input type="text" id="phone" [(ngModel)]="staffRequest.phone" name="phone" required />
-  </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" [(ngModel)]="staffRequest.email" name="email" required />
-  </div>
-  <div class="form-group">
-    <label for="username">Username</label>
-    <input type="text" id="username" [(ngModel)]="staffRequest.username" name="username" required />
-  </div>
-  <!-- Add other fields as needed -->
-  <button type="submit" class="submit-btn">Create Staff</button>
-</form>
+</div>

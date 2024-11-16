@@ -1,103 +1,160 @@
-.register-container {
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  input[type="number"],
-  input[type="tel"],
-  select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .medical-conditions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .medical-conditions input {
-    flex: 1;
-  }
-  
-  .medical-conditions button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .medical-conditions button:hover {
-    background-color: #0056b3;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  ul li {
-    display: flex;
-    justify-content: space-between;
-    background-color: #eee;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-  }
-  
-  ul li button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  ul li button:hover {
-    background-color: #d40000;
-  }
-  
-  .submit-btn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .submit-btn:hover {
-    background-color: #218838;
-  }
-  
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 40px 60px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+select:focus {
+  outline: none;
+  border-color: #98d478;
+}
+
+button {
+  cursor: pointer;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  border: 2px solid #a7e784;
+  background-color: #98d478;
+  color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #86ba6a;
+  border-color: #76a156;
+  transform: translateY(-2px);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4);
+}
+
+button.submit-btn {
+  background-color: #27ae60;
+  color: white;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+button.submit-btn:hover {
+  background-color: #1e8e4f;
+}
+
+.medical-conditions {
+  display: flex;
+  align-items: center;
+}
+
+input[type="text"][name="newCondition"] {
+  margin-right: 10px;
+}
+
+ul.conditions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.conditions-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.conditions-list button {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.popup {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.popup.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.popup.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.popup button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: transparent;
+  border: 2px solid #333333;
+  border-radius: 25px;
+  color: #333333;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.popup button:hover {
+  background-color: #333333;
+  color: #fff;
+}

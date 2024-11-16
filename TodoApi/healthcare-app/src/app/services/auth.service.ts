@@ -291,6 +291,7 @@ export class AuthService {
     // Send the PUT request with query parameters and no body (empty object as body)
     return this.http.put<void>(requestUrl, {}, { headers });
   }
+  
 
   createStaffAsAdmin(request: CreateStaffRequest): Observable<void> {
     const headers = new HttpHeaders({
@@ -352,4 +353,12 @@ let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
     return this.http.delete<void>(url, { headers });
   }
 
+
+  getPatientEmails(): Observable<string[]> {
+    return this.http.get<string[]>(`http://localhost:5174/api/Patients/all`);
+  }
+  
+  getPatientByEmail(email: string): Observable<Patient> {
+    return this.http.get<Patient>(`http://localhost:5174/api/Patients/email/${email}`);
+  }
 }
