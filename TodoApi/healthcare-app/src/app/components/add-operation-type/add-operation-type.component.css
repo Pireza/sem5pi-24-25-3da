@@ -1,131 +1,188 @@
+/* Ensure the body fills the entire screen and content is centered */
+body {
+    margin: 0;
+    padding: 0;
+    position: relative; /* Required for positioning the pseudo-element */
+    height: 100vh; /* Full screen height */
+    display: flex; /* Enable Flexbox layout */
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    text-align: center; /* Center text inside the container */
+    font-family: 'Roboto', sans-serif; /* Font applied to the entire page */
+}
+
 /* General Container Styling */
 .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque white background */
+    border-radius: 20px; /* Rounded corners for the form */
+    padding: 40px 60px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
+    width: 100%;
+    max-width: 600px; /* Max width for the form */
+    text-align: center;
+    position: absolute; /* Position the container absolutely within the body */
+    top: 50%; /* Position it vertically in the center */
+    left: 50%; /* Position it horizontally in the center */
+    transform: translate(-50%, -50%); /* Offset the container to center it */
 }
 
 /* Header Styling */
 h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333333; /* Dark text color */
+    font-family: 'Roboto', sans-serif; /* Explicitly set the font */
 }
 
 /* Form Group Styling */
 .form-group {
-  margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 /* Labels */
 label {
-  font-weight: bold;
-  color: #555;
-  display: block;
-  margin-bottom: 5px;
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Input Fields */
 input[type="text"],
 input[type="number"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 16px;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: #98d478; /* Green border on focus */
 }
 
 /* Staff Array Buttons */
 button {
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
+    cursor: pointer;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 25px;
+    border: 2px solid #a7e784; /* Light green border */
+    background-color: #98d478; /* Light green background */
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+button:hover {
+    background-color: #86ba6a;
+    border-color: #76a156;
+    transform: translateY(-2px);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4); /* Blue glow on focus */
 }
 
 /* Remove Staff Field Button */
 button[type="button"] {
-  background-color: #e74c3c;
-  color: #fff;
-  margin-left: 5px;
+    background-color: #e74c3c;
+    color: #fff;
+    margin-left: 5px;
 }
 
 /* Add Staff ID Button */
 button.add-staff-btn {
-  background-color: #3498db;
-  color: #fff;
-  display: block;
-  width: 100%;
-  margin-top: 10px;
+    background-color: #3498db;
+    color: #fff;
+    display: block;
+    width: 100%;
+    margin-top: 10px;
 }
 
 /* View Staff List Button */
-/* CSS for View Staff List button */
 button.view-staff-btn {
-  background-color: #2ecc71;
-  color: #fff;
-  display: inline-block;
-  margin-top: 15px;
-  width: 100%;
+    background-color: #2ecc71;
+    color: #fff;
+    display: inline-block;
+    margin-top: 15px;
+    width: 100%;
 }
-
 
 /* Submit Button */
 button.submit-btn {
-  background-color: #27ae60;
-  color: #fff;
-  font-weight: bold;
-  display: block;
-  width: 100%;
-  margin-top: 20px;
-  transition: background-color 0.3s;
-}
-
-button.submit-btn:hover {
-  background-color: #219150;
+    background-color: #27ae60;
+    color: #fff;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    margin-top: 20px;
 }
 
 /* Message Popup Styling */
 .popup {
-  text-align: center;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 4px;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
 }
 
-.success {
-  background-color: #2ecc71;
-  color: #fff;
+.popup.success {
+    background-color: #d4edda;
+    color: #155724;
 }
 
-.error {
-  background-color: #e74c3c;
-  color: #fff;
+.popup.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.popup button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: transparent;
+    border: 2px solid #333333;
+    border-radius: 25px;
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.popup button:hover {
+    background-color: #333333;
+    color: #fff;
 }
 
 /* Staff List Table (In New Tab) */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
 th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 
 tr:hover {
-  background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }

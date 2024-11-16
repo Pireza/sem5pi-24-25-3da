@@ -4,10 +4,12 @@ body {
   padding: 0;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   font-family: 'Roboto', sans-serif;
+  
 }
 
 body::before {
@@ -21,7 +23,7 @@ body::before {
   background-size: cover;
   background-position: center;
   opacity: 0.4;
-  z-index: -1;
+
 }
 
 /* Navbar Styles */
@@ -45,23 +47,29 @@ body::before {
 
 .dynamic-content-container {
   padding: 20px;
-  margin-top: 100px; /* Keeps content consistently lower */
+  margin-top: 80px; /* Ensure content starts right below the navbar */
+  flex: 1; /* Allow content to grow downwards and take available space */
   position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   width: 100%;
   box-sizing: border-box;
+  overflow-y: auto; /* Enable scrolling if content overflows */
 }
+
 
 /* Form and Table Styles (to ensure no unexpected shifts) */
 .container {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align form and table to the start */
-  justify-content: flex-start; /* Ensure no vertical centering */
-  margin-top: 20px; /* Extra space above if needed */
+  align-items: flex-start;
+  /* Align form and table to the start */
+  justify-content: flex-start;
+  /* Ensure no vertical centering */
+  margin-top: 20px;
+  /* Extra space above if needed */
 }
 
 
@@ -179,7 +187,7 @@ body::before {
   justify-content: center;
   align-items: center;
   text-align: left;
-  position: fixed;
+  position: relative;
   gap: 50px;
   border-radius: 20px;
 }

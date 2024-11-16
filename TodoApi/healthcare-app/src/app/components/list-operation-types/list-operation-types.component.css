@@ -1,94 +1,167 @@
+/* Ensure the body fills the entire screen and content is centered */
+body {
+    margin: 0;
+    padding: 0;
+    position: relative; /* Required for positioning the pseudo-element */
+    height: 100vh; /* Full screen height */
+    display: flex; /* Enable Flexbox layout */
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    text-align: center; /* Center text inside the container */
+    font-family: 'Roboto', sans-serif; /* Font applied to the entire page */
+}
+
+/* Container Styling */
 .container {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  max-width: 600px;
-  margin: 50px auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly larger shadow */
+    margin-top: 20px;
+    padding: 40px 60px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Rounded corners */
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque white background */
+    max-width: 600px; /* Set the max width for the form */
+    margin: 50px auto; /* Centers the container horizontally */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern look */
+    position: absolute; /* Centering the container */
+    top: 50%; /* Vertically center */
+    left: 50%; /* Horizontally center */
+    transform: translate(-50%, -50%); /* Offset the container to center */
 }
 
+/* Heading Styling */
 h2 {
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 600;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
 }
 
+/* Form Group Styling */
 .form-group {
-  margin-bottom: 15px;
-  width: 100%; /* Ensure the input fields take up the full width */
+    margin-bottom: 20px;
+    width: 100%; /* Ensure the input fields take up the full width */
+    text-align: left;
 }
 
+/* Label Styling */
 label {
-  font-weight: bold;
-  color: #555;
-  display: block;
-  margin-bottom: 8px; /* Space between label and input */
+    font-weight: 500;
+    color: #555;
+    display: block;
+    margin-bottom: 8px; /* Space between label and input */
+    font-family: 'Roboto', sans-serif;
 }
 
-input.form-control {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box; /* Ensure padding is included in the width */
+/* Input Field Styling */
+input.form-control, select.form-control {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0; /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
 }
 
-select.form-control {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  box-sizing: border-box; /* Ensure padding is included in the width */
+input.form-control:focus, select.form-control:focus {
+    outline: none;
+    border-color: #98d478; /* Green border on focus */
 }
 
+/* Button Styling */
 button {
-  width: 100%;
-  padding: 12px 0;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 12px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px; /* Rounded corners */
+    cursor: pointer;
+    background-color: #98d478; /* Light green background */
+    color: white;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
 }
 
 button:hover {
-  background-color: #0056b3;
+    background-color: #86ba6a;
+    transform: translateY(-2px); /* Subtle hover effect */
 }
 
+button:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4); /* Blue glow on focus */
+}
+
+/* Table Styling */
 table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
 }
 
 table th, table td {
-  padding: 12px;
-  text-align: center;
-  border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
 }
 
 table th {
-  background-color: #f8f9fa;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #555;
 }
 
 table tr:nth-child(even) {
-  background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 
 table tr:hover {
-  background-color: #e9ecef; /* Add hover effect for rows */
+    background-color: #e9ecef; /* Hover effect for rows */
 }
 
+/* Style adjustments for input fields inside the table */
+table td input[type="number"], 
+table td input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+/* Style adjustments for the update button inside table rows */
+table td button {
+    width: auto; /* Keep the button to its content size */
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #3498db; /* Blue background */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+table td button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px); /* Hover effect */
+}
+
+table td button:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4); /* Blue glow on focus */
+}
+
+/* Error Message Styling */
 .error-message {
-  color: red;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
 }

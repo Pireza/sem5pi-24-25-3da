@@ -1,64 +1,66 @@
 <body>
-  <!-- Sidebar Toggle Button -->
-  <button class="sidebar-toggle-button" *ngIf="isAuthenticated" (click)="toggleSidebar()">
-    <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'"
-      alt="Toggle Sidebar" class="toggle-icon">
-  </button>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle-button" *ngIf="isAuthenticated" (click)="toggleSidebar()">
+        <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'"
+            alt="Toggle Sidebar" class="toggle-icon">
+    </button>
 
-  <!-- Navigation Bar -->
-  <div class="navbar" [class.navbar-wide]="isAuthenticated">
-    <div class="logo-container">
-      <img src="https://i.pinimg.com/736x/10/fd/d0/10fdd07cd6c91db11aed4203ff718b4b.jpg" alt="Logo"
-        class="logo-image">
-      <div class="logo-text">Healthcare</div>
+    <!-- Navigation Bar -->
+    <div class="navbar" [class.navbar-wide]="isAuthenticated">
+        <div class="logo-container">
+            <img src="https://i.pinimg.com/736x/10/fd/d0/10fdd07cd6c91db11aed4203ff718b4b.jpg" alt="Logo"
+                class="logo-image">
+            <div class="logo-text">Healthcare</div>
+        </div>
+
+        <!-- Buttons shown only if not authenticated -->
+        <div class="nav-buttons" *ngIf="!isAuthenticated">
+            <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
+            <button (click)="onAuthenticate()" class="styled-button">Login</button>
+            <div class="clickable-text" (click)="onPasswordReset()">Forgot Password?</div>
+        </div>
     </div>
 
-    <!-- Buttons shown only if not authenticated -->
-    <div class="nav-buttons" *ngIf="!isAuthenticated">
-      <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
-      <button (click)="onAuthenticate()" class="styled-button">Login</button>
-      <div class="clickable-text" (click)="onPasswordReset()">Forgot Password?</div>
-    </div>
-  </div>
-
-  <!-- Sidebar, only visible if authenticated -->
-  <div class="sidebar" [class.sidebar-open]="isSidebarOpen">
-    <div class="sidebar-header">{{ userRole }} Dashboard</div>
-    <ul class="sidebar-menu">
-      <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)"
-        [class.highlighted]="highlightedItems[item.label]">
-        {{ item.label }}
-        <ul *ngIf="submenuStates[item.label]" class="submenu">
-          <li *ngFor="let subItem of getSubmenuItems(item.label)" (click)="handleClick(subItem)">
-            {{ subItem }}
-          </li>
+    <!-- Sidebar, only visible if authenticated -->
+    <div class="sidebar" [class.sidebar-open]="isSidebarOpen">
+        <div class="sidebar-header">{{ userRole }} Dashboard</div>
+        <ul class="sidebar-menu">
+            <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)"
+                [class.highlighted]="highlightedItems[item.label]">
+                {{ item.label }}
+                <ul *ngIf="submenuStates[item.label]" class="submenu">
+                    <li *ngFor="let subItem of getSubmenuItems(item.label)" (click)="handleClick(subItem)">
+                        {{ subItem }}
+                    </li>
+                </ul>
+            </li>
         </ul>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Content Section -->
-  <div class="content-container" *ngIf="!activeComponent; else dynamicContent">
-    <div class="text-container">
-      <h1 class="welcome-text">Welcome to your<br><span class="highlight-text">Healthcare Application</span></h1>
-      <p class="explanation-text">
-        Here, you can manage your health records, schedule appointments, track your progress, and much more.
-      </p>
     </div>
-    <div class="image-container">
-      <img src="https://d31nhj1t453igc.cloudfront.net/cloudinary/2021/Dec/27/LnVtbNZgBzjmFWgrBgIt.jpg"
-        alt="Healthcare Image" class="image">
+
+    <!-- Content Section -->
+    <div class="content-container" *ngIf="!activeComponent; else dynamicContent">
+        <div class="text-container">
+            <h1 class="welcome-text">Welcome to your<br><span class="highlight-text">Healthcare Application</span></h1>
+            <p class="explanation-text">
+                Here, you can manage your health records, schedule appointments, track your progress, and much more.
+            </p>
+        </div>
+        <div class="image-container">
+            <img src="https://d31nhj1t453igc.cloudfront.net/cloudinary/2021/Dec/27/LnVtbNZgBzjmFWgrBgIt.jpg"
+                alt="Healthcare Image" class="image">
+        </div>
     </div>
-  </div>
 
-  <ng-template #dynamicContent>
-  <div class="dynamic-content-container">
-    <ng-container *ngComponentOutlet="activeComponent"></ng-container>
-  </div>
-</ng-template>
+    <ng-template #dynamicContent>
+        <div class="dynamic-content-container" [style.margin-top.px]="navbarHeight">
+            <ng-container *ngComponentOutlet="activeComponent"></ng-container>
+        </div>
 
-  <!-- Reset Password Form -->
-  <ng-template #resetPasswordForm>
-    <app-reset-password></app-reset-password>
-  </ng-template>
+
+    </ng-template>
+
+    <!-- Reset Password Form -->
+    <ng-template #resetPasswordForm>
+        <app-reset-password></app-reset-password>
+    </ng-template>
 </body>
