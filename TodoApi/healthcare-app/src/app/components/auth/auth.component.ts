@@ -9,7 +9,7 @@ import { FilterRequestsComponent } from '../filter-requests/filter-requests.comp
 import { CreateStaffAdminComponent } from '../create-staff-admin/create-staff-admin.component';
 import { CreatePatientAdminComponent } from '../create-patient-admin/create-patient-admin.component';
 import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
-
+import { UpdateOperationRequestComponent } from '../update-operation-request/update-operation-request.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -118,6 +118,8 @@ export class AuthComponent {
       this.activeComponent = CreatePatientAdminComponent;
     }else if (action === 'Edit Patient Profiles'){
       this.activeComponent = EditPatientProfileAdminComponent;
+    }else if(action === 'Update Operation Request'){
+      this.activeComponent= UpdateOperationRequestComponent;
     }
   }
 
