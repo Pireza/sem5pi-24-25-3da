@@ -123,6 +123,8 @@ export class AuthComponent {
       this.activeComponent= UpdateOperationRequestComponent;
     }else if(action === 'Update Profile'){
       this.activeComponent=UpdateProfileComponent;
+    }else if(action==='Delete Account'){
+      this.onDeletePatient();
     }
   }
 
@@ -143,5 +145,26 @@ export class AuthComponent {
 
   toggleHighlight(menuItem: string) {
     this.highlightedItems[menuItem] = !this.highlightedItems[menuItem];
+  }
+  onDeletePatient(): void {
+    if (this.userEmail) {
+      const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+      if (confirmation) {
+
+      this.authService.deletePatientByEmail(this.userEmail).subscribe({
+        next: () => {
+          console.log('Patient deleted successfully');
+          alert('Your account will be deleted in 30 days as per RGPD standarts.');
+          this.router.navigate(['/auth']);
+        },
+        error: (err) => {
+          console.error('Error deleting patient:', err);
+          alert('An error occurred while trying to delete the patient.');
+        }
+      });
+    }
+    } else {
+      alert('User email is not available.');
+    }
   }
 }
