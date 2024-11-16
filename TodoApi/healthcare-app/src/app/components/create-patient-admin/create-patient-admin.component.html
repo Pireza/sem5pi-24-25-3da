@@ -1,155 +1,154 @@
 <div class="container">
-  <div class="form-wrapper">
-    <h2>Create Patient As Admin</h2>
-    <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
-      <div class="form-group">
-        <label for="username">Username</label>
+  <h2>Create Patient</h2>
+
+  <form (ngSubmit)="onSubmit()" #patientForm="ngForm">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        class="form-control"
+        [(ngModel)]="client.username"
+        name="username"
+        placeholder="Enter Username"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input
+        type="text"
+        id="firstName"
+        class="form-control"
+        [(ngModel)]="client.firstName"
+        name="firstName"
+        placeholder="Enter First Name"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input
+        type="text"
+        id="lastName"
+        class="form-control"
+        [(ngModel)]="client.lastName"
+        name="lastName"
+        placeholder="Enter Last Name"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        class="form-control"
+        [(ngModel)]="client.email"
+        name="email"
+        placeholder="Enter Email Address"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="birthday">Birthday</label>
+      <input
+        type="date"
+        id="birthday"
+        class="form-control"
+        [(ngModel)]="client.birthday"
+        name="birthday"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select
+        id="gender"
+        class="form-control"
+        [(ngModel)]="client.gender"
+        name="gender"
+        required
+      >
+        <option value="" disabled>Select Gender</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="medicalNumber">Medical Number</label>
+      <input
+        type="number"
+        id="medicalNumber"
+        class="form-control"
+        [(ngModel)]="client.medicalNumber"
+        name="medicalNumber"
+        placeholder="Enter Medical Number"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input
+        type="tel"
+        id="phone"
+        class="form-control"
+        [(ngModel)]="client.phone"
+        name="phone"
+        placeholder="Enter Phone Number"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="emergencyContact">Emergency Contact</label>
+      <input
+        type="tel"
+        id="emergencyContact"
+        class="form-control"
+        [(ngModel)]="client.emergencyContact"
+        name="emergencyContact"
+        placeholder="Enter Emergency Contact"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Medical Conditions</label>
+      <div class="medical-conditions">
         <input
           type="text"
-          id="username"
+          [(ngModel)]="newCondition"
+          placeholder="Add condition"
           class="form-control"
-          [(ngModel)]="client.username"
-          name="username"
-          placeholder="Enter Username"
-          required
+          name="newCondition"
         />
+        <button type="button" class="btn btn-add" (click)="addCondition()">
+          Add
+        </button>
       </div>
-
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          class="form-control"
-          [(ngModel)]="client.firstName"
-          name="firstName"
-          placeholder="Enter First Name"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          class="form-control"
-          [(ngModel)]="client.lastName"
-          name="lastName"
-          placeholder="Enter Last Name"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          [(ngModel)]="client.email"
-          name="email"
-          placeholder="Enter Email Address"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="birthday">Birthday</label>
-        <input
-          type="date"
-          id="birthday"
-          class="form-control"
-          [(ngModel)]="client.birthday"
-          name="birthday"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Gender</label>
-        <select
-          id="gender"
-          class="form-control"
-          [(ngModel)]="client.gender"
-          name="gender"
-          required
-        >
-          <option value="" disabled>Select Gender</option>
-          <option value="M">Male</option>
-          <option value="F">Female</option>
-          <option value="O">Other</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="medicalNumber">Medical Number</label>
-        <input
-          type="number"
-          id="medicalNumber"
-          class="form-control"
-          [(ngModel)]="client.medicalNumber"
-          name="medicalNumber"
-          placeholder="Enter Medical Number"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input
-          type="tel"
-          id="phone"
-          class="form-control"
-          [(ngModel)]="client.phone"
-          name="phone"
-          placeholder="Enter Phone Number"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="emergencyContact">Emergency Contact</label>
-        <input
-          type="tel"
-          id="emergencyContact"
-          class="form-control"
-          [(ngModel)]="client.emergencyContact"
-          name="emergencyContact"
-          placeholder="Enter Emergency Contact"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Medical Conditions</label>
-        <div class="medical-conditions">
-          <input
-            type="text"
-            [(ngModel)]="newCondition"
-            placeholder="Add condition"
-            class="form-control"
-            name="newCondition"
-          />
-          <button type="button" class="btn btn-primary" (click)="addCondition()">
-            Add
+      <ul class="conditions-list">
+        <li *ngFor="let condition of client.medicalConditions; let i = index">
+          {{ condition }}
+          <button
+            type="button"
+            class="btn btn-remove"
+            (click)="removeCondition(i)"
+          >
+            Remove
           </button>
-        </div>
-        <ul class="conditions-list">
-          <li *ngFor="let condition of client.medicalConditions; let i = index">
-            {{ condition }}
-            <button
-              type="button"
-              class="btn btn-danger btn-sm"
-              (click)="removeCondition(i)"
-            >
-              Remove
-            </button>
-          </li>
-        </ul>
-      </div>
+        </li>
+      </ul>
+    </div>
 
-      <button type="submit" class="btn btn-success">Register</button>
-    </form>
-  </div>
+    <button type="submit" class="submit-btn">Register</button>
+  </form>
 </div>

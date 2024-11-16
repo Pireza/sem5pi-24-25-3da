@@ -280,6 +280,7 @@ export class AuthService {
     // Send the PUT request with query parameters and no body (empty object as body)
     return this.http.put<void>(requestUrl, {}, { headers });
   }
+  
 
   createStaffAsAdmin(request: CreateStaffRequest): Observable<void> {
     const headers = new HttpHeaders({

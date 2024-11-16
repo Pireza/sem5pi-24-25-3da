@@ -1,99 +1,56 @@
-<div class="container">
-  <div class="form-wrapper">
-    <h2>Edit Patient Profile</h2>
-    <form (ngSubmit)="onSubmit()" #editPatientForm="ngForm">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          id="firstName"
-          class="form-control"
-          [(ngModel)]="patient.firstName"
-          name="firstName"
-          placeholder="Enter First Name"
-          required
-        />
-      </div>
+<div class="container edit-patient-profile">
+  <h2>Edit Patient Profile</h2>
+  
+  <form (ngSubmit)="onSubmit()">
+    <!-- Email field -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [(ngModel)]="patient.email" name="email" required />
+    </div>
 
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input
-          type="text"
-          id="lastName"
-          class="form-control"
-          [(ngModel)]="patient.lastName"
-          name="lastName"
-          placeholder="Enter Last Name"
-          required
-        />
-      </div>
+    <!-- First Name field -->
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" />
+    </div>
+    
+    <!-- Last Name field -->
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" />
+    </div>
+    
+    <!-- Phone field -->
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" [(ngModel)]="patient.phone" name="phone" />
+    </div>
+    
+    <!-- Emergency Contact field -->
+    <div class="form-group">
+      <label for="emergencyContact">Emergency Contact</label>
+      <input type="text" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" />
+    </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          [(ngModel)]="patient.email"
-          name="email"
-          placeholder="Enter Email Address"
-          required
-        />
-      </div>
+    <!-- Medical Conditions list -->
+    <div class="medical-conditions form-group">
+      <label>Medical Conditions</label>
+      <ul>
+        <li *ngFor="let condition of patient.medicalConditions; let i = index">
+          {{ condition }}
+          <button type="button" (click)="removeCondition(i)">Remove</button>
+        </li>
+      </ul>
+      <input 
+        type="text" 
+        [(ngModel)]="newCondition" 
+        placeholder="Add new condition" 
+        (keyup.enter)="addCondition()" 
+      />
+      <button type="button" (click)="addCondition()">Add Condition</button>
+    </div>
 
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input
-          type="tel"
-          id="phone"
-          class="form-control"
-          [(ngModel)]="patient.phone"
-          name="phone"
-          placeholder="Enter Phone Number"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="emergencyContact">Emergency Contact</label>
-        <input
-          type="tel"
-          id="emergencyContact"
-          class="form-control"
-          [(ngModel)]="patient.emergencyContact"
-          name="emergencyContact"
-          placeholder="Enter Emergency Contact"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Medical Conditions</label>
-        <div class="medical-conditions">
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="newCondition"
-            name="newCondition"
-            placeholder="Add a Condition"
-          />
-          <button type="button" class="btn btn-primary" (click)="addCondition()">Add</button>
-        </div>
-        <ul class="conditions-list">
-          <li *ngFor="let condition of patient.medicalConditions; let i = index">
-            {{ condition }}
-            <button
-              type="button"
-              class="btn btn-danger btn-sm"
-              (click)="removeCondition(i)"
-            >
-              Remove
-            </button>
-          </li>
-        </ul>
-      </div>
-
-      <button type="submit" class="btn btn-success">Update Patient</button>
-    </form>
-  </div>
+    <!-- Submit button -->
+    <button type="submit">Save Changes</button>
+  </form>
 </div>
