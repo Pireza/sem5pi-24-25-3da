@@ -1,11 +1,15 @@
 <div class="container edit-patient-profile">
   <h2>Edit Patient Profile</h2>
-  
-  <form (ngSubmit)="onSubmit()">
-    <!-- Email field -->
+
+  <form (ngSubmit)="onSubmit()"> <!-- Ensure this is correctly opened and closed -->
+
+    <!-- Email field with dropdown -->
     <div class="form-group">
       <label for="email">Email</label>
-      <input type="email" id="email" [(ngModel)]="patient.email" name="email" required />
+      <select id="email" [(ngModel)]="patient.email" name="email" (change)="loadPatientData(patient.email)" required>
+        <option value="">Select Patient Email</option>
+        <option *ngFor="let email of availableEmails" [value]="email">{{ email }}</option>
+      </select>
     </div>
 
     <!-- First Name field -->
@@ -13,19 +17,19 @@
       <label for="firstName">First Name</label>
       <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" />
     </div>
-    
+
     <!-- Last Name field -->
     <div class="form-group">
       <label for="lastName">Last Name</label>
       <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" />
     </div>
-    
+
     <!-- Phone field -->
     <div class="form-group">
       <label for="phone">Phone</label>
       <input type="text" id="phone" [(ngModel)]="patient.phone" name="phone" />
     </div>
-    
+
     <!-- Emergency Contact field -->
     <div class="form-group">
       <label for="emergencyContact">Emergency Contact</label>
@@ -52,5 +56,6 @@
 
     <!-- Submit button -->
     <button type="submit">Save Changes</button>
-  </form>
+
+  </form> <!-- Ensure this is correctly closed -->
 </div>

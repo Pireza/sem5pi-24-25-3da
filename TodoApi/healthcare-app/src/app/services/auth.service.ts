@@ -342,4 +342,12 @@ let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
     return this.http.delete<void>(url, { headers });
   }
 
+
+  getPatientEmails(): Observable<string[]> {
+    return this.http.get<string[]>(`http://localhost:5174/api/Patients/all`);
+  }
+  
+  getPatientByEmail(email: string): Observable<Patient> {
+    return this.http.get<Patient>(`http://localhost:5174/api/Patients/email/${email}`);
+  }
 }
