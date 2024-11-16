@@ -37,15 +37,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let type of operationTypes">
-          <td>{{ type.name }}</td>
-          <td>{{ type.duration }}</td>
-          <td>{{ type.isActive ? 'Active' : 'Inactive' }}</td>
-          <td>
-            <ul>
-              <li *ngFor="let staff of type.specializedStaff">{{ staff }}</li>
-            </ul>
-          </td>
+        <tr *ngFor="let operationType of operationTypes">
+          <td>{{ operationType.name }}</td>
+          <td>{{ operationType.duration }}</td>
+          <td>{{ operationType.status ? 'Active' : 'Inactive' }}</td>
+          <td>{{ operationType.specializedStaff }}</td>
         </tr>
       </tbody>
     </table>

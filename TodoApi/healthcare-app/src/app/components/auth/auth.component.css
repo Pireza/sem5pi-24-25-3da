@@ -43,6 +43,28 @@ body::before {
   transition: width 0.3s ease-in-out;
 }
 
+.dynamic-content-container {
+  padding: 20px;
+  margin-top: 100px; /* Keeps content consistently lower */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Form and Table Styles (to ensure no unexpected shifts) */
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align form and table to the start */
+  justify-content: flex-start; /* Ensure no vertical centering */
+  margin-top: 20px; /* Extra space above if needed */
+}
+
+
 .navbar-wide {
   width: 100%;
   left: 0;
@@ -59,6 +81,30 @@ body::before {
 .logo-image {
   max-height: 50px;
   margin-right: 10px;
+}
+
+.table {
+  margin-top: 60px;
+  /* Ensure there's space above the table */
+}
+
+.form-group {
+  margin-bottom: 15px;
+  /* Adjust form spacing */
+}
+
+.error-message {
+  margin-top: 15px;
+  color: red;
+  font-weight: bold;
+}
+
+/* Optional: Prevent excessive shifts when new content loads */
+.result-box {
+  margin-top: 20px;
+  /* Ensures results don’t shift unexpectedly */
+  width: 100%;
+  /* Ensure the result box takes up full available width */
 }
 
 .logo-text {
@@ -133,6 +179,7 @@ body::before {
   justify-content: center;
   align-items: center;
   text-align: left;
+  position: fixed;
   gap: 50px;
   border-radius: 20px;
 }

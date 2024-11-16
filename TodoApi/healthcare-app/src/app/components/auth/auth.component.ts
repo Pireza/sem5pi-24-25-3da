@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'; // Import Router
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { UserService } from '../../services/userService'; // Import UserService
-import { ResetPasswordComponent } from '../reset-password/reset-password.component'; // Import the reset-password component
+import { UserService } from '../../services/userService';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { ListOperationTypesComponent } from '../list-operation-types/list-operation-types.component'; // Import ListOperationTypesComponent
+import { AddOperationTypeComponent } from '../add-operation-type/add-operation-type.component'; // Correct import
+import { FilterRequestsComponent } from '../filter-requests/filter-requests.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,21 +13,30 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent]
 })
 export class AuthComponent {
-  userEmail: string | null = null; // To hold the user's email
-  userRole: string | null = null;   // To hold the user's role
-  isPasswordResetMode: boolean = false; // Control the visibility of the reset password form
-  isAuthenticated: boolean = false; // Authentication state
-  isSidebarOpen: boolean = false; // Sidebar visibility state
+  userEmail: string | null = null;
+  userRole: string | null = null;
+  isPasswordResetMode: boolean = false;
+  isAuthenticated: boolean = false;
+  isSidebarOpen: boolean = false;
 
   submenuStates: { [key: string]: boolean } = {};
   menuItems: { label: string }[] = [];
   highlightedItems: { [key: string]: boolean } = {};
-
-
+  activeComponent: any = null;  // Variable to store the dynamically loaded component
+  navbarHeight: number = 80;
+  
   constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
+
+  ngOnInit() {
+    // Calculate the navbar height dynamically if needed
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      this.navbarHeight = navbar.clientHeight;
+    }
+  }
 
   onAuthenticate() {
     this.authService.authenticateUser().subscribe({
@@ -59,17 +71,17 @@ export class AuthComponent {
         { label: 'Manage Patients' },
         { label: 'Manage Staff' },
         { label: 'Manage Operation Types' },
-        { label: 'Schedule Surgeries', isAction: true },  // This is an action item, not a submenu
+        { label: 'Schedule Surgeries', isAction: true },
       ];
     } else if (this.userRole === 'Doctor') {
       return [
         { label: 'Manage Operation Requests' },
-        { label: '3D Visualization of the Floor', isAction: true },  // This is an action item, not a submenu
+        { label: '3D Visualization of the Floor', isAction: true },
       ];
     } else if (this.userRole === 'Patient') {
       return [
         { label: 'Manage Profile' },
-        { label: 'Return to Login', isAction: true },  // This is an action item, not a submenu
+        { label: 'Return to Login', isAction: true },
       ];
     }
     return [];
@@ -81,19 +93,24 @@ export class AuthComponent {
     } else {
       this.toggleSubmenu(menuItem.label);
       this.toggleHighlight(menuItem.label);
-
     }
-
-
   }
 
   toggleSubmenu(menuItem: string) {
-    this.submenuStates[menuItem] = !this.submenuStates[menuItem]; // Toggle the submenu visibility
+    this.submenuStates[menuItem] = !this.submenuStates[menuItem];
   }
 
   handleClick(action: string) {
     console.log(`Action clicked: ${action}`);
+    if (action === 'Search Operation Types') {
+      this.activeComponent = ListOperationTypesComponent; // Dynamically load ListOperationTypesComponent
+    }else if(action === 'Add New Operation Type'){
+      this.activeComponent = AddOperationTypeComponent;
+    }else if(action === 'Search Operation Requests'){
+      this.activeComponent = FilterRequestsComponent;
+    }
   }
+
   getSubmenuItems(menuItem: string) {
     if (menuItem === 'Manage Patients') {
       return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile'];
@@ -112,5 +129,4 @@ export class AuthComponent {
   toggleHighlight(menuItem: string) {
     this.highlightedItems[menuItem] = !this.highlightedItems[menuItem];
   }
-
 }
