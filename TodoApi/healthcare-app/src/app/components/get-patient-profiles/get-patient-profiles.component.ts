@@ -36,9 +36,7 @@ export class GetPatientProfilesComponent {
     this.totalRecords = 0;
   }
 
-  onGoBack(): void {
-    this.router.navigate(['/admin-ui']);
-  }
+
 
   onSearch(): void {
     this.page = 1;

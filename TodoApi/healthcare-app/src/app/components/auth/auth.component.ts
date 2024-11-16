@@ -11,6 +11,7 @@ import { CreatePatientAdminComponent } from '../create-patient-admin/create-pati
 import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
 import { UpdateOperationRequestComponent } from '../update-operation-request/update-operation-request.component';
 import { UpdateProfileComponent } from '../update-profile/update-profile.component';
+import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -125,6 +126,8 @@ export class AuthComponent {
       this.activeComponent=UpdateProfileComponent;
     }else if(action==='Delete Account'){
       this.onDeletePatient();
+    }else if(action==='Search Patients'){
+      this.activeComponent=GetPatientProfilesComponent;
     }
   }
 

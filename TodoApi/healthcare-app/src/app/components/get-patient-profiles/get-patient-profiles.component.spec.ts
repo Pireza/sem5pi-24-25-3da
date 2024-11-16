@@ -53,10 +53,7 @@ fdescribe('GetPatientProfilesComponent', () => {
     expect(component.totalRecords).toBe(0);
   });
 
-  it('should navigate to /admin-ui when onGoBack is called', () => {
-    component.onGoBack();
-    expect(router.navigate).toHaveBeenCalledWith(['/admin-ui']);
-  });
+ 
 
   it('should call searchPatientProfiles method on onSearch', () => {
     const searchResponse = {

@@ -1,51 +1,115 @@
 .getProfile {
-    text-align: center;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-width: 625px;
-    margin: 50px auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 40px;
+  border: 1px solid #ddd;
+  border-radius: 20px; /* Rounded corners */
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+  max-width: 700px;
+  margin: 50px auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Headings */
+.getProfile h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.getProfile h3 {
+  margin-top: 30px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #444;
+}
+
+/* Labels */
+.getProfile label {
+  font-weight: 500;
+  color: #555;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  text-align: left; /* Align labels to the left */
+}
+
+/* Inputs */
+.getProfile input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px; /* Rounded corners */
+  background-color: #f9f9f9;
+  font-size: 16px;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.getProfile input:focus {
+  outline: none;
+  border-color: #98d478; /* Green border on focus */
+}
+
+/* Buttons */
+.getProfile button {
+  padding: 12px 0;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px; /* Rounded button */
+  cursor: pointer;
+  background-color: #98d478; /* Primary green color */
+  color: white;
+  transition: all 0.3s ease-in-out;
+  width: 100%; /* Full width for buttons */
+  margin-top: 15px;
+}
+
+.getProfile button:hover {
+  background-color: #86ba6a;
+  transform: translateY(-2px);
+}
+
+.getProfile button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Table Styles */
+.getProfile table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.getProfile th,
+.getProfile td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.getProfile th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+  color: #444;
+}
+
+.getProfile td {
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .getProfile {
+      padding: 20px;
   }
-  
-  h1 {
-    color: #333;
-    margin-bottom: 10px;
+
+  .getProfile table {
+      font-size: 14px;
   }
-  
-  label {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  h2 {
-    margin-top: 20px;
-    color: #333;
-  }
-  
+}
