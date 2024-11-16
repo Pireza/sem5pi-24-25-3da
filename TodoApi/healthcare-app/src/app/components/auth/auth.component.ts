@@ -8,6 +8,7 @@ import { AddOperationTypeComponent } from '../add-operation-type/add-operation-t
 import { FilterRequestsComponent } from '../filter-requests/filter-requests.component';
 import { CreateStaffAdminComponent } from '../create-staff-admin/create-staff-admin.component';
 import { CreatePatientAdminComponent } from '../create-patient-admin/create-patient-admin.component';
+import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
 
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +17,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -114,7 +115,9 @@ export class AuthComponent {
     }else if (action === 'Create a New Staff User'){
       this.activeComponent = CreateStaffAdminComponent;
     }else if (action === 'Create Patient Profile'){
-      this.activeComponent = CreatePatientAdminComponent
+      this.activeComponent = CreatePatientAdminComponent;
+    }else if (action === 'Edit Patient Profiles'){
+      this.activeComponent = EditPatientProfileAdminComponent;
     }
   }
 
