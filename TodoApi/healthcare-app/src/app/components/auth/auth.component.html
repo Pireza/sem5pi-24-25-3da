@@ -1,8 +1,8 @@
 <body>
-    <!-- Sidebar Toggle Button (Visible Only When Authenticated) -->
+    <!-- Sidebar Toggle Button -->
     <button class="sidebar-toggle-button" *ngIf="isAuthenticated" (click)="toggleSidebar()">
-        <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'" alt="Toggle Sidebar"
-            class="toggle-icon">
+        <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'"
+            alt="Toggle Sidebar" class="toggle-icon">
     </button>
 
     <!-- Navigation Bar -->
@@ -21,15 +21,21 @@
         </div>
     </div>
 
-    <!-- Sliding Menu (Visible after authentication) -->
+    <!-- Sidebar, only visible if authenticated -->
     <div class="sidebar" [class.sidebar-open]="isSidebarOpen">
-        <div class="sidebar-header">Menu</div>
+        <div class="sidebar-header">{{ userRole }} Dashboard</div>
         <ul class="sidebar-menu">
-            <li>Dashboard</li>
-            <li>Profile</li>
-            <li>Settings</li>
-            <li>Logout</li>
+            <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)"
+                [class.highlighted]="highlightedItems[item.label]">
+                {{ item.label }}
+                <ul *ngIf="submenuStates[item.label]" class="submenu">
+                    <li *ngFor="let subItem of getSubmenuItems(item.label)" (click)="handleClick(subItem)">
+                        {{ subItem }}
+                    </li>
+                </ul>
+            </li>
         </ul>
+
     </div>
 
     <!-- Content Section -->

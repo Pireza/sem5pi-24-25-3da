@@ -150,6 +150,7 @@ body::before {
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -164,6 +165,15 @@ body::before {
   transform: translateX(0);
   transition: transform 0.3s ease-in-out;
   z-index: 1100;
+  overflow-y: auto;
+}
+
+/* Highlighted Menu Item */
+.sidebar-menu li.highlighted {
+  background-color: #5a5a5a;
+  /* Green color or any highlight color */
+  color: rgb(0, 0, 0);
+  font-weight: bold;
 }
 
 .sidebar-open {
@@ -182,15 +192,61 @@ body::before {
 }
 
 .sidebar-menu li {
-  margin: 10px 0;
+  margin: 20px 0;
+  padding: 10px;
+  line-height: 20px;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.5s ease;
+  align-items: left;
+  justify-content: left;
+  border-radius: 5px;
 }
 
 .sidebar-menu li:hover {
-  color: #98d478;
+  color: #000000;
+  background-color: #5a5a5a;
+  font-weight: bold;
 }
 
+/* Submenu Styles */
+.submenu {
+  list-style: none;
+  padding: 0;
+  background-color: #5a5a5a;
+  margin: 5px 0;
+  border-radius: 5px;
+  width: 100%;
+  /* Ensure submenu takes up full width */
+}
+
+.submenu li {
+  width: 100%;
+  /* Ensure submenu items stretch across the submenu width */
+  box-sizing: border-box;
+  /* Include padding and borders in width */
+  margin: 0;
+  /* Remove default margin */
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  color: white;
+  text-align: left;
+  /* Ensure text aligns to the left */
+}
+
+.submenu li:hover {
+  background-color: #bbb;
+  color: #000000;
+  padding-left: 12px;
+  /* Optional: adjust padding if you want the hover effect to include slight indentation */
+}
+
+
+.highlight-text {
+  color: #98d478;
+  /* Green color */
+}
 
 /* Sidebar Toggle Button */
 .sidebar-toggle-button {
@@ -205,12 +261,14 @@ body::before {
 }
 
 .sidebar-toggle-button:hover .toggle-icon {
-  transform: scale(1.1); /* Slight zoom effect on hover */
+  transform: scale(1.1);
+  /* Slight zoom effect on hover */
 }
 
 /* Toggle Button Icon */
 .toggle-icon {
-  width: 25px; /* Adjust the size of the icon */
+  width: 25px;
+  /* Adjust the size of the icon */
   height: 25px;
   transition: transform 0.3s ease;
 }
