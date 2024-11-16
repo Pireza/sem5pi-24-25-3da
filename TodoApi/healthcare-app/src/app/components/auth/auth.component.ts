@@ -10,6 +10,7 @@ import { CreateStaffAdminComponent } from '../create-staff-admin/create-staff-ad
 import { CreatePatientAdminComponent } from '../create-patient-admin/create-patient-admin.component';
 import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
 import { UpdateOperationRequestComponent } from '../update-operation-request/update-operation-request.component';
+import { UpdateProfileComponent } from '../update-profile/update-profile.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -120,6 +121,8 @@ export class AuthComponent {
       this.activeComponent = EditPatientProfileAdminComponent;
     }else if(action === 'Update Operation Request'){
       this.activeComponent= UpdateOperationRequestComponent;
+    }else if(action === 'Update Profile'){
+      this.activeComponent=UpdateProfileComponent;
     }
   }
 

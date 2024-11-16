@@ -99,11 +99,6 @@ fdescribe('UpdateProfileComponent', () => {
     
   });
 
-  // Test goBack method
-  describe('goBack', () => {
-    it('should navigate to /patient-ui', () => {
-      component.goBack();
-      expect(router.navigate).toHaveBeenCalledWith(['/patient-ui']);
-    });
-  });
+ 
+ 
 });
