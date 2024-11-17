@@ -74,7 +74,6 @@ fdescribe('UpdateProfileComponent', () => {
       expect(authService.updatePatientProfile).toHaveBeenCalledWith(
         'test@example.com', 'newemail@example.com', 'John', 'Doe', '1234567890', '9876543210'
       );
-      expect(router.navigate).toHaveBeenCalledWith(['/patient-ui']);
     });
 
     it('should handle errors gracefully', () => {
@@ -99,11 +98,6 @@ fdescribe('UpdateProfileComponent', () => {
     
   });
 
-  // Test goBack method
-  describe('goBack', () => {
-    it('should navigate to /patient-ui', () => {
-      component.goBack();
-      expect(router.navigate).toHaveBeenCalledWith(['/patient-ui']);
-    });
-  });
+ 
+ 
 });

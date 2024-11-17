@@ -89,10 +89,5 @@ export class UpdateOperationRequestComponent implements OnInit {
     }
   }
 
-  
 
-  // Navigate back to the doctor UI
-  goBack(): void {
-    this.router.navigate(['/doctor-ui']);
-  }
 }

@@ -6,7 +6,12 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
 import { ListOperationTypesComponent } from '../list-operation-types/list-operation-types.component'; // Import ListOperationTypesComponent
 import { AddOperationTypeComponent } from '../add-operation-type/add-operation-type.component'; // Correct import
 import { FilterRequestsComponent } from '../filter-requests/filter-requests.component';
-
+import { CreateStaffAdminComponent } from '../create-staff-admin/create-staff-admin.component';
+import { CreatePatientAdminComponent } from '../create-patient-admin/create-patient-admin.component';
+import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
+import { UpdateOperationRequestComponent } from '../update-operation-request/update-operation-request.component';
+import { UpdateProfileComponent } from '../update-profile/update-profile.component';
+import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,7 +19,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -109,6 +114,20 @@ export class AuthComponent {
       this.activeComponent = AddOperationTypeComponent;
     }else if(action === 'Search Operation Requests'){
       this.activeComponent = FilterRequestsComponent;
+    }else if (action === 'Create a New Staff User'){
+      this.activeComponent = CreateStaffAdminComponent;
+    }else if (action === 'Create Patient Profile'){
+      this.activeComponent = CreatePatientAdminComponent;
+    }else if (action === 'Edit Patient Profiles'){
+      this.activeComponent = EditPatientProfileAdminComponent;
+    }else if(action === 'Update Operation Request'){
+      this.activeComponent= UpdateOperationRequestComponent;
+    }else if(action === 'Update Profile'){
+      this.activeComponent=UpdateProfileComponent;
+    }else if(action==='Delete Account'){
+      this.onDeletePatient();
+    }else if(action==='Search Patients'){
+      this.activeComponent=GetPatientProfilesComponent;
     }
   }
 
@@ -129,5 +148,26 @@ export class AuthComponent {
 
   toggleHighlight(menuItem: string) {
     this.highlightedItems[menuItem] = !this.highlightedItems[menuItem];
+  }
+  onDeletePatient(): void {
+    if (this.userEmail) {
+      const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+      if (confirmation) {
+
+      this.authService.deletePatientByEmail(this.userEmail).subscribe({
+        next: () => {
+          console.log('Patient deleted successfully');
+          alert('Your account will be deleted in 30 days as per RGPD standarts.');
+          this.router.navigate(['/auth']);
+        },
+        error: (err) => {
+          console.error('Error deleting patient:', err);
+          alert('An error occurred while trying to delete the patient.');
+        }
+      });
+    }
+    } else {
+      alert('User email is not available.');
+    }
   }
 }

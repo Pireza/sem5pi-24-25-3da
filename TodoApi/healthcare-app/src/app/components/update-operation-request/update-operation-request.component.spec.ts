@@ -108,10 +108,6 @@ fdescribe('UpdateOperationRequestComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Please select a valid Operation Request');
   });
 
-  // Test for Go Back functionality
-  it('should navigate back to doctor UI', () => {
-    component.goBack();
-    expect(router.navigate).toHaveBeenCalledWith(['/doctor-ui']);
-  });
+ 
 
 });

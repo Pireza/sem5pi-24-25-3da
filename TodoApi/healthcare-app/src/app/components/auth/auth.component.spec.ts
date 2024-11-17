@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing'; // Import here
 
-fdescribe('AuthComponent', () => {
+describe('AuthComponent', () => {
   let component: AuthComponent;
   let fixture: ComponentFixture<AuthComponent>;
   let authService: AuthService;

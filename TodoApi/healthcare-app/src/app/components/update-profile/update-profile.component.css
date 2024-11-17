@@ -1,62 +1,63 @@
+/* Update Profile Form Styles */
 .update-profile-form {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    max-width: 400px; /* Set a maximum width for the form */
-    margin: 20px auto; /* Center the form horizontally with margin */
-    padding: 20px; /* Add padding inside the form */
-    border: 1px solid #ddd; /* Light border around the form */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #f9f9f9; /* Light background color */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    flex-direction: column;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 40px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Rounded corners */
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-label {
-    margin-bottom: 5px; /* Space below the label */
-    font-weight: bold; /* Bold labels */
-    color: #333; /* Dark color for labels */
-}
-
-input {
-    margin-bottom: 15px; /* Space below each input */
-    padding: 10px; /* Padding inside the inputs */
-    border: 1px solid #ccc; /* Light border for inputs */
-    border-radius: 4px; /* Rounded corners for inputs */
-    font-size: 16px; /* Font size for input text */
-    color: #333; /* Text color for inputs */
-}
-
-input:focus {
-    border-color: #007bff; /* Border color on focus */
-    outline: none; /* Remove default outline */
-}
-
-.submit-button {
-    background-color: #28a745; /* Bootstrap primary color */
-    color: white; /* White text color */
-    padding: 10px 15px; /* Padding for button */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners for button */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size for button text */
-    transition: background-color 0.3s ease; /* Smooth background transition */
-}
-
-.submit-button:hover {
-    background-color: #218838; /* Darker shade for hover effect */
-}
-.back-btn {
+/* Label Styles */
+.update-profile-form label {
+    font-weight: 500;
+    color: #555;
     display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff; /* Blue color */
-    color: white;
-    border: none;
-    border-radius: 4px;
+    margin-bottom: 8px;
     font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
-.back-btn:hover {
-    background-color: #0056b3; /* Darker blue for hover effect */
+/* Input Styles */
+.update-profile-form input {
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px; /* Rounded corners */
+    background-color: #f9f9f9;
+    font-size: 16px;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box; /* Ensure consistent sizing */
+    transition: border-color 0.3s ease-in-out;
+}
+
+.update-profile-form input:focus {
+    outline: none;
+    border-color: #98d478; /* Green border on focus */
+}
+
+/* Button Styles */
+.update-profile-form .submit-button {
+    padding: 12px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px; /* Rounded button */
+    cursor: pointer;
+    background-color: #98d478; /* Primary green color */
+    color: white;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+.update-profile-form .submit-button:hover {
+    background-color: #86ba6a;
+    transform: translateY(-2px);
+}
+
+.update-profile-form .submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4);
 }
