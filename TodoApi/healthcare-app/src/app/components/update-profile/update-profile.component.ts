@@ -39,7 +39,6 @@ export class UpdateProfileComponent implements OnInit {
         .subscribe(() => {
           console.log('Profile updated successfully');
           alert('Your profile has been updated!');
-          this.router.navigate(['/patient-ui']); // Redirect to patient-ui
         }, (error) => {
           console.error('Error updating profile:', error);
           alert('Error while trying to update your profile.');
@@ -49,7 +48,5 @@ export class UpdateProfileComponent implements OnInit {
       alert('User email is not available. Please log in again.');
     }
   }
-  goBack(): void {
-    this.router.navigate(['/patient-ui']);
-  }
+ 
 }
