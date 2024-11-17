@@ -1,0 +1,79 @@
+/* Delete Container Styling */
+.delete-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px 40px; /* Increased padding for a cleaner look */
+  border: 2px solid rgba(224, 224, 224, 0.9); /* Subtle, modern border */
+  border-radius: 20px; /* Rounded corners for a cohesive look */
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque white background */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern touch */
+  font-family: 'Roboto', sans-serif; /* Consistent font across the container */
+  text-align: center; /* Center content */
+}
+
+/* Header Styling */
+.delete-container h2 {
+  font-size: 28px; /* Larger font size for prominence */
+  font-weight: 600; /* Bolder font */
+  margin-bottom: 20px;
+  color: #333333; /* Dark, modern text color */
+  font-family: 'Roboto', sans-serif; /* Explicit font usage */
+}
+
+/* Label Styling */
+.delete-container label {
+  margin-bottom: 10px; /* Increased spacing for readability */
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333; /* Darker label color for emphasis */
+  font-family: 'Roboto', sans-serif;
+  display: block; /* Consistent label positioning */
+}
+
+/* Input Field Styling */
+.delete-container input[type="number"] {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 10px; /* Rounded input for a modern look */
+  border: 2px solid #e0e0e0; /* Subtle border */
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* Soft background */
+  transition: border-color 0.3s ease-in-out;
+  font-family: 'Roboto', sans-serif;
+}
+
+.delete-container input[type="number"]:focus {
+  outline: none;
+  border-color: #98d478; /* Green border on focus for a cohesive design */
+}
+
+/* Delete Button Styling */
+.delete-button {
+  cursor: pointer;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px; /* Consistent rounded corners */
+  border: 2px solid #e74c3c; /* Consistent red border */
+  background-color: #e74c3c; /* Vibrant red background */
+  color: #fff;
+  transition: all 0.3s ease-in-out; /* Smooth transition effect */
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.delete-button:hover {
+  background-color: #c9302c; /* Darker red on hover */
+  border-color: #c12e2a;
+  transform: translateY(-2px); /* Subtle hover elevation */
+}
+
+.delete-button:focus {
+  outline: none;
+  box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4); /* Blue focus glow */
+}

@@ -9,6 +9,7 @@ import { FilterRequestsComponent } from '../filter-requests/filter-requests.comp
 import { CreateStaffAdminComponent } from '../create-staff-admin/create-staff-admin.component';
 import { CreatePatientAdminComponent } from '../create-patient-admin/create-patient-admin.component';
 import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/edit-patient-profile-admin.component';
+import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-admin/delete-patient-profile-admin.component';
 
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +18,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -27,8 +28,8 @@ export class AuthComponent {
   isSidebarOpen: boolean = false;
 
   submenuStates: { [key: string]: boolean } = {};
-  menuItems: { label: string }[] = [];
   highlightedItems: { [key: string]: boolean } = {};
+  menuItems: { label: string }[] = [];
   activeComponent: any = null;  // Variable to store the dynamically loaded component
   navbarHeight: number = 80;
   
@@ -49,6 +50,7 @@ export class AuthComponent {
           this.userEmail = this.userService.userEmail;
           this.userRole = this.userService.userRole;
           this.isAuthenticated = true;
+          
 
           this.menuItems = this.getMenuItems();
         }
@@ -118,12 +120,14 @@ export class AuthComponent {
       this.activeComponent = CreatePatientAdminComponent;
     }else if (action === 'Edit Patient Profiles'){
       this.activeComponent = EditPatientProfileAdminComponent;
+    }else if(action ==  'Delete Patient Profile'){
+      this.activeComponent = DeletePatientProfileAdminComponent;
     }
   }
 
   getSubmenuItems(menuItem: string) {
     if (menuItem === 'Manage Patients') {
-      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile'];
+      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile', 'Delete Patient Profile'];
     } else if (menuItem === 'Manage Staff') {
       return ['Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
