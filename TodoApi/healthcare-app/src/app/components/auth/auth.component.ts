@@ -12,6 +12,7 @@ import { EditPatientProfileAdminComponent } from '../edit-patient-profile-admin/
 import { UpdateOperationRequestComponent } from '../update-operation-request/update-operation-request.component';
 import { UpdateProfileComponent } from '../update-profile/update-profile.component';
 import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
+import { RegisterStaffComponent } from '../register-staff/register-staff.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -19,7 +20,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule,
+    AddOperationTypeComponent, FilterRequestsComponent,
+    CreateStaffAdminComponent, CreatePatientAdminComponent,
+    EditPatientProfileAdminComponent, RegisterStaffComponent]
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -33,7 +37,7 @@ export class AuthComponent {
   highlightedItems: { [key: string]: boolean } = {};
   activeComponent: any = null;  // Variable to store the dynamically loaded component
   navbarHeight: number = 80;
-  
+
   constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
 
   ngOnInit() {
@@ -110,24 +114,26 @@ export class AuthComponent {
     console.log(`Action clicked: ${action}`);
     if (action === 'Search Operation Types') {
       this.activeComponent = ListOperationTypesComponent; // Dynamically load ListOperationTypesComponent
-    }else if(action === 'Add New Operation Type'){
+    } else if (action === 'Add New Operation Type') {
       this.activeComponent = AddOperationTypeComponent;
-    }else if(action === 'Search Operation Requests'){
+    } else if (action === 'Search Operation Requests') {
       this.activeComponent = FilterRequestsComponent;
-    }else if (action === 'Create a New Staff User'){
+    } else if (action === 'Create a New Staff User') {
       this.activeComponent = CreateStaffAdminComponent;
-    }else if (action === 'Create Patient Profile'){
+    } else if (action === 'Create Patient Profile') {
       this.activeComponent = CreatePatientAdminComponent;
-    }else if (action === 'Edit Patient Profiles'){
+    } else if (action === 'Edit Patient Profiles') {
       this.activeComponent = EditPatientProfileAdminComponent;
-    }else if(action === 'Update Operation Request'){
-      this.activeComponent= UpdateOperationRequestComponent;
-    }else if(action === 'Update Profile'){
-      this.activeComponent=UpdateProfileComponent;
-    }else if(action==='Delete Account'){
+    } else if (action === 'Update Operation Request') {
+      this.activeComponent = UpdateOperationRequestComponent;
+    } else if (action === 'Update Profile') {
+      this.activeComponent = UpdateProfileComponent;
+    } else if (action === 'Delete Account') {
       this.onDeletePatient();
-    }else if(action==='Search Patients'){
-      this.activeComponent=GetPatientProfilesComponent;
+    } else if (action === 'Search Patients') {
+      this.activeComponent = GetPatientProfilesComponent;
+    } else if (action === 'Register New Staff User') {
+      this.activeComponent = RegisterStaffComponent;
     }
   }
 
@@ -154,18 +160,18 @@ export class AuthComponent {
       const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
       if (confirmation) {
 
-      this.authService.deletePatientByEmail(this.userEmail).subscribe({
-        next: () => {
-          console.log('Patient deleted successfully');
-          alert('Your account will be deleted in 30 days as per RGPD standarts.');
-          this.router.navigate(['/auth']);
-        },
-        error: (err) => {
-          console.error('Error deleting patient:', err);
-          alert('An error occurred while trying to delete the patient.');
-        }
-      });
-    }
+        this.authService.deletePatientByEmail(this.userEmail).subscribe({
+          next: () => {
+            console.log('Patient deleted successfully');
+            alert('Your account will be deleted in 30 days as per RGPD standarts.');
+            this.router.navigate(['/auth']);
+          },
+          error: (err) => {
+            console.error('Error deleting patient:', err);
+            alert('An error occurred while trying to delete the patient.');
+          }
+        });
+      }
     } else {
       alert('User email is not available.');
     }
