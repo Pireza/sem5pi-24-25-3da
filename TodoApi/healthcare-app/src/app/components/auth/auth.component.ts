@@ -148,6 +148,8 @@ export class AuthComponent {
       this.router.navigateByUrl('/auth', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/auth']);
     });
+  }else if( action=== 'Look at the 3D Visualization model'){
+    window.open('http://192.168.56.1:5500/TodoApi/3D-Module/Basic_Thumb_Raiser_template/Thumb_Raiser.html', '_blank');
   }
   }
 
@@ -162,6 +164,8 @@ export class AuthComponent {
       return ['Search Operation Requests', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {
       return ['Update Profile', 'Delete Account'];
+    }else if (menuItem === '3D Visualization of the Floor'){
+      return ['Look at the 3D Visualization model'];
     }
     return [];
   }
