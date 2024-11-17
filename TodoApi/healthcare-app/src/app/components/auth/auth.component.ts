@@ -128,7 +128,7 @@ export class AuthComponent {
       this.activeComponent = CreatePatientAdminComponent;
     } else if (action === 'Edit Patient Profiles') {
       this.activeComponent = EditPatientProfileAdminComponent;
-    } else if(action ==  'Delete Patient Profile'){
+    } else if (action ===  'Delete Patient Profile'){
       this.activeComponent = DeletePatientProfileAdminComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
