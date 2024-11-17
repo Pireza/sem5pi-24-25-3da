@@ -21,21 +21,22 @@
         </div>
     </div>
 
-    <!-- Sidebar, only visible if authenticated -->
-    <div class="sidebar" [class.sidebar-open]="isSidebarOpen">
-        <div class="sidebar-header">{{ userRole }} Dashboard</div>
-        <ul class="sidebar-menu">
-            <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)"
-                [class.highlighted]="highlightedItems[item.label]">
-                {{ item.label }}
-                <ul *ngIf="submenuStates[item.label]" class="submenu">
-                    <li *ngFor="let subItem of getSubmenuItems(item.label)" (click)="handleClick(subItem)">
-                        {{ subItem }}
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+  <!-- Sidebar, only visible if authenticated -->
+<div *ngIf="isAuthenticated" class="sidebar" [class.sidebar-open]="isSidebarOpen">
+    <div class="sidebar-header">{{ userRole }} Dashboard</div>
+    <ul class="sidebar-menu">
+        <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)"
+            [class.highlighted]="highlightedItems[item.label]">
+            {{ item.label }}
+            <ul *ngIf="submenuStates[item.label]" class="submenu">
+                <li *ngFor="let subItem of getSubmenuItems(item.label)" (click)="handleClick(subItem)">
+                    {{ subItem }}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
 
     <!-- Content Section -->
     <div class="content-container" *ngIf="!activeComponent; else dynamicContent">

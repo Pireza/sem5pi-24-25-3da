@@ -81,17 +81,19 @@ export class AuthComponent {
         { label: 'Manage Patients' },
         { label: 'Manage Staff' },
         { label: 'Manage Operation Types' },
-        { label: 'Schedule Surgeries', isAction: true },
+        { label: 'Schedule Surgeries'},
+        { label: 'Logout', isAction: true },
       ];
     } else if (this.userRole === 'Doctor') {
       return [
         { label: 'Manage Operation Requests' },
-        { label: '3D Visualization of the Floor', isAction: true },
+        { label: '3D Visualization of the Floor'},
+        { label: 'Logout', isAction: true },
       ];
     } else if (this.userRole === 'Patient') {
       return [
         { label: 'Manage Profile' },
-        { label: 'Return to Login', isAction: true },
+        { label: 'Logout', isAction: true },
       ];
     }
     return [];
@@ -134,7 +136,19 @@ export class AuthComponent {
       this.activeComponent = GetPatientProfilesComponent;
     } else if (action === 'Register New Staff User') {
       this.activeComponent = RegisterStaffComponent;
-    }
+    }else if (action === 'Logout') {
+      this.isAuthenticated = false; // Reset authentication state
+      this.userEmail = null; // Clear user information
+      this.userRole = null;
+      this.activeComponent = null; 
+      this.menuItems = [];
+      this.isSidebarOpen = false;
+  
+      // Navigate to the same route to reset the page state
+      this.router.navigateByUrl('/auth', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/auth']);
+    });
+  }
   }
 
   getSubmenuItems(menuItem: string) {
