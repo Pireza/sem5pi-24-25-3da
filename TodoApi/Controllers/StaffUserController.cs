@@ -348,11 +348,23 @@ public async Task<IActionResult> PutStaffUpdateAsAdmin(
             query = query.Where(s => s.Specialization != null &&
                                     s.Specialization.SpecDescription.Contains(specialization));
         }
+
+        // Pagination logic
+        var totalRecords = await query.CountAsync();
+
         // Paginate results
-        var paginatedResults = await query
+        var staff = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(s => new
+            .ToListAsync();
+
+        var response = new
+        {
+            TotalRecords = totalRecords,
+            Page = pageNumber,
+            PageSize = pageSize,
+            Staff = staff.Select(s => new
+
             {
                 s.Id,
                 s.FirstName,
@@ -360,9 +372,10 @@ public async Task<IActionResult> PutStaffUpdateAsAdmin(
                 s.Email,
                 Specialization = s.Specialization != null ? s.Specialization.SpecDescription : null
             })
-            .ToListAsync();
+        };
+           
         // Return paginated staff profiles
-        return Ok(paginatedResults);
+        return Ok(response);
     }
 
 }
