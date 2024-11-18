@@ -1,5 +1,7 @@
 <div class="container">
   <h2>Filter Operation Types</h2>
+  
+  <!-- Search Form -->
   <form (ngSubmit)="onSearch()" class="filter-form">
     <div class="form-group">
       <label for="name">Name</label>
@@ -23,8 +25,10 @@
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
+  <!-- Error Message -->
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
+  <!-- Results Table -->
   <div *ngIf="operationTypes.length > 0" class="result-box">
     <h3>Results</h3>
     <table class="table table-bordered">

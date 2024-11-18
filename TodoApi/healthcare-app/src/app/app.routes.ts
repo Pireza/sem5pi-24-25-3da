@@ -21,7 +21,7 @@ import { EditStaffAdminComponent } from './components/edit-staff-admin/edit-staf
 import { PlanningComponent } from './components/planning/planning.component';
 import { DeleteOperationRequestComponent } from './components/remove-operation-doctor/remove-operation-doctor.component';
 import { RemoveOperationTypeAdminComponent } from './components/remove-operation-type-admin/remove-operation-type-admin.component';
-
+import { DeletePatientProfileAdminComponent } from './components/delete-patient-profile-admin/delete-patient-profile-admin.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -47,6 +47,7 @@ export const routes: Routes = [
   {path: 'edit-staff-admin', component : EditStaffAdminComponent},
   {path: 'remove-operation-doctor', component :DeleteOperationRequestComponent },
   {path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent},
+  {path: 'delete-patient-profile-admin', component: DeletePatientProfileAdminComponent},
 
 
 

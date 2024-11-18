@@ -1,0 +1,68 @@
+/* General styling for the container */
+.deactivate-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for labels and inputs in a single row */
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Styling the label */
+.form-group label {
+  margin-right: 10px;
+  flex-shrink: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Styling the input */
+.form-group input[type="email"] {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
+}
+
+/* Focus styling for the input */
+.form-group input[type="email"]:focus {
+  border-color: #98d478;
+  outline: none;
+}
+
+/* Styling for the confirmation checkbox */
+.form-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Styling the button */
+.delete-button {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.delete-button:hover:not(:disabled) {
+  background-color: #c0392b;
+}

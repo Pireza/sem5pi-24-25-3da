@@ -34,25 +34,6 @@ export class FilterRequestsComponent {
     );
   }
 
-  // Method to update a specific request
-  updateRequest(request: any): void {
-    const { id, operationPriorityId, deadline } = request;
-
-    if (!operationPriorityId || !deadline) {
-      console.warn('Both Priority ID and Deadline are required to update.');
-      return;
-    }
-
-    // Call the service to update the operation request
-    this.authService.updateOperationRequestAsDoctor(id, operationPriorityId, deadline).subscribe(
-      () => {
-        console.log(`Request ${id} updated successfully.`);
-        alert(`Request ${id} updated successfully.`);
-      },
-      (error) => {
-        console.error(`Error updating request ${id}:`, error);
-        alert(`Error updating request ${id}. Please try again.`);
-      }
-    );
-  }
+ 
+  
 }
