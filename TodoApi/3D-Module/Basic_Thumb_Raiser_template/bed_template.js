@@ -12,37 +12,35 @@ export default class BedTemplate {
 
         // Create an empty group to hold the bed model
         this.bed = new THREE.Group();
-
-        // Load the GLTF model asynchronously
-        this.loadModel();
     }
 
     loadModel() {
-        // Replace 'path_to_your_model.glb' with the actual path to your GLTF model
-        const modelPath = this.modelUrl;
+        return new Promise((resolve, reject) => {
+            // Replace 'path_to_your_model.glb' with the actual path to your GLTF model
+            const modelPath = this.modelUrl;
 
-        this.loader.load(
-            modelPath, // URL to the GLTF model
-            (gltf) => {
-                // Once the model is loaded, add it to the `bed` group
-                this.bed.add(gltf.scene);
+            this.loader.load(
+                modelPath, // URL to the GLTF model
+                (gltf) => {
+                    // Once the model is loaded, add it to the `bed` group
+                    this.bed.add(gltf.scene);
 
-                // Scale and position adjustments if necessary (optional)
-                this.bed.scale.set(0.005, 0.005, 0.005);
-                this.bed.position.set(0, 0, 0); // Adjust the position if necessary
+                   
 
-                // Create a bounding box for the bed model
-                this.bedBox = new THREE.Box3().setFromObject(this.bed);
-            },
-            (xhr) => {
-                // Log the progress of the model loading (optional)
-                console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
-            },
-            (error) => {
-                // Handle loading errors
-                console.error("Error loading model", error);
-            }
-        );
+                    // Create a bounding box for the bed model
+                    this.bedBox = new THREE.Box3().setFromObject(this.bed);
+                    resolve(this.bed); // Resolve the promise when the model is loaded
+                },
+                (xhr) => {
+                    // Log the progress of the model loading (optional)
+                    console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`);
+                },
+                (error) => {
+                    // Handle loading errors
+                    console.error("Error loading model", error);
+                    reject(error); // Reject the promise on error
+                }
+            );
+        });
     }
-
 }

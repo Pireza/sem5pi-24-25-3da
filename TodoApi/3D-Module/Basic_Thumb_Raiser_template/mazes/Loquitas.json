@@ -2,13 +2,31 @@
     "groundTextureUrl": "./textures/ground.jpg",
     "wallTextureUrl": "./textures/wall.jpg",
     "size": { "width": 11, "height": 12 },
-    "initialPosition": [7, 6],
-    "initialDirection": 0.0,
-    "exitLocation": [-0.5, 6],
-    "rooms":[
-    {
-        "height":5,
-        "width":5
-    }
-]
+
+   "rooms": [
+        {
+            "name": "Room 1",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 1
+        },
+        {
+            "name": "Room 2",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
+        },
+        {
+            "name": "Room 3",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 1
+        }
+    ]
 }
