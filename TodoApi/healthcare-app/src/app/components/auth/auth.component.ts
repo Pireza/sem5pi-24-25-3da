@@ -16,6 +16,7 @@ import { RegisterStaffComponent } from '../register-staff/register-staff.compone
 import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-admin/delete-patient-profile-admin.component';
 import { EditStaffAdminComponent } from '../edit-staff-admin/edit-staff-admin.component';
 import { DeleteOperationRequestComponent } from '../remove-operation-doctor/remove-operation-doctor.component';
+import { RemoveOperationTypeAdminComponent } from '../remove-operation-type-admin/remove-operation-type-admin.component';
 
 
 
@@ -26,7 +27,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, DeleteOperationRequestComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent] 
+  imports: [ResetPasswordComponent, DeleteOperationRequestComponent,RemoveOperationTypeAdminComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -146,7 +147,10 @@ export class AuthComponent {
       this.activeComponent = EditStaffAdminComponent;
     }else if(action === 'Remove Operation Request'){
       this.activeComponent = DeleteOperationRequestComponent;
-    }else if (action === 'Logout') {
+    }else if (action === 'Delete Operation Type'){
+      this.activeComponent = RemoveOperationTypeAdminComponent;
+    }
+    else if (action === 'Logout') {
       this.isAuthenticated = false; // Reset authentication state
       this.userEmail = null; // Clear user information
       this.userRole = null;

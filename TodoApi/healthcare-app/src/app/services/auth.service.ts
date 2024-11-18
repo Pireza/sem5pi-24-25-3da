@@ -11,6 +11,7 @@ import { OperationTypeSearch } from '../Models/OperationTypeSearch';
 import { Patient } from '../Models/Patient';
 import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
+import { OperationType } from '../Models/OperationType';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -371,4 +372,9 @@ export class AuthService {
     return this.http.get<Staff>(url);
   
 }
+
+  getActiveTypes(): Observable<OperationType[]>{
+    const url = ' http://localhost:5174/api/OperationType/active';
+    return this.http.get<OperationType[]>(url);
+  }
 }

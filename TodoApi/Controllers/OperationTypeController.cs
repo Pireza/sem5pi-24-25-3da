@@ -1,51 +1,75 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
-using System.Collections.Generic;
+using TodoApi.Services;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
-[Route("api/[controller]")]
-[ApiController]
-
-public class OperationTypeController : ControllerBase
+namespace TodoApi.Controllers
 {
-    private readonly UserContext _context;
-
-    public OperationTypeController(UserContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OperationTypeController : ControllerBase
     {
-        _context = context;
-    }
-    private OperationRequestRepository _repository;
+        private readonly UserContext _context;
+        private readonly OperationTypeRepository _typeRep;  // Injection of the OperationTypeRepository
 
-
-[HttpDelete("removeOperationTypeAsAdmin/{id}")] // Correcting route to be DELETE and using path variable
-[Authorize(Policy = "AdminOnly")]
-public async Task<IActionResult> DeactivateOperationType(long id)
-{
-    try
-    {
-        // Call repository to deactivate the operation type
-        var deactivated = await _repository.DeactivateOperationTypeAsync(id);
-
-        if (!deactivated)
+        // Constructor to inject dependencies
+        public OperationTypeController(UserContext context, OperationTypeRepository typeRep)
         {
-            return NotFound("Operation type not found or does not exist."); // Provide a message with NotFound
+            _context = context;  // Store UserContext in _context
+            _typeRep = typeRep;  // Store the injected OperationTypeRepository in _typeRep
         }
 
-        return NoContent(); // Return No Content status on success
-    }
-    catch (InvalidOperationException ex)
-    {
-        return BadRequest($"Invalid operation: {ex.Message}"); // Provide more context in the response
-    }
-    catch (Exception ex) // Catch all other exceptions
-    {
-        // Log the exception here (you can use a logging framework)
-        // e.g., _logger.LogError(ex, "An error occurred while deactivating operation type");
-        return StatusCode(500, "An error occurred while processing your request.");
-    }
-}
+        // Example method to get all operation types
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OperationType>>> GetOperationTypes()
+        {
+            var operationTypes = await _context.OperationTypes.ToListAsync();
+            return Ok(operationTypes);  // Return a list of operation types from the database
+        }
 
+        // Example method to deactivate an operation type
+        [HttpDelete("removeOperationTypeAsAdmin/{id}")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> DeactivateOperationType(long id)
+        {
+            try
+            {
+                var deactivated = await _typeRep.DeactivateOperationTypeAsync(id);
 
+                if (!deactivated)
+                {
+                    return NotFound("Operation type not found or does not exist.");
+                }
+
+                return NoContent(); // Successfully deactivated
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest($"Invalid operation: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Method to get all active operation types
+        [HttpGet("active")]
+        public async Task<ActionResult<IEnumerable<OperationType>>> GetActiveOperationTypes()
+        {
+            var activeOperationTypes = await _context.Types
+                .Where(ot => ot.IsActive) // Assuming 'IsActive' field indicates active status
+                .ToListAsync();
+
+            if (activeOperationTypes == null || !activeOperationTypes.Any())
+            {
+                return NotFound("No active operation types found.");
+            }
+
+            return Ok(activeOperationTypes);  // Return active operation types from the database
+        }
+    }
 }
