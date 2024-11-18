@@ -1,0 +1,38 @@
+<div class="deactivate-container">
+  <h2>Deactivate Patient Profile</h2>
+  <form (ngSubmit)="deactivatePatientProfile()">
+    <!-- Patient Email Input -->
+    <div class="form-group">
+      <label for="patientEmail">Patient Email:</label>
+      <input
+        type="email"
+        id="patientEmail"
+        [(ngModel)]="patientEmail"
+        name="patientEmail"
+        placeholder="Enter patient's email"
+        required
+      />
+    </div>
+
+    <!-- Confirmation Checkbox -->
+    <div class="form-group">
+      <input
+        type="checkbox"
+        id="confirmation"
+        [(ngModel)]="isConfirmed"
+        name="confirmation"
+        required
+      />
+      <label for="confirmation">I confirm to deactivate this profile</label>
+    </div>
+
+    <!-- Deactivate Profile Button -->
+    <button
+      type="submit"
+      class="delete-button"
+      [disabled]="!isConfirmed || !patientEmail"
+    >
+      Deactivate Profile
+    </button>
+  </form>
+</div>

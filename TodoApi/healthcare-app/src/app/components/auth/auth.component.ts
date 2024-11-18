@@ -13,6 +13,10 @@ import { UpdateOperationRequestComponent } from '../update-operation-request/upd
 import { UpdateProfileComponent } from '../update-profile/update-profile.component';
 import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
 import { RegisterStaffComponent } from '../register-staff/register-staff.component';
+import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-admin/delete-patient-profile-admin.component';
+
+
+
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,10 +24,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule,
-    AddOperationTypeComponent, FilterRequestsComponent,
-    CreateStaffAdminComponent, CreatePatientAdminComponent,
-    EditPatientProfileAdminComponent, RegisterStaffComponent]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -33,8 +34,8 @@ export class AuthComponent {
   isSidebarOpen: boolean = false;
 
   submenuStates: { [key: string]: boolean } = {};
-  menuItems: { label: string }[] = [];
   highlightedItems: { [key: string]: boolean } = {};
+  menuItems: { label: string }[] = [];
   activeComponent: any = null;  // Variable to store the dynamically loaded component
   navbarHeight: number = 80;
 
@@ -55,6 +56,7 @@ export class AuthComponent {
           this.userEmail = this.userService.userEmail;
           this.userRole = this.userService.userRole;
           this.isAuthenticated = true;
+          
 
           this.menuItems = this.getMenuItems();
         }
@@ -81,17 +83,19 @@ export class AuthComponent {
         { label: 'Manage Patients' },
         { label: 'Manage Staff' },
         { label: 'Manage Operation Types' },
-        { label: 'Schedule Surgeries', isAction: true },
+        { label: 'Schedule Surgeries'},
+        { label: 'Logout', isAction: true },
       ];
     } else if (this.userRole === 'Doctor') {
       return [
         { label: 'Manage Operation Requests' },
-        { label: '3D Visualization of the Floor', isAction: true },
+        { label: '3D Visualization of the Floor'},
+        { label: 'Logout', isAction: true },
       ];
     } else if (this.userRole === 'Patient') {
       return [
         { label: 'Manage Profile' },
-        { label: 'Return to Login', isAction: true },
+        { label: 'Logout', isAction: true },
       ];
     }
     return [];
@@ -124,6 +128,8 @@ export class AuthComponent {
       this.activeComponent = CreatePatientAdminComponent;
     } else if (action === 'Edit Patient Profiles') {
       this.activeComponent = EditPatientProfileAdminComponent;
+    } else if (action ===  'Delete Patient Profile'){
+      this.activeComponent = DeletePatientProfileAdminComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
     } else if (action === 'Update Profile') {
@@ -134,12 +140,26 @@ export class AuthComponent {
       this.activeComponent = GetPatientProfilesComponent;
     } else if (action === 'Register New Staff User') {
       this.activeComponent = RegisterStaffComponent;
-    }
+    }else if (action === 'Logout') {
+      this.isAuthenticated = false; // Reset authentication state
+      this.userEmail = null; // Clear user information
+      this.userRole = null;
+      this.activeComponent = null; 
+      this.menuItems = [];
+      this.isSidebarOpen = false;
+  
+      // Navigate to the same route to reset the page state
+      this.router.navigateByUrl('/auth', { skipLocationChange: true }).then(() => {
+        this.router.navigate(['/auth']);
+    });
+  }else if( action=== 'Look at the 3D Visualization model'){
+    window.open('http://192.168.56.1:5500/TodoApi/3D-Module/Basic_Thumb_Raiser_template/Thumb_Raiser.html', '_blank');
+  } 
   }
 
   getSubmenuItems(menuItem: string) {
     if (menuItem === 'Manage Patients') {
-      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile'];
+      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile', 'Delete Patient Profile'];
     } else if (menuItem === 'Manage Staff') {
       return ['Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
@@ -148,6 +168,8 @@ export class AuthComponent {
       return ['Search Operation Requests', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {
       return ['Update Profile', 'Delete Account'];
+    }else if (menuItem === '3D Visualization of the Floor'){
+      return ['Look at the 3D Visualization model'];
     }
     return [];
   }

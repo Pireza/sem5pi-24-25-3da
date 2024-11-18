@@ -21,9 +21,6 @@ export interface DecodedToken {
   providedIn: 'root',
 })
 export class AuthService {
-  deactivatePatientProfileAsAdmin(patientEmail: string) {
-    throw new Error('Method not implemented.');
-  }
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
   public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0';
   public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail';

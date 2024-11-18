@@ -6,14 +6,15 @@ import { CommonModule } from '@angular/common';
  
 
 @Component({
-  selector: 'app-delete-patient-profile',
+  selector: 'app-delete-patient-profile-admin',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './delete-patient-profile.component.html',
-  styleUrls: ['./delete-patient-profile.component.css']
+  templateUrl: './delete-patient-profile-admin.component.html',
+  styleUrls: ['./delete-patient-profile-admin.component.css']
 })
-export class DeletePatientProfileComponent {
+export class DeletePatientProfileAdminComponent {
   patientEmail?: string; // Variable to hold the patient's email
+  isConfirmed: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
