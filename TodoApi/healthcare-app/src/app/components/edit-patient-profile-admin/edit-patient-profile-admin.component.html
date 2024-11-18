@@ -9,7 +9,7 @@
       <select id="email" [(ngModel)]="patient.email" name="email" (change)="loadPatientData(patient.email)" required>
         <option value="">Select Patient Email</option>
         <option *ngFor="let email of availableEmails" [value]="email">{{ email }}</option>
-      </select>
+      </select>      
     </div>
 
     <!-- First Name field -->
@@ -36,23 +36,30 @@
       <input type="text" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" />
     </div>
 
-    <!-- Medical Conditions list -->
     <div class="medical-conditions form-group">
       <label>Medical Conditions</label>
+    
+      <!-- Input and Add Button -->
+      <div class="medical-conditions">
+        <input 
+          type="text" 
+          [(ngModel)]="newCondition" 
+          placeholder="Add condition" 
+          name="newCondition" 
+        />
+        <button type="button" (click)="addCondition()">Add</button>
+      </div>
+    
+      <!-- Conditions List -->
       <ul>
         <li *ngFor="let condition of patient.medicalConditions; let i = index">
           {{ condition }}
           <button type="button" (click)="removeCondition(i)">Remove</button>
         </li>
       </ul>
-      <input 
-        type="text" 
-        [(ngModel)]="newCondition" 
-        placeholder="Add new condition" 
-        (keyup.enter)="addCondition()" 
-      />
-      <button type="button" (click)="addCondition()">Add Condition</button>
+    
     </div>
+    
 
     <!-- Submit button -->
     <button type="submit">Save Changes</button>

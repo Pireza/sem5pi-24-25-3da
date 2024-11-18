@@ -355,10 +355,12 @@ let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
 
 
   getPatientEmails(): Observable<string[]> {
-    return this.http.get<string[]>(`http://localhost:5174/api/Patients/all`);
+    return this.http.get<string[]>(`http://localhost:5174/api/Patients/emails`);
   }
   
   getPatientByEmail(email: string): Observable<Patient> {
-    return this.http.get<Patient>(`http://localhost:5174/api/Patients/email/${email}`);
+    const url = `http://localhost:5174/api/Patients/email/${encodeURIComponent(email)}`;
+    return this.http.get<Patient>(url);
   }
+  
 }
