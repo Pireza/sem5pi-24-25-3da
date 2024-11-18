@@ -173,7 +173,6 @@ export default class ThumbRaiser {
         // Create the lights
         this.lights = new Lights(this.lightsParameters);
 
-        this.person = new Person();
 
         // Create the fog
 
