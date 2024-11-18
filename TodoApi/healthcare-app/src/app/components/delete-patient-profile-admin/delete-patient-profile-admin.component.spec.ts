@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeletePatientProfileAdminComponent } from './components/delete-patient-profile-admin/delete-patient-profile-admin.component';
+import { DeletePatientProfileAdminComponent } from './delete-patient-profile-admin.component';
 
 describe('DeletePatientProfileComponent', () => {
   let component: DeletePatientProfileAdminComponent;

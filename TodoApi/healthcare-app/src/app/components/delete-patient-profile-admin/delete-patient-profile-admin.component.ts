@@ -17,24 +17,29 @@ export class DeletePatientProfileAdminComponent {
   isConfirmed: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
-
-  // Method to call the service and delete the patient profile
   deactivatePatientProfile() {
     if (!this.patientEmail) {
       alert('Please provide a patient email.');
       return;
     }
-
-    // Call the service method to delete the patient profile
+  
     this.authService.deletePatientByEmailAsAdmin(this.patientEmail).subscribe({
       next: () => {
+        // Success: Handle 204 response
         alert('Patient Profile deactivated successfully.');
-        this.router.navigate(['/admin-dashboard']); // Navigate after success
+        this.router.navigate(['/admin-dashboard']);
       },
       error: (error) => {
-        console.error('Error deactivating patient profile:', error);
-        alert('Failed to deactivate patient profile.');
+        // Handle different error statuses
+        if (error.status === 404) {
+          alert('Patient not found. Please check the email address and try again.');
+        } else if (error.status === 403) {
+          alert('You do not have the necessary permissions to deactivate this profile.');
+        } else {
+          console.error('Unexpected error:', error);
+          alert('Failed to deactivate patient profile. Please try again later.');
+        }
       }
     });
-  }
+  }  
 }
