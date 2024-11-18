@@ -1,7 +1,7 @@
 <div class="container edit-patient-profile">
   <h2>Edit Patient Profile</h2>
 
-  <form (ngSubmit)="onSubmit()"> <!-- Ensure this is correctly opened and closed -->
+  <form (ngSubmit)="onSubmit()">
 
     <!-- Email field with dropdown -->
     <div class="form-group">
@@ -15,28 +15,29 @@
     <!-- First Name field -->
     <div class="form-group">
       <label for="firstName">First Name</label>
-      <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" />
+      <input type="text" id="firstName" [(ngModel)]="patient.firstName" name="firstName" class="form-control" />
     </div>
 
     <!-- Last Name field -->
     <div class="form-group">
       <label for="lastName">Last Name</label>
-      <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" />
+      <input type="text" id="lastName" [(ngModel)]="patient.lastName" name="lastName" class="form-control" />
     </div>
 
     <!-- Phone field -->
     <div class="form-group">
       <label for="phone">Phone</label>
-      <input type="text" id="phone" [(ngModel)]="patient.phone" name="phone" />
+      <input type="text" id="phone" [(ngModel)]="patient.phone" name="phone" class="form-control" />
     </div>
 
     <!-- Emergency Contact field -->
     <div class="form-group">
       <label for="emergencyContact">Emergency Contact</label>
-      <input type="text" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" />
+      <input type="text" id="emergencyContact" [(ngModel)]="patient.emergencyContact" name="emergencyContact" class="form-control" />
     </div>
 
-    <div class="medical-conditions form-group">
+    <!-- Medical Conditions -->
+    <div class="form-group medical-conditions">
       <label>Medical Conditions</label>
     
       <!-- Input and Add Button -->
@@ -46,6 +47,7 @@
           [(ngModel)]="newCondition" 
           placeholder="Add condition" 
           name="newCondition" 
+          class="form-control"
         />
         <button type="button" (click)="addCondition()">Add</button>
       </div>
@@ -57,12 +59,10 @@
           <button type="button" (click)="removeCondition(i)">Remove</button>
         </li>
       </ul>
-    
     </div>
-    
 
     <!-- Submit button -->
-    <button type="submit">Save Changes</button>
+    <button type="submit" class="submit-btn">Save Changes</button>
 
-  </form> <!-- Ensure this is correctly closed -->
+  </form>
 </div>
