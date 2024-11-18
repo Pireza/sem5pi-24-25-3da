@@ -60,7 +60,7 @@ export class CreatePatientAdminComponent {
     this.authService.createPatientAsAdmin(this.client).subscribe({
       next: () => {
         this.authService.isAuthenticated=false;
-        this.router.navigate(['/admin-ui']); 
+        alert('Patient created!')
       },
       error: (error) => {
         console.error('Error registering patient:', error);

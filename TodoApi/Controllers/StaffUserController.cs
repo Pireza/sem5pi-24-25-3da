@@ -24,6 +24,70 @@ public class StaffUserController : ControllerBase
         _repository = repository;
     }
 
+[HttpGet("all-staff-emails")]
+/// <summary>
+/// This method retrieves all the emails of staff members with the roles 'Doctor' or 'Nurse' from the system.
+/// </summary>
+/// <returns>
+/// A list of staff emails. If no staff emails are found, returns NotFound.
+/// </returns>
+public async Task<IActionResult> GetAllStaffEmails()
+{
+    try
+    {
+        // Query the user context for all users with the 'Doctor' or 'Nurse' role
+        var staffEmails = await _context.Users
+            .Where(u => u.Role == "Doctor" || u.Role == "Nurse")  // Check for both 'Doctor' and 'Nurse' roles
+            .Select(u => u.Email)  // Select only the emails of staff users
+            .ToListAsync();
+
+        if (staffEmails == null || !staffEmails.Any())
+        {
+            return NotFound("No staff emails found.");
+        }
+
+        // Return the list of staff emails
+        return Ok(staffEmails);
+    }
+    catch (Exception ex)
+    {
+        // Handle any unexpected errors
+        return BadRequest($"Error retrieving staff emails: {ex.Message}");
+    }
+}
+
+
+[HttpGet("staff-by-email/{email}")]
+/// <summary>
+/// This method retrieves all the information of a staff member based on the provided email.
+/// </summary>
+/// <param name="email">The email of the staff member.</param>
+/// <returns>
+/// Returns the staff details if found, or NotFound if no staff with the provided email exists.
+/// </returns>
+public async Task<IActionResult> GetStaffByEmail(string email)
+{
+    try
+    {
+        // Query the repository to find staff by email
+        var staff = await _repository.checkStaffEmail(email);
+
+        if (staff == null)
+        {
+            return NotFound($"No staff found with the email: {email}");
+        }
+
+        // Return the staff details
+        return Ok(staff);
+    }
+    catch (Exception ex)
+    {
+        // Handle any unexpected errors
+        return BadRequest($"Error retrieving staff details: {ex.Message}");
+    }
+}
+
+
     // GET: api/Staff/{id}
     [HttpGet("{id}")]
     /// <summary>

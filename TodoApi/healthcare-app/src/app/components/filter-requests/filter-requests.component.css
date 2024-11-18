@@ -2,14 +2,18 @@
 .container {
     padding: 40px 60px;
     border: 1px solid #ddd;
-    border-radius: 20px;
+    border-radius: 20px; /* Keep same border radius */
     background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
     max-width: 800px; /* Limit width for better layout */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center content vertically inside the container */
+    align-items: center; /* Align items in the center horizontally */
     text-align: center;
+    width: 100%;  /* Allow it to scale */
+    margin: 0 auto; /* Center horizontally */
+    box-sizing: border-box; /* Include padding in width/height */
 }
 
 /* Table styles inside the component */

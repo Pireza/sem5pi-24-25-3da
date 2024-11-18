@@ -57,7 +57,8 @@ fdescribe('AuthComponent', () => {
       spyOn(window, 'alert'); // Spy on alert to check for RGPD message
       authService.deletePatientByEmail.and.returnValue(of(undefined)); // Mock delete operation once
   
-
+      // Spy on resetPage to prevent it from being executed during tests
+      spyOn(component, 'resetPage');
     });
   
     it('should call deletePatientByEmail when confirmed', () => {
@@ -71,7 +72,6 @@ fdescribe('AuthComponent', () => {
   
       // Assert that the alert for account deletion is shown
       expect(window.alert).toHaveBeenCalledWith('Your account will be deleted in 30 days as per RGPD standarts.');
-     
     });
   
     it('should not call deletePatientByEmail when canceled', fakeAsync(() => {
@@ -81,9 +81,10 @@ fdescribe('AuthComponent', () => {
       tick(); // simulate async passage of time
   
       expect(authService.deletePatientByEmail).not.toHaveBeenCalled();
-      
+      expect(component.resetPage).not.toHaveBeenCalled(); // Ensure resetPage is not called
     }));
   });
+  
   
   
   

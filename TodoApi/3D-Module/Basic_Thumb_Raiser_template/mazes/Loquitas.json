@@ -2,42 +2,31 @@
     "groundTextureUrl": "./textures/ground.jpg",
     "wallTextureUrl": "./textures/wall.jpg",
     "size": { "width": 11, "height": 12 },
-    "map": [
-        [3, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 1],
-        [1, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-        [3, 2, 2, 2, 5, 1, 3, 2, 2, 2, 2, 1],
-        [1, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-        [3, 2, 5, 2, 2, 1, 3, 2, 2, 2, 2, 1],
-        [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1],
-        [3, 2, 2, 2, 2, 1, 3, 2, 2, 2, 2, 1],
-        [1, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 4, 1, 0, 0, 0, 0, 1],
-        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0]
-    ],
-    "rooms" : [
+
+   "rooms": [
         {
-            "bedX" : 5.0,
-            "bedY" : 5.0,
-            "bedDirection" :30.0,
-            "isOccupied": true
+            "name": "Room 1",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 1
         },
         {
-            "bedX" : 2.0,
-            "bedY" : 2.0,
-            "bedDirection" : -90.0,
-            "isOccupied": false
+            "name": "Room 2",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
         },
         {
-            "bedX" : 0.0,
-            "bedY" : 0.0,
-            "bedDirection" : 180.0,
-            "isOccupied": true
+            "name": "Room 3",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 1
         }
-    ],
-    "initialPosition": [7, 6],
-    "initialDirection": 0.0,
-    "exitLocation": [-0.5, 6]
+    ]
 }

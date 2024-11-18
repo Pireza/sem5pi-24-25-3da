@@ -1,35 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router'; // Import Router
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  imports: [FormsModule, CommonModule],
   selector: 'app-delete-operation-request',
+  standalone: true,
+  imports: [FormsModule, CommonModule], // Include FormsModule in imports
   templateUrl: './remove-operation-doctor.component.html',
   styleUrls: ['./remove-operation-doctor.component.css']
 })
-export class DeleteOperationRequestComponent {
-  operationRequestId?: number; // Define operationRequestId as optional
+export class DeleteOperationRequestComponent implements OnInit {
+  operationRequests: any[] = [];
+  selectedRequestId?: number;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  deleteOperationRequest(): void {
-    if (this.operationRequestId != null) { // Check if operationRequestId is defined
-      this.authService.deleteOperationRequestAsDoctor(this.operationRequestId).subscribe({
-        next: () => {
-          console.log('Operation request deleted successfully');
-          this.router.navigate(['/doctor-ui']); // Redirect after deletion
-        },
-        error: (error) => {
-          console.error('Error deleting operation request:', error);
-          alert('Failed to delete operation request. Please try again.');
+  ngOnInit(): void {
+    this.loadRequests();
+  }
+
+  // Load operation requests from the backend API
+  private loadRequests(): void {
+    this.authService.getAllRequests().subscribe(
+      (data) => {
+        if (Array.isArray(data)) {
+          console.log('Loaded operation requests:', data);
+          this.operationRequests = data;
+        } else {
+          console.error('Invalid data format for operation requests:', data);
         }
-      });
+      },
+      (error) => {
+        console.error('Error loading requests', error);
+        alert('Failed to load operation requests');
+      }
+    );
+  }
+
+  // Delete the selected operation request
+  deleteOperationRequest(): void {
+    if (this.selectedRequestId) {
+      this.authService.deleteOperationRequestAsDoctor(this.selectedRequestId).subscribe(
+        () => {
+          alert('Operation Request Deleted!');
+          this.resetForm();
+        },
+        (error) => {
+          console.error('Error deleting operation request', error);
+          alert('Failed to delete operation request');
+        }
+      );
     } else {
-      alert('Please enter a valid operation request ID.');
+      alert('Please select a valid Operation Request');
     }
+  }
+
+  // Reset the form after successful deletion
+  private resetForm(): void {
+    this.selectedRequestId = undefined;
+    this.loadRequests(); // Reload the requests after reset
   }
 }
