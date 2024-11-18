@@ -186,8 +186,18 @@ export class AuthComponent {
           next: () => {
             console.log('Patient deleted successfully');
             alert('Your account will be deleted in 30 days as per RGPD standarts.');
-            this.router.navigate(['/auth']);
-          },
+            this.isAuthenticated = false; // Reset authentication state
+            this.userEmail = null; // Clear user information
+            this.userRole = null;
+            this.activeComponent = null; 
+            this.menuItems = [];
+            this.isSidebarOpen = false;
+        
+            // Navigate to the same route to reset the page state
+            this.router.navigateByUrl('/auth', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/auth']);
+          });
+                  },
           error: (err) => {
             console.error('Error deleting patient:', err);
             alert('An error occurred while trying to delete the patient.');
