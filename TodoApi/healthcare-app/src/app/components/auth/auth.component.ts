@@ -68,7 +68,7 @@ export class AuthComponent {
   }
 
   onPasswordReset() {
-    this.isPasswordResetMode = true;
+    this.activeComponent = ResetPasswordComponent;
   }
 
   toggleSidebar() {
