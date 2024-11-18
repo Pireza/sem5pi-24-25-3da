@@ -6,14 +6,14 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-register-client',
+  selector: 'app-register-patient',
   standalone: true, // Indicate this is a standalone component
   imports: [CommonModule, FormsModule], // Include FormsModule here
-  templateUrl: './register-client.component.html',
-  styleUrls: ['./register-client.component.css'],
+  templateUrl: './register-patient.component.html',
+  styleUrls: ['./register-patient.component.css'],
 })
-export class RegisterClientComponent {
-  client: CreatePatientRequest = {
+export class RegisterPatientComponent {
+  patient: CreatePatientRequest = {
     username: '',
     firstName: '',
     lastName: '',
@@ -32,13 +32,13 @@ export class RegisterClientComponent {
 
   addCondition() {
     if (this.newCondition.trim()) {
-      this.client.medicalConditions.push(this.newCondition.trim());
+      this.patient.medicalConditions.push(this.newCondition.trim());
       this.newCondition = '';
     }
   }
 
   removeCondition(index: number) {
-    this.client.medicalConditions.splice(index, 1);
+    this.patient.medicalConditions.splice(index, 1);
   }
 
   // Function to format date to dd/MM/yyyy
@@ -51,13 +51,13 @@ export class RegisterClientComponent {
 
   onSubmit() {
     // Assuming the birthday is currently in 'yyyy-MM-dd' format
-    const rawBirthday = this.client.birthday; // Get the current birthday value
+    const rawBirthday = this.patient.birthday; // Get the current birthday value
     const date = new Date(rawBirthday); // Convert to Date object
 
     // Format the birthday to dd/MM/yyyy
-    this.client.birthday = this.formatDateToDDMMYYYY(date); // Update the birthday in the client object
+    this.patient.birthday = this.formatDateToDDMMYYYY(date); // Update the birthday in the client object
 
-    this.authService.registerPatient(this.client).subscribe({
+    this.authService.registerPatient(this.patient).subscribe({
       next: () => {
         this.errorMessage = '';
         this.authService.isAuthenticated=false;
