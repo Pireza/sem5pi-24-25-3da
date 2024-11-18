@@ -14,6 +14,7 @@ import { UpdateProfileComponent } from '../update-profile/update-profile.compone
 import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
 import { RegisterStaffComponent } from '../register-staff/register-staff.component';
 import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-admin/delete-patient-profile-admin.component';
+import { EditStaffAdminComponent } from '../edit-staff-admin/edit-staff-admin.component';
 
 
 
@@ -24,7 +25,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -140,6 +141,8 @@ export class AuthComponent {
       this.activeComponent = GetPatientProfilesComponent;
     } else if (action === 'Register New Staff User') {
       this.activeComponent = RegisterStaffComponent;
+    }else if(action === 'Edit Staff Profile'){  
+      this.activeComponent = EditStaffAdminComponent;
     }else if (action === 'Logout') {
       this.isAuthenticated = false; // Reset authentication state
       this.userEmail = null; // Clear user information
