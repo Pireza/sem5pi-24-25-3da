@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
+import { AvailabilitySlot, Staff } from '../../Models/Staff';  
 
 @Component({
   selector: 'app-create-staff',
@@ -11,51 +13,105 @@ import { CommonModule } from '@angular/common';
   imports: [FormsModule, CommonModule],
   styleUrls: ['./edit-staff-admin.component.css']
 })
-export class EditStaffAdminComponent {
-  // Initialize the staff update request
+export class EditStaffAdminComponent implements OnInit {
   staffUpdateRequest = {
     email: '',
     firstName: '',
     lastName: '',
     phone: '',
-    specializationId: undefined as number | undefined, // Changed to undefined instead of null
+    licenseNumber: '',
     role: '',
-    availabilitySlots: []
+    specializationId: undefined as number | undefined, // Not used directly in the form, but can map specialization later
+    specializationDescription: '',  // For displaying specialization description
+    availabilitySlots: [] as AvailabilitySlot[]  // For storing availability slots
   };
-  
+
+  staffEmails: string[] = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Method to handle form submission
-  onSubmit() {
-    // Ensure all required fields are filled out
-    if (!this.staffUpdateRequest.email) {
+  ngOnInit(): void {
+    this.getStaffEmails();
+  }
+
+  // Fetch the list of staff emails from the backend
+  getStaffEmails(): void {
+    this.authService.getStaffEmails().subscribe(
+      (emails: string[]) => {
+        this.staffEmails = emails;
+      },
+      (error) => {
+        console.error('Error fetching staff emails:', error);
+      }
+    );
+  }
+
+  // Fetch staff details based on the selected email
+  onEmailChange(email: string): void {
+    this.authService.getStaffByEmail(email).subscribe(
+      (staff: Staff) => {
+        this.staffUpdateRequest.firstName = staff.firstName;
+        this.staffUpdateRequest.lastName = staff.lastName;
+        this.staffUpdateRequest.phone = staff.phone;
+        this.staffUpdateRequest.licenseNumber = staff.licenseNumber;
+        this.staffUpdateRequest.role = staff.role;
+  
+        // Make sure to parse the specializationId to a number
+        this.staffUpdateRequest.specializationId = staff.specialization.specId; // Assuming specId is a number
+  
+        this.staffUpdateRequest.specializationDescription = staff.specialization.specDescription;
+        this.staffUpdateRequest.availabilitySlots = staff.availabilitySlots;
+      },
+      (error) => {
+        console.error('Error fetching staff details:', error);
+      }
+    );
+  }
+
+  onSubmit(): void {
+    // Ensure all required fields are filled
+    if (!this.staffUpdateRequest.email || !this.staffUpdateRequest.firstName || !this.staffUpdateRequest.lastName) {
       alert('Please fill in all required fields!');
       return;
     }
-
-    // Call AuthService to update staff profile as admin
-    this.authService.updateStaffProfileAsAdmin(
-      this.staffUpdateRequest.email,
-      this.staffUpdateRequest.firstName,
-      this.staffUpdateRequest.lastName,
-      this.staffUpdateRequest.phone,
-      this.staffUpdateRequest.specializationId,
-      this.staffUpdateRequest.role,
-      this.staffUpdateRequest.availabilitySlots
-    ).subscribe({
+  
+    // Ensure specializationId is a number
+    if (this.staffUpdateRequest.specializationId != null) {
+      this.staffUpdateRequest.specializationId = Number(this.staffUpdateRequest.specializationId);
+    }
+  
+    // Call the updateStaffProfileAsAdmin method directly from AuthService
+    this.authService.updateStaffProfileAsAdmin(this.staffUpdateRequest).subscribe({
       next: () => {
         console.log('Staff updated successfully');
-        this.router.navigate(['/admin-ui']); // Navigate to admin dashboard after success
+        alert('Staff updated successfully');
+        
+        // Reset the form and fetch the staff emails again
+        this.resetForm();
+        this.getStaffEmails(); // Re-fetch the email list after reset
       },
       error: (error) => {
         console.error('Error updating staff:', error);
-        if (error.error) {
-          alert(`Error: ${error.error.message || 'Unknown error'}`);
-        } else {
-          alert('An error occurred while updating the staff.');
-        }
+        alert(`Error: ${error.error?.message || 'Unknown error'}`);
       }
     });
   }
+  
+  
+  resetForm(): void {
+    this.staffUpdateRequest = {
+      email: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      licenseNumber: '',
+      role: '',
+      specializationId: undefined as number | undefined,
+      specializationDescription: '',
+      availabilitySlots: [] as AvailabilitySlot[]
+    };
+    // Optionally clear the emails list if you want to force a refetch
+    this.staffEmails = [];
+  }
+  
 }

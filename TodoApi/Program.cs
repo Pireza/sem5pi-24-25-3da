@@ -209,6 +209,7 @@ builder.Services.AddTransient<Auth0UserService>();
 builder.Services.AddTransient<PasswordGeneratorService>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<OperationRequestRepository>();
+builder.Services.AddScoped<OperationTypeRepository>();
 
 var app = builder.Build();
 

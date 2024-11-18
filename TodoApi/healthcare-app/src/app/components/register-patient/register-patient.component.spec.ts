@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RegisterClientComponent } from './register-client.component';
+import { RegisterPatientComponent } from './register-patient.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -15,22 +15,22 @@ class MockRouter {
   navigate = jasmine.createSpy('navigate');
 }
 
-fdescribe('RegisterClientComponent', () => {
-  let component: RegisterClientComponent;
-  let fixture: ComponentFixture<RegisterClientComponent>;
+fdescribe('RegisterPatientComponent', () => {
+  let component: RegisterPatientComponent;
+  let fixture: ComponentFixture<RegisterPatientComponent>;
   let authService: MockAuthService;
   let router: MockRouter;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, FormsModule, RegisterClientComponent], 
+      imports: [CommonModule, FormsModule, RegisterPatientComponent], 
       providers: [
         { provide: AuthService, useClass: MockAuthService },
         { provide: Router, useClass: MockRouter }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RegisterClientComponent);
+    fixture = TestBed.createComponent(RegisterPatientComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as unknown as MockAuthService;
     router = TestBed.inject(Router) as unknown as MockRouter;
@@ -47,24 +47,24 @@ fdescribe('RegisterClientComponent', () => {
     it('should add a new condition to the medicalConditions array', () => {
       component.newCondition = 'Asthma';
       component.addCondition();
-      expect(component.client.medicalConditions).toContain('Asthma');
+      expect(component.patient.medicalConditions).toContain('Asthma');
       expect(component.newCondition).toBe('');
     });
 
     it('should not add an empty condition', () => {
       component.newCondition = '   ';
       component.addCondition();
-      expect(component.client.medicalConditions.length).toBe(0);
+      expect(component.patient.medicalConditions.length).toBe(0);
     });
   });
 
   // Test removeCondition method
   describe('removeCondition', () => {
     it('should remove a condition from the medicalConditions array', () => {
-      component.client.medicalConditions = ['Asthma', 'Diabetes'];
+      component.patient.medicalConditions = ['Asthma', 'Diabetes'];
       component.removeCondition(0);
-      expect(component.client.medicalConditions.length).toBe(1);
-      expect(component.client.medicalConditions).not.toContain('Asthma');
+      expect(component.patient.medicalConditions.length).toBe(1);
+      expect(component.patient.medicalConditions).not.toContain('Asthma');
     });
   });
 
@@ -81,7 +81,7 @@ fdescribe('RegisterClientComponent', () => {
   describe('onSubmit', () => {
     beforeEach(() => {
       // Initialize a default client object
-      component.client = {
+      component.patient = {
         username: 'JohnDoe',
         firstName: 'John',
         lastName: 'Doe',
@@ -100,12 +100,12 @@ fdescribe('RegisterClientComponent', () => {
 
       component.onSubmit();
 
-      expect(authService.registerPatient).toHaveBeenCalledWith(component.client);
+      expect(authService.registerPatient).toHaveBeenCalledWith(component.patient);
       expect(router.navigate).toHaveBeenCalledWith(['/auth']);
     });
 
     it('should set an error message if user already exists', () => {
-      component.client.email = 'existing@example.com';
+      component.patient.email = 'existing@example.com';
 
       authService.registerPatient.and.returnValue(throwError({
         status: 400,

@@ -8,6 +8,12 @@ import { of, throwError } from 'rxjs';
 
 class MockAuthService {
   updatePatientProfile = jasmine.createSpy('updatePatientProfile').and.returnValue(of({}));
+  getPatientByEmail = jasmine.createSpy('getPatientByEmail').and.returnValue(of({
+    firstName: 'Test',
+    lastName: 'User',
+    phone: '1234567890',
+    emergencyContact: '0987654321'
+  }));
 }
 
 class MockRouter {

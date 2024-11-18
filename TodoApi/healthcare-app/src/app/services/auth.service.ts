@@ -9,7 +9,9 @@ import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
 import { OperationTypeSearch } from '../Models/OperationTypeSearch';
 import { Patient } from '../Models/Patient';
+import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
+import { OperationType } from '../Models/OperationType';
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -300,33 +302,34 @@ export class AuthService {
   }
 
 
-  updateStaffProfileAsAdmin(
-    email: string,
-    firstName?: string,
-    lastName?: string,
-    phone?: string,
-    specializationId?: number,
-    role?: string,
-    availabilitySlots?: any[]
-  ): Observable<void> {
+  updateStaffProfileAsAdmin(staffUpdateRequest: {
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    specializationId?: number;
+    role?: string;
+    availabilitySlots?: any[];
+  }): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json'
     });
   
+    let queryParams = '';
   
-let queryParams = '';
-
-if (firstName) queryParams += `firstName=${encodeURIComponent(firstName)}`;
-if (lastName) queryParams += `${queryParams ? '&' : '?'}lastName=${encodeURIComponent(lastName)}`;
-if (phone) queryParams += `${queryParams ? '&' : '?'}phone=${encodeURIComponent(phone)}`;
-if (specializationId != null) queryParams += `${queryParams ? '&' : '?'}specializationId=${specializationId}`;
-if (role) queryParams += `${queryParams ? '&' : '?'}role=${encodeURIComponent(role)}`;
-if (availabilitySlots) queryParams += `${queryParams ? '&' : '?'}availabilitySlots=${encodeURIComponent(JSON.stringify(availabilitySlots))}`;
-
-let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
+    if (staffUpdateRequest.firstName) queryParams += `firstName=${encodeURIComponent(staffUpdateRequest.firstName)}`;
+    if (staffUpdateRequest.lastName) queryParams += `${queryParams ? '&' : '?'}lastName=${encodeURIComponent(staffUpdateRequest.lastName)}`;
+    if (staffUpdateRequest.phone) queryParams += `${queryParams ? '&' : '?'}phone=${encodeURIComponent(staffUpdateRequest.phone)}`;
+    if (staffUpdateRequest.specializationId != null) queryParams += `${queryParams ? '&' : '?'}specializationId=${staffUpdateRequest.specializationId}`;
+    if (staffUpdateRequest.role) queryParams += `${queryParams ? '&' : '?'}role=${encodeURIComponent(staffUpdateRequest.role)}`;
+    if (staffUpdateRequest.availabilitySlots) queryParams += `${queryParams ? '&' : '?'}availabilitySlots=${encodeURIComponent(JSON.stringify(staffUpdateRequest.availabilitySlots))}`;
+  
+    const url = `${this.editStaffAdmin}/${staffUpdateRequest.email}?${queryParams.toString()}`;
+  
     return this.http.put<void>(url, queryParams, { headers });
-  }  
+  }
+  
 
   deleteOperationRequestAsDoctor(id: number): Observable<void> {
     const headers = new HttpHeaders({
@@ -352,10 +355,26 @@ let url = `${this.editStaffAdmin}/${email}?${queryParams.toString()}`;
 
 
   getPatientEmails(): Observable<string[]> {
-    return this.http.get<string[]>(`http://localhost:5174/api/Patients/all`);
+    return this.http.get<string[]>(`http://localhost:5174/api/Patients/emails`);
   }
   
   getPatientByEmail(email: string): Observable<Patient> {
-    return this.http.get<Patient>(`http://localhost:5174/api/Patients/email/${email}`);
+    const url = `http://localhost:5174/api/Patients/email/${encodeURIComponent(email)}`;
+    return this.http.get<Patient>(url);
+  }
+
+  getStaffEmails() : Observable<string[]> {
+    return this.http.get<string[]>('http://localhost:5174/api/StaffUser/all-staff-emails');
+  }
+
+  getStaffByEmail(email: string): Observable<Staff> {
+    const url = `http://localhost:5174/api/StaffUser/staff-by-email/${encodeURIComponent(email)}`;
+    return this.http.get<Staff>(url);
+  
+}
+
+  getActiveTypes(): Observable<OperationType[]>{
+    const url = ' http://localhost:5174/api/OperationType/active';
+    return this.http.get<OperationType[]>(url);
   }
 }

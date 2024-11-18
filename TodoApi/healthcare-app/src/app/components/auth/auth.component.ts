@@ -14,6 +14,9 @@ import { UpdateProfileComponent } from '../update-profile/update-profile.compone
 import { GetPatientProfilesComponent } from '../get-patient-profiles/get-patient-profiles.component';
 import { RegisterStaffComponent } from '../register-staff/register-staff.component';
 import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-admin/delete-patient-profile-admin.component';
+import { EditStaffAdminComponent } from '../edit-staff-admin/edit-staff-admin.component';
+import { DeleteOperationRequestComponent } from '../remove-operation-doctor/remove-operation-doctor.component';
+import { RemoveOperationTypeAdminComponent } from '../remove-operation-type-admin/remove-operation-type-admin.component';
 
 
 
@@ -24,7 +27,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent] 
+  imports: [ResetPasswordComponent, DeleteOperationRequestComponent,RemoveOperationTypeAdminComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -66,7 +69,7 @@ export class AuthComponent {
   }
 
   onCreateAccountClient() {
-    this.router.navigate(['/registerClient']);
+    this.router.navigate(['/registerPatient']);
   }
 
   onPasswordReset() {
@@ -140,7 +143,14 @@ export class AuthComponent {
       this.activeComponent = GetPatientProfilesComponent;
     } else if (action === 'Register New Staff User') {
       this.activeComponent = RegisterStaffComponent;
-    }else if (action === 'Logout') {
+    }else if(action === 'Edit Staff Profile'){  
+      this.activeComponent = EditStaffAdminComponent;
+    }else if(action === 'Remove Operation Request'){
+      this.activeComponent = DeleteOperationRequestComponent;
+    }else if (action === 'Delete Operation Type'){
+      this.activeComponent = RemoveOperationTypeAdminComponent;
+    }
+    else if (action === 'Logout') {
       this.isAuthenticated = false; // Reset authentication state
       this.userEmail = null; // Clear user information
       this.userRole = null;
@@ -186,8 +196,8 @@ export class AuthComponent {
           next: () => {
             console.log('Patient deleted successfully');
             alert('Your account will be deleted in 30 days as per RGPD standarts.');
-            this.router.navigate(['/auth']);
-          },
+            this.resetPage();
+                  },
           error: (err) => {
             console.error('Error deleting patient:', err);
             alert('An error occurred while trying to delete the patient.');
@@ -197,5 +207,18 @@ export class AuthComponent {
     } else {
       alert('User email is not available.');
     }
+  }
+  resetPage(){
+    this.isAuthenticated = false; // Reset authentication state
+            this.userEmail = null; // Clear user information
+            this.userRole = null;
+            this.activeComponent = null; 
+            this.menuItems = [];
+            this.isSidebarOpen = false;
+        
+            // Navigate to the same route to reset the page state
+            this.router.navigateByUrl('/auth', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/auth']);
+          });
   }
 }

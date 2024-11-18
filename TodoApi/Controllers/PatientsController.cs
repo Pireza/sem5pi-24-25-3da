@@ -105,11 +105,35 @@ namespace TodoApi.Controllers
 
         // GET: api/Patients
         [HttpGet("all")]
-        [Authorize(Policy = "PatientOnly")]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
             return await _context.Patients.ToListAsync();
         }
+
+
+[HttpGet("emails")]
+public async Task<ActionResult<IEnumerable<string>>> GetPatientEmails()
+{
+    try
+    {
+        // Fetch users with the Patient role and select their emails
+        var emails = await _context.Users
+            .Where(u => u.Role == "Patient") // Filter users by role
+            .Select(u => u.Email)            // Select the Email field
+            .ToListAsync();
+
+        // Return the list of patient emails
+        return Ok(emails);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception (you can replace this with your logging system)
+        Console.Error.WriteLine($"Error fetching patient emails: {ex.Message}");
+
+        // Return a 500 Internal Server Error
+        return StatusCode(500, "An error occurred while retrieving patient emails.");
+    }
+}
 
 
 

@@ -78,6 +78,8 @@ export class UpdateOperationRequestComponent implements OnInit {
       ).subscribe(
         () => {
           alert('Operation Request Updated!');
+          this.resetForm();
+
         },
         (error) => {
           console.error('Error updating operation request', error);
@@ -88,6 +90,11 @@ export class UpdateOperationRequestComponent implements OnInit {
       alert('Please select a valid Operation Request');
     }
   }
-
+  private resetForm(): void {
+    this.selectedRequestId = undefined;
+    this.selectedPriorityId = undefined;
+    this.deadline = undefined;
+    this.loadRequests(); 
+  }
 
 }

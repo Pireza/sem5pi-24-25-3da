@@ -11,16 +11,16 @@ body {
 }
 
 .container {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
   padding: 40px 60px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
+  max-width: 800px; /* Limit width for better layout */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically inside the container */
+  text-align: center;
 }
 
 h2 {
