@@ -14,16 +14,8 @@
         },
         {
             "name": "Room 2",
-            "lenght": 10,
-            "width": 10,
-            "bedX": 0.01,
-            "bedY": 0.01,
-            "isActive": 0
-        },
-        {
-            "name": "Room 3",
-            "lenght": 10,
-            "width": 10,
+            "lenght": 15,
+            "width": 15,
             "bedX": 0.01,
             "bedY": 0.01,
             "isActive": 1

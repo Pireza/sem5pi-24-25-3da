@@ -7,13 +7,13 @@ export default class Maze {
             // Create a group of objects
             this.object = new THREE.Group();
             
-            // Starting position for the first room
             let currentX = 0; // Start at the origin or wherever you want the first room
-            
-            // Create rooms from the description
+
             this.rooms = [];
-            for (const roomData of description.rooms) {
-                // Create a room with the provided data
+            for (let i = 0; i < description.rooms.length; i++) {
+                const roomData = description.rooms[i];
+            
+                // Create the room
                 const room = new RoomTemplate({
                     lenght: roomData.lenght,
                     width: roomData.width,
@@ -22,19 +22,20 @@ export default class Maze {
                     bedD: roomData.bedD,
                     isActive: roomData.isActive,
                     groundTextureUrl: description.groundTextureUrl,
-                    bedModelUrl: './models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'        
+                    bedModelUrl: './models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
                 });
-        
-                // Set the room's position based on the current position
-                room.object.position.set(currentX, 0, 0);
-        
+            
+                // Set the room's position
+                room.object.position.set(currentX + roomData.width / 2, 0, 0);
+            
                 // Add the room to the maze
                 this.rooms.push(room);
                 this.object.add(room.object);
-        
-                // Update currentX for the next room (place the next room next to the previous one)
-                currentX += roomData.width+0.01;
+            
+                currentX += roomData.width + 0.01;
+
             }
+            
         
             this.loaded = true;
         }
