@@ -1,63 +1,85 @@
 import * as THREE from "three";
-import RoomTemplate from "./room_template.js"; // Assuming you have this already
-
+import Ground from "./ground_template.js";
+import Wall from "./wall_template.js";
+import BedTemplate from "./bed_template.js";
+import Person from "./person_template.js";
+import RoomTemplate from "./room_template.js";
+/*
+ * parameters = {
+ *  url: String,
+ *  credits: String,
+ *  scale: Vector3
+ * }
+ */
 export default class Maze {
     constructor(parameters) {
         this.onLoad = function (description) {
+            // Store the maze's map and size
+            this.walls = [];
+            this.map = description.map;
+            this.size = description.size;
+            // Store the player's initial position and direction
+            this.initialPosition = this.cellToCartesian(description.initialPosition);
+            this.initialDirection = description.initialDirection;
+            // Store the maze's exit location
+            this.exitLocation = this.cellToCartesian(description.exitLocation);
             // Create a group of objects
             this.object = new THREE.Group();
+            // Create the ground
+            this.ground = new Ground({ textureUrl: description.groundTextureUrl, size: description.size });
+            this.object.add(this.ground.object);
+            // Create a wall
+            this.wall = new Wall({ textureUrl: description.wallTextureUrl });
+            // Create a bed
+            this.bed = new BedTemplate({
+                modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
+            });
+            // Create a person
+            this.person = new Person({
+                modelUrl: 'models/gltf/human/3d_scan_man_1.glb'
+            });
 
-            let currentX = -20; // Starting X position
-            let currentZ = -20; // Starting Z position
-            const spacing = 0.01; // Small spacing between rooms
+            const roomBuilder = new RoomTemplate('textures/wall.jpg');
 
-            this.rooms = [];
-            for (let i = 0; i < description.rooms.length; i++) {
-                const roomData = description.rooms[i];
 
-                // Create the room
-                const room = new RoomTemplate({
-                    lenght: roomData.lenght,
-                    width: roomData.width,
-                    bedX: roomData.bedX,
-                    bedY: roomData.bedY,
-                    bedD: roomData.bedD,
-                    isActive: roomData.isActive,
-                    groundTextureUrl: description.groundTextureUrl,
-                    bedModelUrl: './models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
-                });
+            roomBuilder.generateRoom(6, 6, true, 'south');
+            roomBuilder.setRoomPositions(0, 0);
+            this.object.add(roomBuilder.getRoom());
 
-                // Set the room's position
-                room.object.position.set(
-                    currentX + roomData.width / 2, // Centered X position
-                    -20, // Fixed Y position
-                    currentZ - roomData.lenght / 2 // Centered Z position
-                );
 
-                // Add the room to the maze
-                this.rooms.push(room);
-                this.object.add(room.object);
+            roomBuilder.generateRoom(3, 3, false, 'east');
+            roomBuilder.setRoomPositions(4, 4);
+            this.object.add(roomBuilder.getRoom());
 
-                // Update the positions for the next room
-                if ((i + 1) % 3 === 0) {
-                    // Start a new row after every 3 rooms
-                    currentX = -20; // Reset X to the starting position
-                    currentZ += roomData.lenght + 8; // Move Z downward for the new row
-                } else {
-                    // Place the next room side by side
-                    currentX += roomData.width + spacing;
-                }
-            }
 
+            /*
+                        for (let i = 0; i < 5; i++) {
+                            const newPerson = new Person({
+                                modelUrl: 'models/gltf/human/3d_scan_man_1.glb'
+                            });
+                            const newBed = new BedTemplate({
+                                modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
+                            });
+            
+                            newBed.bed.position.set(i, i, i);
+                            newPerson.person.position.set(i, i + 1.5, i);
+            
+                            this.object.add(newBed.bed);
+                            this.object.add(newPerson.person);
+                        }
+            
+            */
+
+            this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
             this.loaded = true;
-        };
 
+        }
         this.onProgress = function (url, xhr) {
             console.log("Resource '" + url + "' " + (100.0 * xhr.loaded / xhr.total).toFixed(0) + "% loaded.");
-        };
+        }
         this.onError = function (url, error) {
             console.error("Error loading resource " + url + " (" + error + ").");
-        };
+        }
         for (const [key, value] of Object.entries(parameters)) {
             this[key] = value;
         }
@@ -70,7 +92,7 @@ export default class Maze {
         loader.setResponseType("json");
         // Load a maze description resource file
         loader.load(
-            // Resource URL
+            //Resource URL
             this.url,
             // onLoad callback
             description => this.onLoad(description),
@@ -80,21 +102,54 @@ export default class Maze {
             error => this.onError(this.url, error)
         );
     }
-
     // Convert cell [row, column] coordinates to cartesian (x, y, z) coordinates
     cellToCartesian(position) {
-        return new THREE.Vector3(
-            (position[1] - this.size.width / 2.0 + 0.5) * this.scale.x,
-            0.0,
-            (position[0] - this.size.height / 2.0 + 0.5) * this.scale.z
-        );
+        return new THREE.Vector3((position[1] - this.size.width / 2.0 + 0.5) * this.scale.x, 0.0, (position[0] - this.size.height / 2.0 + 0.5) * this.scale.z)
     }
-
     // Convert cartesian (x, y, z) coordinates to cell [row, column] coordinates
     cartesianToCell(position) {
-        return [
-            Math.floor(position.z / this.scale.z + this.size.height / 2.0),
-            Math.floor(position.x / this.scale.x + this.size.width / 2.0)
-        ];
+        return [Math.floor(position.z / this.scale.z + this.size.height / 2.0), Math.floor(position.x / this.scale.x + this.size.width / 2.0)];
     }
+    /* To-do #23 - Measure the player’s distance to the walls
+        - player position: position
+    distanceToWestWall(position) {
+        const indices = this.cartesianToCell(position);
+        if (this.map[indices[0]][indices[1]] == 1 || this.map[indices[0]][indices[1]] == 3) {
+            return position.x - this.cellToCartesian(indices).x + this.scale.x / 2.0;
+        }
+        return Infinity;
+    }
+    distanceToEastWall(position) {
+        const indices = ...;
+        indices[1]++;
+        if (... || ...) {
+            return ...;
+        }
+        return ...;
+    }
+    distanceToNorthWall(position) {
+        const indices = ...;
+        if (... || ...) {
+            return ...;
+        }
+        return ...;
+    }
+    distanceToSouthWall(position) {
+        const indices = ...;
+        ...++;
+        if (... || ...3) {
+            return ...z;
+        }
+        return ...;
+    } */
+    foundExit(position) {
+        return false;
+        /* To-do #42 - Check if the player found the exit
+            - assume that the exit is found if the distance between the player position and the exit location is less than (0.5 * maze scale) in both the X- and Z-dimensions
+            - player position: position
+            - exit location: this.exitLocation
+            - maze scale: this.scale
+            - remove the previous instruction and replace it with the following one (after completing it)
+        return ... < ... && ... */
+    };
 }

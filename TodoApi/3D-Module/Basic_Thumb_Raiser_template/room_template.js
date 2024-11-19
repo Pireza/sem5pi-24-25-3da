@@ -1,102 +1,104 @@
 import * as THREE from "three";
-import BedTemplate from "./bed_template.js"; 
-import Wall from "./wall_template.js"; 
-import Ground from "./ground_template.js"; 
+import BedTemplate from "./bed_template.js";
 import Person from "./person_template.js";
 
 export default class RoomTemplate {
-    constructor(parameters) {
-        this.lenght = parameters.lenght;
-        this.width = parameters.width;
-        this.bedX = parameters.bedX;
-        this.bedY = parameters.bedY;
-        this.isActive= parameters.isActive;
-        this.scale = parameters.scale || new THREE.Vector3(1, 1, 1);
+    constructor(textureUrl) {
+        this.wallThickness = .1;  // The thickness of the walls
+        this.wallHeight = 5;        // The height of the walls
 
-        // Create room object group
-        this.object = new THREE.Group();
 
-        // Add ground to room
-        this.ground = new Ground({ textureUrl: parameters.groundTextureUrl, size: { width: this.width, height: this.lenght } });
-        this.object.add(this.ground.object);
+        this.directionMap = new Map();
 
-        // Create walls for the room
-        this.walls = [];
-        this.createWalls();
+        this.directionMap.set('north', 0.0);
+        this.directionMap.set('south', Math.PI);
+        this.directionMap.set('west', Math.PI / 2);
+        this.directionMap.set('east', 3 * Math.PI / 2);
 
-        const bedXPos = this.width / 2;  // Center horizontally
-        const bedYPos = this.lenght / 2; // Center vertically
 
-        // Create and load bed
-        this.bed = new BedTemplate({
-            modelUrl: parameters.bedModelUrl,
-            position: new THREE.Vector3(bedXPos, 0, bedYPos)
-        });
-        this.bed.loadModel().then(() => {
-            // Apply scaling once the model is loaded
-            this.bed.bed.scale.set(this.bedX, 0.01, this.bedY);  
-            // Add bed to room
-            this.object.add(this.bed.bed);
-            if(this.isActive===1){
-                const bedHeight = this.bed.bed.scale.y * 0.01;  // Assuming the bed's height scale is proportional to this value
-            this.person.bed.position.set(this.bed.bed.position.x , bedHeight + 1.4, this.bed.bed.position.z+1); // Adjust Y for height
-         
-            this.object.add(this.person.bed);
-            }
-            
-        }).catch(error => {
-            console.error("Error loading the bed model:", error);
-        });
-        if(this.isActive===1){
-            this.person = new Person({
-            modelUrl: './models/gltf/human/indian_man_in_kurta.glb', 
-        });
-        this.person.loadModel().then(() => {
-            console.log('Person model loaded');
-            this.person.bed.rotation.set(-Math.PI/2, 0, 0);
-            this.person.bed.scale.set(0.6, 0.6, 0.6); 
-        }).catch(error => {
-            console.error("Error loading the person model:", error);
-        });
 
+        if (textureUrl) {
+            const textureLoader = new THREE.TextureLoader();
+            this.material = new THREE.MeshBasicMaterial({
+                map: textureLoader.load(textureUrl),
+                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides of the walls
+            });
+        } else {
+            // If no texture is provided, use a basic color material
+            this.material = new THREE.MeshBasicMaterial({ color: 0x888888 });
         }
-        
-        // Scale the room object, but not affecting Y-axis scaling
-        this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
+
+
+        this.roomMesh = new THREE.Group();  // A group to hold all the walls
     }
 
-    createWalls() {
-        const wallParams = { textureUrl: "./textures/wall.jpg" };
-        const wallHeight = 5; // Fixed height for all walls
+    generateRoom(width, depth, occupied, direction) {
 
-        // North wall
-        let northWall = new Wall(wallParams);
-        northWall.object.position.set(0, wallHeight / 2, this.lenght / 2);
-        northWall.object.scale.set(this.width, wallHeight, 1);
-        this.walls.push(northWall);
-        this.object.add(northWall.object);
+        this.roomMesh = new THREE.Group();
+        // Create 4 walls: front, back, left, right
 
-        // South wall
-        let southWall = new Wall(wallParams);
-        southWall.object.position.set(0, wallHeight / 2, -this.lenght / 2);
-        southWall.object.scale.set(this.width, wallHeight, 1);
-        this.walls.push(southWall);
-        this.object.add(southWall.object);
+        // Front wall
+        const frontWall = new THREE.Mesh(
+            new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
+            this.material
+        );
+        frontWall.position.set(0, this.wallHeight / 2, -depth / 2);
+        this.roomMesh.add(frontWall);
 
-        // West wall
-        let westWall = new Wall(wallParams);
-        westWall.object.position.set(this.width / 2, wallHeight / 2, 0);
-        westWall.object.rotation.y = Math.PI / 2; 
-        westWall.object.scale.set(this.lenght, wallHeight, 1);
-        this.walls.push(westWall);
-        this.object.add(westWall.object);
+        // Back wall
+        const backWall = new THREE.Mesh(
+            new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
+            this.material
+        );
+        backWall.position.set(0, this.wallHeight / 2, depth / 2);
+        this.roomMesh.add(backWall);
 
-        // East wall
-        let eastWall = new Wall(wallParams);
-        eastWall.object.position.set(-this.width / 2, wallHeight / 2, 0);
-        eastWall.object.rotation.y = Math.PI / 2; 
-        eastWall.object.scale.set(this.lenght, wallHeight, 1);
-        this.walls.push(eastWall);
-        this.object.add(eastWall.object);
+        // Left wall
+        const leftWall = new THREE.Mesh(
+            new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
+            this.material
+        );
+        leftWall.position.set(-width / 2, this.wallHeight / 2, 0);
+        this.roomMesh.add(leftWall);
+
+        // Right wall
+        const rightWall = new THREE.Mesh(
+            new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
+            this.material
+        );
+        rightWall.position.set(width / 2, this.wallHeight / 2, 0);
+        this.roomMesh.add(rightWall);
+
+        this.bed = new BedTemplate({
+            modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
+        });
+
+        this.roomMesh.add(this.bed.bed);
+
+
+
+        if (this.directionMap.has(direction))
+            this.orientation = this.directionMap.get(direction);
+
+
+        this.bed.bed.rotation.y = this.orientation;
+
+
+        if (occupied) {
+            this.person = new Person({
+                modelUrl: 'models/gltf/human/3d_scan_man_1.glb'
+            });
+
+            this.person.person.position.y = 1.5;
+            this.person.person.rotation.z = this.orientation;
+            this.roomMesh.add(this.person.person);
+        }
+    }
+
+    setRoomPositions(x, y) {
+        this.roomMesh.position.set(x, 0, y);
+    }
+    getRoom() {
+        return this.roomMesh;
     }
 }

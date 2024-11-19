@@ -402,32 +402,21 @@ export default class ThumbRaiser {
         }
     }
 
-    mouseDown(event) {
-        if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
-            // Store current mouse position in window coordinates (mouse coordinate system: origin in the top-left corner; window coordinate system: origin in the bottom-left corner)
-            this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
-            // Select the camera whose view is being pointed
-            const cameraView = this.getPointedViewport(this.mousePosition);
-            if (cameraView != "none") {
-                if (cameraView == "mini-map") { // Mini-map camera selected
-                    if (event.buttons == 1) { // Primary button down
-                        this.dragMiniMap = true;
-                    }
-                }
-                else { // One of the remaining cameras selected
-                    const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
-                    this.view.options.selectedIndex = cameraIndex;
-                    this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
-                    if (event.buttons == 1) { // Primary button down
-                        this.changeCameraDistance = true;
-                    }
-                    else { // Secondary button down
-                        this.changeCameraOrientation = true;
-                    }
-                }
+   mouseDown(event) {
+    if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
+        this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
+        const cameraView = this.getPointedViewport(this.mousePosition);
+        if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
+            const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
+            this.view.options.selectedIndex = cameraIndex;
+            this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
+            if (event.buttons == 2) { // Only allow secondary button for orientation
+                this.changeCameraOrientation = true;
             }
         }
     }
+}
+
 
     mouseMove(event) {
         if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
