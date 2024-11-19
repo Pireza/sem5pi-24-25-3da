@@ -7,7 +7,7 @@ export default class Maze {
             // Create a group of objects
             this.object = new THREE.Group();
             
-            let currentX = 0; // Start at the origin or wherever you want the first room
+            let currentX = -20; // Start at the origin or wherever you want the first room
 
             this.rooms = [];
             for (let i = 0; i < description.rooms.length; i++) {
@@ -24,9 +24,11 @@ export default class Maze {
                     groundTextureUrl: description.groundTextureUrl,
                     bedModelUrl: './models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
                 });
-            
-                // Set the room's position
-                room.object.position.set(currentX + roomData.width / 2, 0, 0);
+                
+         
+                    room.object.position.set(currentX + roomData.width/2, -20, -20);
+
+              
             
                 // Add the room to the maze
                 this.rooms.push(room);
