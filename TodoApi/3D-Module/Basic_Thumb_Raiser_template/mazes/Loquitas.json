@@ -1,7 +1,6 @@
 {
     "groundTextureUrl": "./textures/ground.jpg",
     "wallTextureUrl": "./textures/wall.jpg",
-    "size": { "width": 11, "height": 12 },
 
    "rooms": [
         {
@@ -14,11 +13,11 @@
         },
         {
             "name": "Room 2",
-            "lenght": 10,
+            "lenght": 15,
             "width": 10,
             "bedX": 0.01,
             "bedY": 0.01,
-            "isActive": 0
+            "isActive": 1
         },
         {
             "name": "Room 3",
@@ -26,7 +25,39 @@
             "width": 10,
             "bedX": 0.01,
             "bedY": 0.01,
-            "isActive": 1
+            "isActive": 0
+        },
+        {
+            "name": "Room 4",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
+        },
+        {
+            "name": "Room 5",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
+        },
+        {
+            "name": "Room 6",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
+        },
+        {
+            "name": "Room 7",
+            "lenght": 10,
+            "width": 10,
+            "bedX": 0.01,
+            "bedY": 0.01,
+            "isActive": 0
         }
     ]
 }
