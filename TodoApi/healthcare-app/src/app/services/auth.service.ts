@@ -12,6 +12,8 @@ import { Patient } from '../Models/Patient';
 import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
+import { map } from 'rxjs/operators';
+
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -46,7 +48,7 @@ export class AuthService {
   public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
   public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin'
   public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientByEmailAsAdmin'
-  public deactivateStaffProfile = 'http://localhost:5174/api/Staff/deactivateStaffProfileAsAdmin'
+  public deactivateStaffProfile = 'http://localhost:5174/api/StaffUser/deactivate'
   public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search'
 
   public isAuthenticated: boolean = false;
@@ -136,12 +138,21 @@ export class AuthService {
     return this.http.delete<void>(`${this.deletePatientProfile}/${email}`, { headers });
   }
 
-  deactivateStaffByEmailAsAdmin(email: string): Observable<void> {
+  deactivateStaffByIdAsAdmin(id: number): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
     });
-    return this.http.delete<void>(`${this.deactivateStaffProfile}/${email}`, { headers });
+  
+    return this.http.put<void>(`${this.deactivateStaffProfile}/${id}`, {}, { headers, observe: 'response' }).pipe(
+      map(response => {
+        if (response.status === 200) {
+          return; // Treat 200 OK as success
+        }
+        throw new Error('Unexpected response status');
+      })
+    );
   }
+  
 
 
 
