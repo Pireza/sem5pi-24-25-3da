@@ -22,6 +22,9 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { DeleteOperationRequestComponent } from './components/remove-operation-doctor/remove-operation-doctor.component';
 import { RemoveOperationTypeAdminComponent } from './components/remove-operation-type-admin/remove-operation-type-admin.component';
 import { DeletePatientProfileAdminComponent } from './components/delete-patient-profile-admin/delete-patient-profile-admin.component';
+import { DeactivateStaffProfileAdminComponent } from './components/deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
+import { SearchStaffProfileAdminComponent} from './components/filter-staff-admin/filter-staff-admin.component';
+
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -48,8 +51,8 @@ export const routes: Routes = [
   {path: 'remove-operation-doctor', component :DeleteOperationRequestComponent },
   {path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent},
   {path: 'delete-patient-profile-admin', component: DeletePatientProfileAdminComponent},
-
-
+  {path: 'deactivate-staff-profile-admin', component: DeactivateStaffProfileAdminComponent},
+  {path: 'filter-staff-admin', component: SearchStaffProfileAdminComponent},
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load

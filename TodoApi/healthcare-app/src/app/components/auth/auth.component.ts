@@ -17,17 +17,21 @@ import { DeletePatientProfileAdminComponent } from '../delete-patient-profile-ad
 import { EditStaffAdminComponent } from '../edit-staff-admin/edit-staff-admin.component';
 import { DeleteOperationRequestComponent } from '../remove-operation-doctor/remove-operation-doctor.component';
 import { RemoveOperationTypeAdminComponent } from '../remove-operation-type-admin/remove-operation-type-admin.component';
+import { DeactivateStaffProfileAdminComponent } from '../deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
+import { SearchStaffProfileAdminComponent } from '../filter-staff-admin/filter-staff-admin.component';
+
 
 
 
 import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, DeleteOperationRequestComponent,RemoveOperationTypeAdminComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -133,10 +137,14 @@ export class AuthComponent {
       this.activeComponent = EditPatientProfileAdminComponent;
     } else if (action ===  'Delete Patient Profile'){
       this.activeComponent = DeletePatientProfileAdminComponent;
+    } else if (action ===  'Deactivate Staff Profile'){
+      this.activeComponent = DeactivateStaffProfileAdminComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
     } else if (action === 'Update Profile') {
       this.activeComponent = UpdateProfileComponent;
+    } else if (action === 'Search Staff Profile') {
+      this.activeComponent = SearchStaffProfileAdminComponent;
     } else if (action === 'Delete Account') {
       this.onDeletePatient();
     } else if (action === 'Search Patients') {
@@ -171,7 +179,7 @@ export class AuthComponent {
     if (menuItem === 'Manage Patients') {
       return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile', 'Delete Patient Profile'];
     } else if (menuItem === 'Manage Staff') {
-      return ['Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile'];
+      return ['Search Staff Profile', 'Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile' , 'Deactivate Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
       return ['Add New Operation Type', 'Search Operation Types', 'Delete Operation Type'];
     } else if (menuItem === 'Manage Operation Requests') {

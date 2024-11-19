@@ -12,6 +12,8 @@ import { Patient } from '../Models/Patient';
 import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
+import { map } from 'rxjs/operators';
+
 
 // Update the DecodedToken interface to include the roles property
 export interface DecodedToken {
@@ -23,6 +25,7 @@ export interface DecodedToken {
   providedIn: 'root',
 })
 export class AuthService {
+ 
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
   public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0';
   public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail';
@@ -44,7 +47,9 @@ export class AuthService {
   public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin';
   public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
   public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin'
-  public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientProfileAsAdmin'
+  public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientByEmailAsAdmin'
+  public deactivateStaffProfile = 'http://localhost:5174/api/StaffUser/deactivate'
+  public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -128,10 +133,28 @@ export class AuthService {
 
   deletePatientByEmailAsAdmin(email: string): Observable<void> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
+    Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
     });
     return this.http.delete<void>(`${this.deletePatientProfile}/${email}`, { headers });
   }
+
+  deactivateStaffByIdAsAdmin(id: number): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
+    });
+  
+    return this.http.put<void>(`${this.deactivateStaffProfile}/${id}`, {}, { headers, observe: 'response' }).pipe(
+      map(response => {
+        if (response.status === 200) {
+          return; // Treat 200 OK as success
+        }
+        throw new Error('Unexpected response status');
+      })
+    );
+  }
+  
+
+
 
   // Registration method
   registerPatient(patientData: CreatePatientRequest): Observable<any> {
@@ -377,4 +400,33 @@ export class AuthService {
     const url = ' http://localhost:5174/api/OperationType/active';
     return this.http.get<OperationType[]>(url);
   }
+
+  searchStaffProfiles(
+    name?: string,
+    email?: string,
+    specialization?: number,
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`  // Set the Authorization header
+    });
+  
+    // Construct the URL with query parameters
+    const params = new URLSearchParams();
+    if (name) params.append('name', name);
+    if (email) params.append('email', email);
+    if (specialization) params.append('specialization', specialization.toString());
+    params.append('page', page.toString());
+    params.append('pageSize', pageSize.toString());
+  
+    // Log the final URL for debugging
+    const url = `${this.searchStaffProfilesUrl}?${params.toString()}`;
+    console.log('Final search URL:', url);  // Log the full URL for inspection
+    
+  
+    return this.http.get<any>(url, { headers });
+  }
+
+
 }

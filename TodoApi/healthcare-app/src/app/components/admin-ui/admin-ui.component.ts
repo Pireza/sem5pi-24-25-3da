@@ -54,5 +54,10 @@ export class AdminUiComponent implements OnInit {
   redirectToDeletePatientProfile(): void{
     this.router.navigate(['/delete-patient-profile-admin']);
   }
-  
+  redirectToDeleteStaffProfile(): void{
+    this.router.navigate(['/deactivate-staff-profile-admin']);
+  }
+  redirectToSearchStaffProfile(): void{
+    this.router.navigate(['/filter-staff-admin']);
+  }
 }

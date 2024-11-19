@@ -1,0 +1,91 @@
+/* General Styling for the Container */
+.deactivate-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px 40px; /* Increased padding for a balanced layout */
+    background: rgba(255, 255, 255, 0.9); /* Slightly opaque white for consistency */
+    border-radius: 20px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for elegance */
+    text-align: center; /* Center text and content */
+    font-family: 'Roboto', sans-serif; /* Consistent font */
+}
+
+/* Header Styling */
+.deactivate-container h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333333; /* Dark text color */
+    font-family: 'Roboto', sans-serif; /* Consistent font */
+}
+
+/* Form Group Styling */
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Even spacing between label and input */
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Styling the Label */
+.form-group label {
+    margin-right: 10px;
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333; /* Consistent label color */
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Styling the Input Field */
+.form-group input[type="email"] {
+    flex-grow: 1;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+.form-group input[type="email"]:focus {
+    outline: none;
+    border-color: #98d478; /* Green border for focus */
+}
+
+/* Confirmation Checkbox Styling */
+.form-group input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2); /* Larger checkbox for better usability */
+    cursor: pointer;
+}
+
+/* Styling for the Deactivate Button */
+.delete-button {
+    width: 100%;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 25px; /* Rounded corners */
+    border: 2px solid #e74c3c; /* Consistent red border */
+    background-color: #e74c3c; /* Vibrant red background */
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Smooth hover effect */
+    font-family: 'Roboto', sans-serif;
+}
+
+.delete-button:disabled {
+    background-color: #ccc; /* Gray for disabled state */
+    cursor: not-allowed;
+    border-color: #ccc;
+}
+
+.delete-button:hover:not(:disabled) {
+    background-color: #c0392b; /* Darker red on hover */
+    border-color: #a7281c;
+    transform: translateY(-2px); /* Slight elevation on hover */
+}

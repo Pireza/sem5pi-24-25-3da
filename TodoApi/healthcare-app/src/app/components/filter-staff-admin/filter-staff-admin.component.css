@@ -1,0 +1,125 @@
+.getProfile {
+  text-align: center;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 15px; /* Softer rounded corners */
+  background-color: rgba(255, 255, 255, 0.95); /* Slight transparency */
+  max-width: 600px; /* Slightly narrower for compact look */
+  margin: 50px auto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+}
+
+/* Headings */
+.getProfile h2 {
+  color: #222; /* Darker text for readability */
+  margin-bottom: 15px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* Labels */
+.getProfile label {
+  font-weight: 600; /* Stronger emphasis */
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 15px;
+  text-align: left;
+}
+
+/* Inputs */
+.getProfile input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Subtle rounded corners */
+  background-color: #f8f8f8;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.getProfile input:focus {
+  outline: none;
+  border-color: #8ac78f; /* Subtle green border on focus */
+}
+
+/* Buttons */
+.getProfile button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px; /* Rounded button */
+  cursor: pointer;
+  background-color: #98d478; /* Primary green color */
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.getProfile button:hover {
+  background-color: #86ba6a; /* Slightly darker green on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.getProfile button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Table Styles */
+.getProfile table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.getProfile th,
+.getProfile td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.getProfile th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  color: #444;
+}
+
+.getProfile td {
+  color: #333;
+}
+
+/* Placeholder for No Results */
+.getProfile .noResults {
+  font-size: 16px;
+  color: #999; /* Gray for emphasis */
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .getProfile {
+      padding: 20px;
+  }
+
+  .getProfile table {
+      font-size: 12px;
+  }
+
+  .getProfile h2 {
+      font-size: 20px;
+  }
+
+  .getProfile input {
+      font-size: 12px;
+  }
+
+  .getProfile button {
+      font-size: 14px;
+  }
+}

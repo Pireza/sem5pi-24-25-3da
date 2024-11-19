@@ -1,0 +1,39 @@
+<div class="deactivate-container">
+    <h2>Deactivate Staff Profile</h2>
+    <form (ngSubmit)="deactivateStaffProfile()">
+      <!-- Staff Id Input -->
+      <div class="form-group">
+        <label for="staffId">Staff Id:</label>
+        <input
+          type="id"
+          id="staffId"
+          [(ngModel)]="staffId"
+          name="staffId"
+          placeholder="Enter staff's id"
+          required
+        />
+      </div>
+  
+      <!-- Confirmation Checkbox -->
+      <div class="form-group">
+        <input
+          type="checkbox"
+          id="confirmation"
+          [(ngModel)]="isConfirmed"
+          name="confirmation"
+          required
+        />
+        <label for="confirmation">I confirm to deactivate this profile</label>
+      </div>
+  
+      <!-- Deactivate Profile Button -->
+      <button
+        type="submit"
+        class="delete-button"
+        [disabled]="!isConfirmed || !staffId"
+      >
+        Deactivate Profile
+      </button>
+    </form>
+  </div>
+  
