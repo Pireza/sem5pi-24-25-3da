@@ -5,5 +5,14 @@
     "@angular/forms": "^18.2.10",
     "@angular/platform-browser": "^18.2.10",
     "@angular/platform-browser-dynamic": "^18.2.10"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^18.2.10",
+    "@angular/cli": "^18.2.10",
+    "@angular/compiler-cli": "^18.2.10",
+    "typescript": "^5.2.0"
+  },
+  "scripts": {
+    "start": "ng serve"
   }
 }

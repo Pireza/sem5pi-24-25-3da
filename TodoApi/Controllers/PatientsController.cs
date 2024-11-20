@@ -703,7 +703,6 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
         }
     
 
-    // DELETE: api/Patients/email/{email}
     [HttpDelete("deletePatientByEmailAsAdmin/{email}/delete")]
     [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeletePatientByEmailAsAdmin(string email)
@@ -715,13 +714,19 @@ public async Task<IActionResult> PutPatientUpdateAsAdmin(
             return NotFound("Patient not found.");
         }
 
-        patient.PendingDeletionDate = DateTime.UtcNow;
+        // Check if the patient is already marked for deletion
+        if (patient.PendingDeletionDate.HasValue)
+        {
+            return BadRequest("Patient is already marked for deletion.");
+        }
 
+        // Mark the patient for deletion
+        patient.PendingDeletionDate = DateTime.UtcNow;
 
         // Log the deletion request
         await _repository.AddAuditLogForDeletionAsync(email);
 
-        // Update Patient 
+        // Update the patient record
         await _repository.UpdatePatientAsync(patient);
 
         return NoContent(); // Respond with 204 No Content
