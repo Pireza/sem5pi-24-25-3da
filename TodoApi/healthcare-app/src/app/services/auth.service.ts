@@ -46,10 +46,11 @@ export class AuthService {
   public createStaffAdmin = 'http://localhost:5174/api/StaffUser/CreateStaffAsAdmin';
   public editStaffAdmin = 'http://localhost:5174/api/StaffUser/email/UpdateStaffProfileAsAdmin';
   public deleteOperationDoctor = 'http://localhost:5174/api/OperationRequests/id/deleteOperationRequestAsDoctor';
-  public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin'
-  public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientByEmailAsAdmin'
-  public deactivateStaffProfile = 'http://localhost:5174/api/StaffUser/deactivate'
-  public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search'
+  public removeOPerationType = 'http://localhost:5174/api/OperationType/removeOperationTypeAsAdmin';
+  public deletePatientProfile = 'http://localhost:5174/api/Patients/deletePatientByEmailAsAdmin';
+  public deactivateStaffProfile = 'http://localhost:5174/api/StaffUser/deactivate';
+  public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search';
+  public getAllTypesNamesEP = 'http://localhost:5174/api/Operation/type-names';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -168,6 +169,11 @@ export class AuthService {
     });
 
     return this.http.post(this.addTypeEP, typeData, { headers });
+  }
+
+
+  getOperationTypesNames(){
+    return this.http.get<any>(this.getAllTypesNamesEP);
   }
 
 

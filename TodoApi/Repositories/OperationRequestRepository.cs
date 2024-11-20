@@ -25,50 +25,50 @@ public class OperationRequestRepository
         await _context.SaveChangesAsync();
     }
     public virtual async Task<List<OperationRequest>> GetAllOperationRequestsAsync()
-{
-    var operationRequests = await _context.Requests
-        .Include(r => r.Priority)
-        .Include(d => d.Doctor)
-        .Include(p => p.Patient).Include(o=> o.OperationType) 
-        .ToListAsync();
-
-    // Remove circular reference (Patient.Operations) temporarily for this method
-    foreach (var request in operationRequests)
     {
-        if (request.Patient != null)
+        var operationRequests = await _context.Requests
+            .Include(r => r.Priority)
+            .Include(d => d.Doctor)
+            .Include(p => p.Patient).Include(o => o.OperationType)
+            .ToListAsync();
+
+        // Remove circular reference (Patient.Operations) temporarily for this method
+        foreach (var request in operationRequests)
         {
-            // Create a shallow copy of the Patient object without the Operations property
-            var patientWithoutOperations = new Patient
+            if (request.Patient != null)
             {
-                Id = request.Patient.Id,
-                FirstName = request.Patient.FirstName,
-                LastName = request.Patient.LastName,
-                Email = request.Patient.Email,
-                Phone = request.Patient.Phone,
-                EmergencyContact= request.Patient.EmergencyContact,
-                Appointments= request.Patient.Appointments,
-                Birthday = request.Patient.Birthday,
-                Gender = request.Patient.Gender,
-                MedicalNumber = request.Patient.MedicalNumber,
-                MedicalConditions= request.Patient.MedicalConditions
+                // Create a shallow copy of the Patient object without the Operations property
+                var patientWithoutOperations = new Patient
+                {
+                    Id = request.Patient.Id,
+                    FirstName = request.Patient.FirstName,
+                    LastName = request.Patient.LastName,
+                    Email = request.Patient.Email,
+                    Phone = request.Patient.Phone,
+                    EmergencyContact = request.Patient.EmergencyContact,
+                    Appointments = request.Patient.Appointments,
+                    Birthday = request.Patient.Birthday,
+                    Gender = request.Patient.Gender,
+                    MedicalNumber = request.Patient.MedicalNumber,
+                    MedicalConditions = request.Patient.MedicalConditions
 
-            };
+                };
 
-            // Replace the Patient in the OperationRequest with the modified one
-            request.Patient = patientWithoutOperations;
+                // Replace the Patient in the OperationRequest with the modified one
+                request.Patient = patientWithoutOperations;
+            }
         }
+
+        return operationRequests;
     }
 
-     return operationRequests;
-}
 
 
 
-
-public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsync()
-{
-    return await _context.Priorities.ToListAsync();
-}
+    public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsync()
+    {
+        return await _context.Priorities.ToListAsync();
+    }
 
     public virtual async Task LogRequestChangeAsync(long requestId, List<string> changes)
     {
@@ -161,6 +161,11 @@ public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsyn
     {
         return await _context.Types.ToListAsync();
     }
+    public async Task<List<string>> GetTypesNames()
+    {
+        return await _context.Types.Select(t => t.Name).ToListAsync();
+    }
+
 
     public async Task<List<OperationTypeGetDTO>> FilterTypes(OperationTypeSearch search)
     {
@@ -311,71 +316,71 @@ public virtual async Task<List<OperationPriority>> GetAllOperationPrioritiesAsyn
         return result;
     }
 
-public async Task<bool> DeactivateOperationTypeAsync(long id)
-{
-    // Check if the operation type exists
-    var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
-
-    if (operationType == null)
+    public async Task<bool> DeactivateOperationTypeAsync(long id)
     {
-        return false; // Operation type not found
-    }
+        // Check if the operation type exists
+        var operationType = await _context.Types.FirstOrDefaultAsync(ot => ot.Id == id);
 
-    if (!operationType.IsActive)
-    {
-        throw new InvalidOperationException("Operation type is already inactive."); // Already inactive
-    }
-
-    // Mark the operation type as inactive
-    operationType.IsActive = false;
-
-    // Track the operation type's state for modification
-    _context.Entry(operationType).State = EntityState.Modified;
-
-    try
-    {
-        // Save the changes to the database
-        await _context.SaveChangesAsync();
-
-        // Log the deactivation for audit purposes
-        var logEntry = new AuditLogOperationType
+        if (operationType == null)
         {
-            EntityId = operationType.Id,
-            EntityName = nameof(OperationType),
-            Action = "Deactivated",
-            ChangeDate = DateTime.UtcNow,
-            Description = $"Operation type '{operationType.Name}' deactivated by admin."
-        };
-
-        _context.AuditLogOperationTypes.Add(logEntry);
-        await _context.SaveChangesAsync();
-
-        return true; // Successfully deactivated
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!await OperationTypeExistsAsync(id))
-        {
-            return false; // The operation type does not exist anymore
+            return false; // Operation type not found
         }
-        else
+
+        if (!operationType.IsActive)
         {
-            throw; // Rethrow the exception for other handling
+            throw new InvalidOperationException("Operation type is already inactive."); // Already inactive
+        }
+
+        // Mark the operation type as inactive
+        operationType.IsActive = false;
+
+        // Track the operation type's state for modification
+        _context.Entry(operationType).State = EntityState.Modified;
+
+        try
+        {
+            // Save the changes to the database
+            await _context.SaveChangesAsync();
+
+            // Log the deactivation for audit purposes
+            var logEntry = new AuditLogOperationType
+            {
+                EntityId = operationType.Id,
+                EntityName = nameof(OperationType),
+                Action = "Deactivated",
+                ChangeDate = DateTime.UtcNow,
+                Description = $"Operation type '{operationType.Name}' deactivated by admin."
+            };
+
+            _context.AuditLogOperationTypes.Add(logEntry);
+            await _context.SaveChangesAsync();
+
+            return true; // Successfully deactivated
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await OperationTypeExistsAsync(id))
+            {
+                return false; // The operation type does not exist anymore
+            }
+            else
+            {
+                throw; // Rethrow the exception for other handling
+            }
+        }
+        catch (Exception)
+        {
+            // Handle other exceptions if necessary
+            throw; // Propagate the exception for further handling
         }
     }
-    catch (Exception)
-    {
-        // Handle other exceptions if necessary
-        throw; // Propagate the exception for further handling
-    }
-}
 
     private async Task<bool> OperationTypeExistsAsync(long id)
     {
         return await _context.Types.AnyAsync(e => e.Id == id);
     }
 
-        public async Task<Staff> GetDoctorByEmailAsync(string email)
+    public async Task<Staff> GetDoctorByEmailAsync(string email)
     {
         return await _context.Staff.FirstOrDefaultAsync(d => d.Email == email);
     }
@@ -408,7 +413,7 @@ public async Task<bool> DeactivateOperationTypeAsync(long id)
             throw new NotFoundResource("Invalid specialized staff ID");
     }
 
-     public async Task UpdateTypeAsync(OperationType existingType, IEnumerable<long> newStaffIds)
+    public async Task UpdateTypeAsync(OperationType existingType, IEnumerable<long> newStaffIds)
     {
         // Update the basic fields of OperationType
         _context.Types.Update(existingType);
