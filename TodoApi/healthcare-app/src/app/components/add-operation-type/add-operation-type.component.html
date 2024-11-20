@@ -5,36 +5,40 @@
     <!-- Name field -->
     <div class="form-group">
       <label for="name">Name:</label>
-      <input id="name" formControlName="name" type="text" placeholder="Enter operation type name" />
+      <input id="name" formControlName="name" class="form-control" type="text" placeholder="Enter operation type name" />
     </div>
 
     <!-- Duration field -->
     <div class="form-group">
       <label for="duration">Duration (HH:mm:ss):</label>
-      <input id="duration" formControlName="duration" type="text" placeholder="e.g., 01:30:00" />
+      <input id="duration" formControlName="duration" class="form-control" type="text" placeholder="e.g., 01:30:00" />
     </div>
 
-    <!-- Dynamic list of Staff IDs -->
+    <!-- Dynamic list of Staff dropdowns -->
     <div class="form-group">
       <label>Staff IDs:</label>
       <div formArrayName="staff">
         <div *ngFor="let staffControl of staff.controls; let i = index" class="form-group">
-          <input [formControlName]="i" type="number" placeholder="Enter staff ID" />
-          <button type="button" (click)="removeStaffField(i)">Remove</button>
+          <select [formControlName]="i" class="form-control">
+            <option *ngFor="let staff of staffList" [value]="staff.id">
+              {{ staff.role }} - {{ staff.specialization || 'N/A' }}
+            </option>
+          </select>
+          <button type="button" class="remove-staff-btn" (click)="removeStaffField(i)">Remove</button>
         </div>
       </div>
-      <button type="button" (click)="addStaffField()">Add Staff ID</button>
+      <button type="button" class="add-staff-btn" (click)="addStaffField()">Add Staff ID</button>
     </div>
-
-    <!-- Button to open staff list in a new tab -->
-    <button type="button" class="view-staff-btn" (click)="openStaffListTab()">View Specializations List</button>
 
     <!-- Submit button -->
     <button type="submit" class="submit-btn">Create Operation Type</button>
   </form>
 
-  <!-- Display success or error message outside the form -->
-  <div *ngIf="message" [ngClass]="{'popup': true, 'success': message.includes('successfully'), 'error': !message.includes('successfully')}">
+  <div *ngIf="message" [ngClass]="{
+  'popup': true, 
+  'success': message.includes('successfully'), 
+  'error': message && !message.includes('successfully')
+}">
     {{ message }}
   </div>
 </div>

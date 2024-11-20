@@ -1,132 +1,184 @@
-/* Ensure the body fills the entire screen and content is centered */
-body {
-    margin: 0;
-    padding: 0;
-    position: relative; /* Required for positioning the pseudo-element */
-    height: 100vh; /* Full screen height */
-    display: flex; /* Enable Flexbox layout */
-    justify-content: center; /* Horizontally center content */
-    align-items: center; /* Vertically center content */
-    text-align: center; /* Center text inside the container */
-    font-family: 'Roboto', sans-serif; /* Font applied to the entire page */
-}
-
-/* General Container Styling */
+/* Ensure the container is responsive and centered */
 .container {
     padding: 40px 60px;
     border: 1px solid #ddd;
-    border-radius: 20px; /* Rounded corners */
-    background-color: rgba(255, 255, 255, 0.9); /* Slight transparency */
-    max-width: 800px; /* Limit container width */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    text-align: center; /* Center text */
-    margin: 20px auto;
+    border-radius: 20px;
+    /* Keep same border radius */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Slight transparency */
+    max-width: 800px;
+    /* Limit width for better layout */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Center content vertically inside the container */
+    align-items: center;
+    /* Align items in the center horizontally */
+    text-align: center;
+    width: 100%;
+    /* Allow it to scale */
+    margin: 0 auto;
+    /* Center horizontally */
+    box-sizing: border-box;
+    /* Include padding in width/height */
 }
 
-/* Header Styling */
-h2 {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #333333; /* Dark text color */
-    font-family: 'Roboto', sans-serif; /* Explicitly set the font */
-}
-
-/* Form Group Styling */
+/* Form group styles */
 .form-group {
     margin-bottom: 20px;
     text-align: left;
 }
 
-/* Labels */
 label {
-    display: block;
-    font-size: 16px;
     font-weight: 500;
-    margin-bottom: 5px;
-    color: #333333;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
     font-family: 'Roboto', sans-serif;
 }
 
-/* Input Fields */
-input[type="text"],
-input[type="number"] {
+/* Text input styles */
+input.form-control {
     width: 100%;
-    padding: 12px 15px;
+    padding: 12px;
     font-size: 16px;
-    border-radius: 10px;
     border: 2px solid #e0e0e0;
+    border-radius: 10px;
     box-sizing: border-box;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease-in-out;
     font-family: 'Roboto', sans-serif;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus {
+/* Focus styles for text inputs */
+input.form-control:focus {
     outline: none;
-    border-color: #98d478; /* Green border on focus */
+    border-color: #98d478;
+    /* Green border on focus */
+    background-color: #fff;
 }
 
-/* Staff Array Buttons */
-button {
-    cursor: pointer;
-    padding: 12px 25px;
+/* Dropdown styles */
+select.form-control {
+    width: 100%;
+    padding: 12px;
     font-size: 16px;
-    font-weight: bold;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+    appearance: none;
+    /* Removes default dropdown arrow styling */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 viewBox%3D%220 0 4 5%22%3E%3Cpath fill%3D%22%23333%22 d%3D%22M2 0L0 2h4z%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    padding-right: 40px;
+    /* Adjust for arrow */
+    cursor: pointer;
+    /* Shows hand cursor for dropdown */
+}
+
+/* Focus styles for dropdown */
+select.form-control:focus {
+    outline: none;
+    border-color: #98d478;
+    /* Green border on focus */
+    background-color: #fff;
+}
+
+/* Styles for the submit button */
+button.submit-btn {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 18px;
+    border: none;
     border-radius: 25px;
-    border: 2px solid #a7e784; /* Light green border */
-    background-color: #98d478; /* Light green background */
-    color: #fff;
+    cursor: pointer;
+    background-color: #98d478;
+    /* Light green background */
+    color: white;
     transition: all 0.3s ease-in-out;
     font-family: 'Roboto', sans-serif;
 }
 
-button:hover {
+button.submit-btn:hover {
     background-color: #86ba6a;
-    border-color: #76a156;
     transform: translateY(-2px);
 }
 
-button:focus {
+button.submit-btn:focus {
     outline: none;
-    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4); /* Blue glow on focus */
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4);
+    /* Blue glow on focus */
 }
 
-/* Remove Staff Field Button */
-button[type="button"] {
-    background-color: #e74c3c;
-    color: #fff;
-    margin-left: 5px;
-}
-
-/* Add Staff ID Button */
+/* Add Staff button - styled the same as the submit button, with same proportions */
 button.add-staff-btn {
-    background-color: #3498db;
-    color: #fff;
-    display: block;
     width: 100%;
-    margin-top: 10px;
+    /* Full width */
+    padding: 12px 0;
+    /* Same padding as submit */
+    font-size: 18px;
+    /* Same font size */
+    border: none;
+    border-radius: 25px;
+    /* Same border radius as submit */
+    cursor: pointer;
+    background-color: #98d478;
+    /* Light green background */
+    color: white;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
 }
 
-/* View Staff List Button */
-button.view-staff-btn {
-    background-color: #2ecc71;
-    color: #fff;
-    display: inline-block;
-    margin-top: 15px;
-    width: 100%;
+button.add-staff-btn:hover {
+    background-color: #86ba6a;
+    /* Darker green on hover */
+    transform: translateY(-2px);
 }
 
-/* Submit Button */
-button.submit-btn {
-    background-color: #27ae60;
-    color: #fff;
-    font-weight: bold;
-    display: block;
-    width: 100%;
-    margin-top: 20px;
+button.add-staff-btn:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4);
+    /* Blue glow on focus */
 }
+
+/* Remove button - styled in red with slightly smaller proportions */
+button.remove-staff-btn {
+    width: auto;
+    /* Adjust width for smaller size */
+    padding: 8px 15px;
+    /* Smaller padding */
+    font-size: 16px;
+    /* Slightly smaller font */
+    border: none;
+    border-radius: 25px;
+    /* Same rounded corners */
+    cursor: pointer;
+    background-color: #e74c3c;
+    /* Red background */
+    color: white;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Roboto', sans-serif;
+}
+
+button.remove-staff-btn:hover {
+    background-color: #c0392b;
+    /* Darker red on hover */
+    transform: translateY(-2px);
+}
+
+button.remove-staff-btn:focus {
+    outline: none;
+    box-shadow: 0 0 3px 3px rgba(255, 0, 0, 0.4);
+    /* Red glow on focus */
+}
+
 
 /* Message Popup Styling */
 .popup {
@@ -161,25 +213,4 @@ button.submit-btn {
 .popup button:hover {
     background-color: #333333;
     color: #fff;
-}
-
-/* Staff List Table (In New Tab) */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
 }
