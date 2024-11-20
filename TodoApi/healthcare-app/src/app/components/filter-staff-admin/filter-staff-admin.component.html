@@ -47,7 +47,8 @@
 
   <!-- Pagination Controls -->
   <div *ngIf="searchResults.length > 0">
-    <button (click)="previousPage()" [disabled]="page === 1">Previous</button>
-    <button (click)="nextPage()">Next</button>
+    <button (click)="previousPage()" *ngIf="page > 1">Previous</button>
+    <button (click)="nextPage()" *ngIf="page * pageSize < totalRecords">Next</button>
   </div>
+  
 </div>

@@ -393,7 +393,7 @@ public async Task<IActionResult> PutStaffUpdateAsAdmin(
         [FromQuery] string? name = null,
         [FromQuery] string? email = null,
         [FromQuery] string? specialization = null,
-        [FromQuery] int pageNumber = 1,
+        [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
         var query = _repository.GetStaffQueryable();
@@ -418,14 +418,14 @@ public async Task<IActionResult> PutStaffUpdateAsAdmin(
 
         // Paginate results
         var staff = await query
-            .Skip((pageNumber - 1) * pageSize)
+            .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
         var response = new
         {
             TotalRecords = totalRecords,
-            Page = pageNumber,
+            Page = page,
             PageSize = pageSize,
             Staff = staff.Select(s => new
 
@@ -437,6 +437,7 @@ public async Task<IActionResult> PutStaffUpdateAsAdmin(
                 Specialization = s.Specialization != null ? s.Specialization.SpecDescription : null
             })
         };
+
            
         // Return paginated staff profiles
         return Ok(response);
