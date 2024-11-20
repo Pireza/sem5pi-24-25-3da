@@ -133,10 +133,13 @@ export class AuthService {
 
   deletePatientByEmailAsAdmin(email: string): Observable<void> {
     const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
+      Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
     });
-    return this.http.delete<void>(`${this.deletePatientProfile}/${email}`, { headers });
+    return this.http.delete<void>(
+      `${this.deletePatientProfile}/${email}/delete`, { headers }
+    );
   }
+  
 
   deactivateStaffByIdAsAdmin(id: number): Observable<void> {
     const headers = new HttpHeaders({
