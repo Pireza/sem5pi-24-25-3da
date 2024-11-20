@@ -51,6 +51,7 @@ export class AuthService {
   public deactivateStaffProfile = 'http://localhost:5174/api/StaffUser/deactivate';
   public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search';
   public getAllTypesNamesEP = 'http://localhost:5174/api/Operation/type-names';
+  public getAllSpecsNamesEP = 'http://localhost:5174/api/Specialization/names';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -179,6 +180,9 @@ export class AuthService {
     return this.http.get<any>(this.getAllTypesNamesEP);
   }
 
+  getSpecsNames(){
+    return this.http.get<any>(this.getAllSpecsNamesEP);
+  }
 
   updatePatientProfile(
     email: string,
