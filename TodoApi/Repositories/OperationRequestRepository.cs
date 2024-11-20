@@ -222,7 +222,7 @@ public class OperationRequestRepository
                                 .Select(s => s.SpecDescription)
                                 .FirstOrDefault()
                 })
-                .Select(ss => $"{ss.Role} - {ss.Specialization}")
+                .Select(ss => $"{ss.Specialization} {ss.Role}")
                 .ToList()
         }).ToList();
 

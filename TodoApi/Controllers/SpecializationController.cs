@@ -21,6 +21,11 @@ public class SpecializationController : ControllerBase
     }
 
 
+    [HttpGet("names")]
+    public async Task<ActionResult<IEnumerable<string>>> GetSpecializationsNames()
+    {
+        return await _context.Specializations.Select(s => s.SpecDescription).ToListAsync();
+    }
 
     // GET: api/Specialization/{id}
     [HttpGet("{id}")]
@@ -63,14 +68,14 @@ public class SpecializationController : ControllerBase
     public async Task<ActionResult<IEnumerable<SpecializationDTO>>> GetSpecializedStaffFull()
     {
         return await (from staff in _context.SpecializedStaff
-                                          join specialization in _context.Specializations
-                                          on staff.SpecializationId equals specialization.SpecId
-                                          select new SpecializationDTO
-                                          {
-                                              Id = staff.Id,
-                                              Role = staff.Role,
-                                              Specialization = specialization.SpecDescription
-                                          }).ToListAsync();
+                      join specialization in _context.Specializations
+                      on staff.SpecializationId equals specialization.SpecId
+                      select new SpecializationDTO
+                      {
+                          Id = staff.Id,
+                          Role = staff.Role,
+                          Specialization = specialization.SpecDescription
+                      }).ToListAsync();
 
     }
 
