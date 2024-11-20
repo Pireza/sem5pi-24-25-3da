@@ -58,7 +58,7 @@ export class DeleteOperationRequestComponent implements OnInit {
   }
 
   // Reset the form after successful deletion
-  private resetForm(): void {
+  public resetForm(): void {
     this.selectedRequestId = undefined;
     this.loadRequests(); // Reload the requests after reset
   }

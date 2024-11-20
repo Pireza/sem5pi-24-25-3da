@@ -50,6 +50,11 @@ public class OperationService
         return await this._repo.GetTypes();
     }
 
+    public async Task<List<string>> GetAllTypesNamesAsync()
+    {
+        return await this._repo.GetTypesNames();
+    }
+
 
     public async Task<List<OperationTypeGetDTO>> GetAllTypeFilterAsync(OperationTypeSearch search)
     {

@@ -10,17 +10,31 @@
 
     <div class="form-group">
       <label for="operationType">Operation Type</label>
-      <input type="text" id="operationType" class="form-control" [(ngModel)]="search.operationType" name="operationType">
+      <select id="operationType" class="form-control" [(ngModel)]="search.operationType" name="operationType">
+        <option value="">None</option>
+        <option *ngFor="let type of foundTypes" [value]="type">{{ type }}</option>
+      </select>
     </div>
+
 
     <div class="form-group">
       <label for="priority">Priority</label>
-      <input type="text" id="priority" class="form-control" [(ngModel)]="search.priority" name="priority">
+      <select id="priority" class="form-control" [(ngModel)]="search.priority" name="priority">
+        <option value="">None</option>
+        <option value="Elective Surgery">Elective Surgery</option>
+        <option value="Urgent Surgery">Urgent Surgery</option>
+        <option value="Emergency Surgery">Emergency Surgery</option>
+      </select>
     </div>
 
     <div class="form-group">
       <label for="status">Status</label>
-      <input type="text" id="status" class="form-control" [(ngModel)]="search.status" name="status">
+      <select id="status" class="form-control" [(ngModel)]="search.status" name="status">
+        <option value="">None</option>
+        <option value="Declined">Declined</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Pending">Pending</option>
+      </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Search</button>

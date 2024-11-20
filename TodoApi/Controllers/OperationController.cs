@@ -82,6 +82,12 @@ public class OperationController : ControllerBase
         return await _service.GetAllTypeAsync();
     }
 
+    [HttpGet("type-names")]
+
+    public async Task<ActionResult<IEnumerable<string>>> GetTypesNames()
+    {
+        return await _service.GetAllTypesNamesAsync();
+    }
 
     // GET: api/operation/type/{id}
     [HttpGet("type/{id}")]
@@ -229,6 +235,6 @@ public class OperationController : ControllerBase
         return requests;
     }
 
-    
+
 
 }
