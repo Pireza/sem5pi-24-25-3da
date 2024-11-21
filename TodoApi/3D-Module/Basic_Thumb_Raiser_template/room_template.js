@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import BedTemplate from "./bed_template.js";
 import Person from "./person_template.js";
+import DoorTemplate from "./door_template.js";  // Import the doorTemplate class
 
 export default class RoomTemplate {
     constructor(textureUrl) {
-        this.wallThickness = .1;  // A espessura das paredes
-        this.wallHeight = 5;      // A altura das paredes
+        this.wallThickness = 0.1;  // Thickness of the walls
+        this.wallHeight = 5;      // Height of the walls
 
         this.directionMap = new Map();
         this.directionMap.set('north', 0.0);
@@ -13,26 +14,26 @@ export default class RoomTemplate {
         this.directionMap.set('west', Math.PI / 2);
         this.directionMap.set('east', 3 * Math.PI / 2);
 
-        // Material que reage à luz
+        // Material that reacts to light
         if (textureUrl) {
             const textureLoader = new THREE.TextureLoader();
             this.material = new THREE.MeshStandardMaterial({
                 map: textureLoader.load(textureUrl),
-                side: THREE.DoubleSide,  // Certifique-se de que a textura será visível de ambos os lados
+                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides
             });
         } else {
-            // Caso não tenha textura, use uma cor básica
+            // If no texture, use a basic color
             this.material = new THREE.MeshStandardMaterial({ color: 0x888888 });
         }
 
-        this.roomMesh = new THREE.Group();  // Um grupo para armazenar todas as paredes
+        this.roomMesh = new THREE.Group();  // A group to store all the walls
     }
 
-    generateRoom(width, depth, occupied, direction) {
+    generateRoom(width, depth, occupied, direction = 'north', doorPosition) {
         this.roomMesh = new THREE.Group();
-        // Criar 4 paredes: frente, fundo, esquerda, direita
+        // Create 4 walls: front, back, left, right
 
-        // Parede da frente
+        // Front wall
         const frontWall = new THREE.Mesh(
             new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
             this.material
@@ -40,7 +41,7 @@ export default class RoomTemplate {
         frontWall.position.set(0, this.wallHeight / 2, -depth / 2);
         this.roomMesh.add(frontWall);
 
-        // Parede do fundo
+        // Back wall
         const backWall = new THREE.Mesh(
             new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
             this.material
@@ -48,7 +49,7 @@ export default class RoomTemplate {
         backWall.position.set(0, this.wallHeight / 2, depth / 2);
         this.roomMesh.add(backWall);
 
-        // Parede da esquerda
+        // Left wall
         const leftWall = new THREE.Mesh(
             new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
             this.material
@@ -56,7 +57,7 @@ export default class RoomTemplate {
         leftWall.position.set(-width / 2, this.wallHeight / 2, 0);
         this.roomMesh.add(leftWall);
 
-        // Parede da direita
+        // Right wall
         const rightWall = new THREE.Mesh(
             new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
             this.material
@@ -64,6 +65,10 @@ export default class RoomTemplate {
         rightWall.position.set(width / 2, this.wallHeight / 2, 0);
         this.roomMesh.add(rightWall);
 
+        // Add the door to the selected wall
+        this.addDoor(doorPosition, width, depth);
+
+        // Add the bed
         this.bed = new BedTemplate({
             modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
         });
@@ -71,6 +76,7 @@ export default class RoomTemplate {
 
         if (this.directionMap.has(direction))
             this.orientation = this.directionMap.get(direction);
+       
 
         this.bed.bed.rotation.y = this.orientation;
 
@@ -84,28 +90,52 @@ export default class RoomTemplate {
             this.roomMesh.add(this.person.person);
         }
 
-        // Adicionar o foco de luz com maior alcance
+        // Add the spotlight
         this.addSpotlight(width, depth);
     }
 
+    addDoor(position, width, depth) {
+        // Create a new door instance based on the doorTemplate class
+        const door = new DoorTemplate({
+            modelUrl: 'models/gltf/door/door.glb'  // Path to your door model
+        });
+
+        // Wait for the door model to load
+        door.door.position.set(0, this.wallHeight / 2, 0);  // Default position
+
+        // Position and rotate the door on the selected wall
+        if (position === 'front') {
+            // Place the door on the front wall (Z = -depth/2) and align it
+            door.door.position.set(0, this.wallHeight / 2, -depth / 2 + this.wallThickness / 2);
+            door.door.rotation.y = Math.PI / 2;  // Door should face inside the room
+        } else if (position === 'back') {
+            // Place the door on the back wall (Z = depth/2) and align it
+            door.door.position.set(0, this.wallHeight / 2, depth / 2 - this.wallThickness / 2);
+            door.door.rotation.y = 3 * Math.PI / 2;  // Door should face inside the room (opposite direction)
+        } else if (position === 'left') {
+            // Place the door on the left wall (X = -width/2) and rotate it to align
+            door.door.position.set(-width / 2 + this.wallThickness / 2, this.wallHeight / 2, 0);
+            door.door.rotation.y = 0;  // Rotate the door to face the left wall, parallel to it
+        } else if (position === 'right') {
+            // Place the door on the right wall (X = width/2) and rotate it to align
+            door.door.position.set(width / 2 - this.wallThickness / 2, this.wallHeight / 2, 0);
+            door.door.rotation.y = Math.PI;  // Rotate the door to face the right wall, parallel to it
+        }
+
+        // Add the door to the room's mesh
+        this.roomMesh.add(door.door);
+    }
+
     addSpotlight(width, depth) {
-        // Aumentar a distância da luz para cobrir toda a sala
         const spotlight = new THREE.SpotLight(0xffffff, 1, 100, Math.PI / 3, 0.5, 2);
-        spotlight.position.set(0, this.wallHeight + 5, 0);  // Posicionar acima da sala
-        spotlight.target.position.set(0, this.wallHeight / 2, 0);  // Focar no centro da sala
+        spotlight.position.set(0, this.wallHeight + 5, 0);  // Position it above the room
+        spotlight.target.position.set(0, this.wallHeight / 2, 0);  // Focus on the center of the room
         spotlight.castShadow = true;
 
-        // Ajuste o alcance da luz (distância) para garantir que cubra a sala inteira
-        spotlight.distance = Math.max(width, depth) * 1.5;  // Cobrir toda a sala com folga
+        spotlight.distance = Math.max(width, depth) * 1.5;  // Cover the entire room
+        spotlight.angle = Math.PI / 3;  // Adjust the spotlight angle
+        spotlight.intensity = 21;  // Increase the intensity
 
-        // Ajuste o ângulo do cone de iluminação para um campo de visão mais amplo
-        spotlight.angle = Math.PI / 3; // Aumente este valor para expandir o alcance da luz
-
-        // Intensidade maior, se necessário
-        spotlight.intensity = 21;
-
-        // Adicionar a luz à cena (certifique-se de que você tenha acesso à cena do Three.js)
-        // Certifique-se de que a luz esteja sendo adicionada diretamente à cena, não ao roomMesh
         this.roomMesh.add(spotlight);
     }
 
