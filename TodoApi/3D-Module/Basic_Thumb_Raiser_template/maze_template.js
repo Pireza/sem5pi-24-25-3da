@@ -37,18 +37,24 @@ export default class Maze {
                 room = this.rooms[i];
                 isOccupied = false;
                 // Check if the room is occupied based on the status
-                if (this.roomsStatus.rooms.includes(room.name))
+                if (this.roomsStatus.rooms.includes(room.name)) {
                     isOccupied = true;
+                }
 
-                roomBuilder.generateRoom(
-                    room.width,
-                    room.length,
-                    isOccupied,
-                    room.bedDirection,
-                    room.door
-                );
-                roomBuilder.setRoomPositions(room.x, room.y);
-                this.object.add(roomBuilder.getRoom());
+                // Ensure the room is within bounds before placing it
+                if (this.isRoomWithinBounds(room)) {
+                    roomBuilder.generateRoom(
+                        room.width,
+                        room.length,
+                        isOccupied,
+                        room.bedDirection,
+                        room.door
+                    );
+                    roomBuilder.setRoomPositions(room.x, room.y);
+                    this.object.add(roomBuilder.getRoom());
+                } else {
+                    console.log(`Room ${room.name} is out of bounds and won't be placed.`);
+                }
             }
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
@@ -96,4 +102,22 @@ export default class Maze {
                 console.error('Error loading the JSON file:', error);
             });
     }
+
+    // Check if the room is within bounds
+   isRoomWithinBounds(room) {
+    // Room's left and right boundaries
+    const left = room.x - room.width / 2;
+    const right = room.x + room.width / 2;
+    
+    // Room's top and bottom boundaries
+    const top = room.y + room.length / 2;
+    const bottom = room.y - room.length / 2;
+
+    // Check if the room is within the maze's boundaries
+    if (left < -this.size.width / 2 || right > this.size.width / 2 || bottom < -this.size.height / 2 || top > this.size.height / 2) {
+        return false; // Room is out of bounds
+    }
+    return true; // Room is within bounds
+}
+
 }
