@@ -151,6 +151,13 @@ export default class ThumbRaiser {
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
 
+
+        this.moveForward = false;
+        this.moveBackward = false;
+        this.moveLeft = false;
+        this.moveRight = false;
+        this.cameraState = null; // Possible values: "moving", "rotating", or null
+
         // Create a 2D scene (the viewports frames)
         this.scene2D = new THREE.Scene();
 
@@ -389,6 +396,23 @@ export default class ThumbRaiser {
     }
 
     keyChange(event, state) {
+
+        switch (event.code) {
+            case "KeyW": // Move forward
+                this.moveForward = state;
+                break;
+            case "KeyS": // Move backward
+                this.moveBackward = state;
+                break;
+            case "KeyA": // Move left
+                this.moveLeft = state;
+                break;
+            case "KeyD": // Move right
+                this.moveRight = state;
+                break;
+            default:
+                break;
+        }
         // Allow digit and arrow keys to be used when entering numbers
         if (["horizontal", "vertical", "distance", "zoom"].indexOf(event.target.id) < 0) {
             event.target.blur();
@@ -398,24 +422,24 @@ export default class ThumbRaiser {
             if (event.code == "Space" || event.code == "ArrowLeft" || event.code == "ArrowRight" || event.code == "ArrowDown" || event.code == "ArrowUp") {
                 event.preventDefault();
             }
-            
+
         }
     }
 
-   mouseDown(event) {
-    if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
-        this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
-        const cameraView = this.getPointedViewport(this.mousePosition);
-        if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
-            const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
-            this.view.options.selectedIndex = cameraIndex;
-            this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
-            if (event.buttons == 2) { // Only allow secondary button for orientation
-                this.changeCameraOrientation = true;
+    mouseDown(event) {
+        if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
+            this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
+            const cameraView = this.getPointedViewport(this.mousePosition);
+            if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
+                const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
+                this.view.options.selectedIndex = cameraIndex;
+                this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
+                if (event.buttons == 2) { // Only allow secondary button for orientation
+                    this.changeCameraOrientation = true;
+                }
             }
         }
     }
-}
 
 
     mouseMove(event) {
@@ -441,6 +465,7 @@ export default class ThumbRaiser {
                 else { // Secondary button down
                     if (this.changeCameraOrientation) {
                         this.activeViewCamera.updateOrientation(mouseIncrement.multiply(new THREE.Vector2(-0.5, 0.5)));
+                        this.activeViewCamera.position = 1000;
                         this.displayPanel();
                     }
                 }
@@ -554,9 +579,25 @@ export default class ThumbRaiser {
         else {
             // Update the model animations
             const deltaT = this.clock.getDelta();
+            const moveSpeed = 5 * deltaT;
 
+            if (this.activeViewCamera && this.activeViewCamera.object) {
+                const camera = this.activeViewCamera.object;
+                const forward = new THREE.Vector3();
+                const right = new THREE.Vector3();
 
+                // Calculate local forward and right directions
+                camera.getWorldDirection(forward);
+                forward.y = 0; // Ignore vertical movement
+                forward.normalize();
+                right.copy(forward).cross(new THREE.Vector3(0, 1, 0)).normalize();
 
+                // Apply movement
+                if (this.moveForward) camera.position.add(forward.multiplyScalar(moveSpeed));
+                if (this.moveBackward) camera.position.add(forward.multiplyScalar(-moveSpeed));
+                if (this.moveLeft) camera.position.add(right.multiplyScalar(-moveSpeed));
+                if (this.moveRight) camera.position.add(right.multiplyScalar(moveSpeed));
+            }
 
             // Update statistics
             this.statistics.update();
