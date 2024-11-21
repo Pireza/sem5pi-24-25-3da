@@ -7,7 +7,6 @@ describe('Patient page testing', () => {
     });
 
 
-    // This will test profile updating
     it('update function test success', () => {
 
 
@@ -36,7 +35,6 @@ describe('Patient page testing', () => {
         
     });
 
-    // This will test profile updating
     it('update function test phone number not correct', () => {
 
 

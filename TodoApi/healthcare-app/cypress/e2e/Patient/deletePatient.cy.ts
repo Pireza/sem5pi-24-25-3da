@@ -6,7 +6,6 @@ describe('Patient page testing', () => {
         cy.get('#login').click();
     });
 
-// This will test password reset function
 it('delete function test', () => {
 
 
