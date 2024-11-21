@@ -26,7 +26,7 @@ describe('Login page testing', () => {
     cy.get('.close-btn').click();
 
     // sends request expecting success
-    cy.get('#email').clear().type('successs@gmail.com');
+    cy.get('#email').clear().type('success@gmail.com');
     cy.get('#reset-password-button').click();
     cy.get('#popup p').invoke('text').then((message1) => expect(message1).to.equal('Password reset email sent successfully'));
 
