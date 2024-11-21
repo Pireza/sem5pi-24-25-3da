@@ -14,7 +14,8 @@ public class Staff : User
     public string? LastName { get; set; }
     public string? FullName { get; set; }
     public string? LicenseNumber { get; set; }
-    public Specialization? Specialization { get; set; }
+    public long? SpecializationSpecId { get; set; } 
+    public Specialization? Specialization { get; set; } 
     public string? Phone { get; set; }
     public ICollection<AvailabilitySlot>? AvailabilitySlots { get; set; } = new List<AvailabilitySlot>();
     public bool IsActive { get; set; } = true;

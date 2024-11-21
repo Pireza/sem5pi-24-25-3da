@@ -10,7 +10,8 @@ public class OperationType
     public string Duration { get; set; }
     public string Status { get; set; }
     public bool IsActive { get; set; } = true; // Add an IsActive flag
-    public Specialization? Specialization { get; set; }
+     public long? SpecializationSpecId { get; set; } 
+    public Specialization? Specialization { get; set; } 
     public OperationType() { }
     /// <summary>
     /// Basic constructor for this class which calls ValidDuration()
