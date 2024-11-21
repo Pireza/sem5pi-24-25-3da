@@ -380,20 +380,24 @@ public class OperationRequestRepository
         return await _context.Types.AnyAsync(e => e.Id == id);
     }
 
-    public async Task<Staff> GetDoctorByEmailAsync(string email)
+    public async Task<Staff?> GetDoctorByEmailAsync(string email)
     {
-        return await _context.Staff.FirstOrDefaultAsync(d => d.Email == email);
+    return await _context.Staff
+        .Include(s => s.Specialization) // Include Specialization data
+        .FirstOrDefaultAsync(s => s.Email == email);
     }
 
     public async Task<Patient> GetPatientByIdAsync(long patientId)
     {
         return await _context.Patients.FindAsync(patientId);
     }
-
-    public async Task<OperationType> GetOperationTypeByIdAsync(long operationTypeId)
+    public async Task<OperationType?> GetOperationTypeByIdAsync(long id)
     {
-        return await _context.Types.FindAsync(operationTypeId);
+        return await _context.OperationTypes
+            .Include(o => o.Specialization) // Include Specialization data
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
+
 
     public async Task AddOperationRequestAsync(OperationRequest operationRequest)
     {

@@ -62,6 +62,20 @@ public class UserContext : DbContext
             .HasMany(p => p.Appointments); // A patient has many appointments
         modelBuilder.Entity<OperationTypeLog>().ToTable("OperationTypeLog");
 
+        
+    modelBuilder.Entity<Staff>()
+        .HasOne(s => s.Specialization) 
+        .WithMany()                    
+        .HasForeignKey(s => s.SpecializationSpecId); 
+
+    
+    modelBuilder.Entity<OperationType>()
+        .HasOne(o => o.Specialization) 
+        .WithMany()                  
+        .HasForeignKey(o => o.SpecializationSpecId);
+
     }
+
+
 
 }
