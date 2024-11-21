@@ -48,7 +48,9 @@ export default class Maze {
                         room.length,
                         isOccupied,
                         room.bedDirection,
-                        room.door
+                        room.door,
+                        room.bedX,
+                        room.bedY
                     );
                     roomBuilder.setRoomPositions(room.x, room.y);
                     this.object.add(roomBuilder.getRoom());

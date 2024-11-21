@@ -29,7 +29,7 @@ export default class RoomTemplate {
         this.roomMesh = new THREE.Group();  // A group to store all the walls
     }
 
-    generateRoom(width, depth, occupied, direction = 'north', doorPosition) {
+    generateRoom(width, depth, occupied, direction = 'north', doorPosition = 'front', bedX = 0.0, bedY = 0.0) {
         this.roomMesh = new THREE.Group();
         // Create 4 walls: front, back, left, right
 
@@ -76,16 +76,17 @@ export default class RoomTemplate {
 
         if (this.directionMap.has(direction))
             this.orientation = this.directionMap.get(direction);
-       
+
 
         this.bed.bed.rotation.y = this.orientation;
+        this.bed.bed.position.set(bedX, 0, bedY);
 
         if (occupied) {
             this.person = new Person({
                 modelUrl: 'models/gltf/human/3d_scan_man_1.glb'
             });
 
-            this.person.person.position.y = 1.5;
+            this.person.person.position.set(bedX, 1.5, bedY);
             this.person.person.rotation.z = this.orientation;
             this.roomMesh.add(this.person.person);
         }
