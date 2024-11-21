@@ -1,0 +1,55 @@
+<div class="form-container">
+  <h1>Create Operation Request</h1>
+  <form (ngSubmit)="onSubmit()" #operationForm="ngForm" novalidate>
+    <div class="form-group">
+      <label for="patientId">Patient ID</label>
+      <input
+        type="number"
+        id="patientId"
+        name="patientId"
+        [(ngModel)]="operationRequest.patientId"
+        required
+        placeholder="Enter Patient ID"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="operationTypeId">Operation Type</label>
+      <input
+        type="number"
+        id="operationTypeId"
+        name="operationTypeId"
+        [(ngModel)]="operationRequest.operationTypeId"
+        required
+        placeholder="Enter Operation Type ID"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="priorityId">Priority</label>
+      <input
+        type="number"
+        id="priorityId"
+        name="priorityId"
+        [(ngModel)]="operationRequest.priorityId"
+        required
+        placeholder="Enter Priority ID"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="deadline">Deadline</label>
+      <input
+        type="date"
+        id="deadline"
+        name="deadline"
+        [(ngModel)]="operationRequest.deadline"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <button type="submit" [disabled]="operationForm.invalid">Create Request</button>
+    </div>
+  </form>
+</div>

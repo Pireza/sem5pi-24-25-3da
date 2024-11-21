@@ -19,7 +19,7 @@ import { DeleteOperationRequestComponent } from '../remove-operation-doctor/remo
 import { RemoveOperationTypeAdminComponent } from '../remove-operation-type-admin/remove-operation-type-admin.component';
 import { DeactivateStaffProfileAdminComponent } from '../deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
 import { SearchStaffProfileAdminComponent } from '../filter-staff-admin/filter-staff-admin.component';
-
+import { CreateOperationDoctorComponent} from '../create-operation-doctor/create-operation-doctor.component';
 
 
 
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -139,6 +139,8 @@ export class AuthComponent {
       this.activeComponent = DeletePatientProfileAdminComponent;
     } else if (action ===  'Deactivate Staff Profile'){
       this.activeComponent = DeactivateStaffProfileAdminComponent;
+    }else if (action ===  'Create Operation Request'){
+      this.activeComponent = CreateOperationDoctorComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
     } else if (action === 'Update Profile') {
@@ -183,7 +185,7 @@ export class AuthComponent {
     } else if (menuItem === 'Manage Operation Types') {
       return ['Add New Operation Type', 'Search Operation Types', 'Delete Operation Type'];
     } else if (menuItem === 'Manage Operation Requests') {
-      return ['Search Operation Requests', 'Update Operation Request', 'Remove Operation Request'];
+      return ['Search Operation Requests','Create Operation Request', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {
       return ['Update Profile', 'Delete Account'];
     }else if (menuItem === '3D Visualization of the Floor'){
