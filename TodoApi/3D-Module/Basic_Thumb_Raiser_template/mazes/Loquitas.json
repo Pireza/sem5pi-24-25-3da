@@ -30,8 +30,8 @@
             "length": 3,
             "x": -3.0,
             "y": 3.0,
-            "bedX" : 0.0,
-            "bedY" : -10,
+            "bedX" : 0.5,
+            "bedY" : 0.0,
             "bedDirection": "north",
             "door": "front"
         }
