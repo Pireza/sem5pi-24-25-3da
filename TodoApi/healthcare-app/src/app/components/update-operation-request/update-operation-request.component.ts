@@ -83,7 +83,7 @@ export class UpdateOperationRequestComponent implements OnInit {
         },
         (error) => {
           console.error('Error updating operation request', error);
-          alert('Failed to update operation request');
+          alert('You only have permission to update your own requests!');
         }
       );
     } else {

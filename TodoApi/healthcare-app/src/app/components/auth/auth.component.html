@@ -6,7 +6,7 @@
 
 <body>
     <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle-button" *ngIf="isAuthenticated" (click)="toggleSidebar()">
+    <button class="sidebar-toggle-button" *ngIf="isAuthenticated" id="burger" (click)="toggleSidebar()">
         <img [src]="isSidebarOpen ? 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png' : 'https://cdn-icons-png.flaticon.com/512/3388/3388823.png'"
             alt="Toggle Sidebar" class="toggle-icon">
     </button>
@@ -22,7 +22,7 @@
         <!-- Buttons shown only if not authenticated -->
         <div class="nav-buttons" *ngIf="!isAuthenticated">
             <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
-            <button (click)="onAuthenticate()" class="styled-button">Login</button>
+            <button (click)="onAuthenticate()" class="styled-button" id="login">Login</button>
             <div class="clickable-text" id="forgot-password" (click)="onPasswordReset()">Forgot Password?</div>
         </div>
     </div>

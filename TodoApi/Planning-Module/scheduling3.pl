@@ -373,3 +373,72 @@ remove_equals([X|L],L1):-member(X,L),!,remove_equals(L,L1).
 remove_equals([X|L],[X|L1]):-remove_equals(L,L1).
 
 
+
+
+
+
+% Heuristic based on doctor occupancy
+
+obtain_better_sol_heuristica2(Room, Day, AgOpRoomBetter, LAgDoctorsBetter, TFinOp):-
+    get_time(Ti),
+    (obtain_better_sol2(Room, Day); true),
+    retract(better_sol(Day, Room, AgOpRoomBetter, LAgDoctorsBetter, _)), % Recupera os valores de melhor solução
+    calcular_tempo_final_realizado(AgOpRoomBetter, LAgDoctorsBetter, TFinOp), % Calcula o tempo da última cirurgia realizada
+    get_time(Tf),
+    T is Tf - Ti,
+    write('Tempo de geracao da solucao:'), write(T), nl.
+
+calcular_tempo_final_realizado(AgOpRoom, LAgDoctors, TFinOp):-
+  findall(Tfin,
+    (
+      member((_, Tfin, OpCode), AgOpRoom), % Para cada operação na sala
+      member((_, AgendaDoctor), LAgDoctors), % Verifica a agenda de cada doutor
+      member((_, _, OpCode), AgendaDoctor) % Confirma se a operação está na agenda de algum doutor, **ignorando os tempos de inicio e fim**
+    ), ListaFins), % Coleta os tempos finais das cirurgias realizadas
+  (ListaFins = [] -> TFinOp = 0 ; max_list(ListaFins, TFinOp)). % Retorna o maior tempo final ou 0 se não houver cirurgias realizadas.
+
+obtain_better_sol2(Room,Day):-
+    asserta(better_sol(Day,Room,_,_,1441)),
+    findall(OpCode,surgery_id(OpCode,_),LOC),!,
+    permutation(LOC,LOpCode),
+    retractall(agenda_staff1(_,_,_)),
+    retractall(agenda_operation_room1(_,_,_)),
+    retractall(availability(_,_,_)),
+    findall(_,(agenda_staff(D,Day,Agenda),assertz(agenda_staff1(D,Day,Agenda))),_),
+    agenda_operation_room(Room,Day,Agenda),assert(agenda_operation_room1(Room,Day,Agenda)),
+    findall(_,(agenda_staff1(D,Day,L),free_agenda0(L,LFA),adapt_timetable(D,Day,LFA,LFA2),assertz(availability(D,Day,LFA2))),_),
+    availability_all_surgeries(LOpCode,Room,Day),
+    agenda_operation_room1(Room,Day,AgendaR),
+		update_better_sol2(Day,Room,AgendaR,LOpCode),
+		fail.
+
+
+
+update_better_sol2(Day, Room, Agenda, LOpCode):-
+    better_sol(Day, Room, _, _, MelhorPercentagem),
+    calcular_percentagem_maxima(Day, LOpCode, PercentagemMaxima),
+    (PercentagemMaxima < MelhorPercentagem ->
+        retract(better_sol(_, _, _, _, _)),
+        findall(Doctor, assignment_surgery(_, Doctor), LDoctors1),
+        remove_equals(LDoctors1, LDoctors),
+        list_doctors_agenda(Day, LDoctors, LDAgendas),
+        asserta(better_sol(Day, Room, Agenda, LDAgendas, PercentagemMaxima)),
+        write('Melhor solução atualizada: '),nl, write('Percentagem máxima = '), write(PercentagemMaxima), nl
+    ; true).
+
+calcular_percentagem_maxima(Day, LOpCode, PercentagemMaxima):-
+    findall(Percentagem, (member(OpCode, LOpCode), assignment_surgery(OpCode, Medico), calcular_ocupacao(Medico, Day, Percentagem)), ListaPercentagem),
+    max_list(ListaPercentagem, PercentagemMaxima).
+
+calcular_ocupacao(Medico, Dia, Percentagem):-
+    agenda_staff1(Medico, Dia, Agenda),
+    calcular_tempo_ocupado(Agenda, TempoTotalOcupado),
+    timetable(Medico, Dia, (Inicio, Fim)),
+    TempoDisponivel is Fim - Inicio,
+    Percentagem is (TempoTotalOcupado / TempoDisponivel) * 100.
+
+calcular_tempo_ocupado([], 0).
+calcular_tempo_ocupado([(Tin, Tfin, _) | Resto], TempoTotalOcupado):-
+    Duracao is Tfin - Tin,
+    calcular_tempo_ocupado(Resto, TempoResto),
+    TempoTotalOcupado is Duracao + TempoResto.

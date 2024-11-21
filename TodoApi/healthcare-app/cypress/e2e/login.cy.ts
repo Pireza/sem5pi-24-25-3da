@@ -26,9 +26,29 @@ describe('Login page testing', () => {
     cy.get('.close-btn').click();
 
     // sends request expecting success
-    cy.get('#email').clear().type('successs@gmail.com');
+    cy.get('#email').clear().type('success@gmail.com');
     cy.get('#reset-password-button').click();
     cy.get('#popup p').invoke('text').then((message1) => expect(message1).to.equal('Password reset email sent successfully'));
+
+  });
+  // This will test password reset function
+  it('login', () => {
+
+
+    cy.get('#login').click();
+
+
+  // Check if the sidebar is displayed
+  cy.get('.sidebar', { timeout: 10000 }).should('exist');
+
+  // Ensure that the navigation bar adjusts for authenticated state
+  cy.get('.navbar').should('have.class', 'navbar-wide');
+
+  // Check that the sidebar menu items are rendered
+  cy.get('.sidebar-menu li').should('exist').and('have.length.greaterThan', 0);
+
+  // Verify the sidebar header displays the user role
+  cy.get('.sidebar-header').should('contain.text', 'Dashboard');
 
   });
 

@@ -21,7 +21,7 @@
       <label for="pageSize">Page Size:</label>
       <input id="pageSize" type="number" [(ngModel)]="pageSize" name="pageSize" min="1" />
     </div>
-    <button type="submit">Search</button>
+    <button type="submit" id="submit">Search</button>
   </form>
 
   <div *ngIf="searchResults.length > 0; else noResults">
