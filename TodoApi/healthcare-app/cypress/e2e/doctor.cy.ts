@@ -1,6 +1,6 @@
 
 
-describe('Admin page testing', () => {
+describe('Doctor page testing', () => {
 
     beforeEach(() => {
         cy.visit('/auth')
@@ -9,7 +9,7 @@ describe('Admin page testing', () => {
     });
 
     // This will test password reset function
-    it('admin functions', () => {
+    it('doctor functions', () => {
 
 
         cy.get('#burger', { timeout: 1000000 }).should('be.visible').click();
