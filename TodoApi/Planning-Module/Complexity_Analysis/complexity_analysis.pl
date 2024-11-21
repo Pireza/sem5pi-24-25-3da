@@ -66,17 +66,17 @@ surgery(so2,45,60,45).
 surgery(so3,45,90,45).
 surgery(so4,45,75,45).
 
-agenda_staff(d001,20241028,[(720,790,m01),(1080,1140,c01)]).
-agenda_staff(d002,20241028,[(850,900,m02),(901,960,m02),(1380,1440,c02)]).
-agenda_staff(d003,20241028,[(720,790,m01),(910,980,m02)]).
-agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
+agenda_staff(d001,20241028,[]).
+agenda_staff(d002,20241028,[]).
+agenda_staff(d003,20241028,[]).
+agenda_staff(d004,20241028,[]).
 timetable(d001,20241028,(480,1200)).
 timetable(d002,20241028,(500,1440)).
 timetable(d003,20241028,(520,1320)).
 timetable(d004,20241028,(620,1020)).
 
 
-%surgery_id(so100001,so2).
+surgery_id(so100001,so2).
 %surgery_id(so100002,so3).
 %surgery_id(so100003,so4).
 %surgery_id(so100004,so2).
@@ -90,9 +90,9 @@ timetable(d004,20241028,(620,1020)).
 %surgery_id(so100012,so2).
 surgery_id(so100013,so2).
 
-%assignment_surgery(so100001,d001).
-%assignment_surgery(so100001,d002).
-%assignment_surgery(so100001,d003).
+assignment_surgery(so100001,d001).
+assignment_surgery(so100001,d002).
+assignment_surgery(so100001,d003).
 %assignment_surgery(so100002,d001).
 %assignment_surgery(so100002,d002).
 %assignment_surgery(so100002,d003).
@@ -200,168 +200,60 @@ min_max(I,I1,I,I1):- I<I1,!.
 min_max(I,I1,I1,I).
 
 
-% ========================================================
 
-%%
 
 schedule_all_surgeries(Room,Day):-
-    clean_dynamic_data,
-    create_dynamic_data(Day),
-    define_staff_availability,
-    
-    findall(OpCode,surgery_id(OpCode,_),LOpCode),
-    availability_all_surgeries(LOpCode,Room,Day),!.
-
-%%
-
-define_staff_availability() :- findall(_,(agenda_staff1(D,Date,L),free_agenda0(L,LFA),adapt_timetable(D,Date,LFA,LFA2),assertz(availability(D,Date,LFA2))),_).
-
-
-create_dynamic_data(Day) :-
-    findall(_,(agenda_staff(D,Day,Agenda),assertz(agenda_staff1(D,Day,Agenda))),_),
-    agenda_operation_room(Or,Date,Agenda),assert(agenda_operation_room1(Or,Date,Agenda)).
-
-
-clean_dynamic_data():-
     retractall(agenda_staff1(_,_,_)),
     retractall(agenda_operation_room1(_,_,_)),
-    retractall(availability(_,_,_)).
+    retractall(availability(_,_,_)),
+    findall(_,(agenda_staff(D,Day,Agenda),assertz(agenda_staff1(D,Day,Agenda))),_),
+    agenda_operation_room(Or,Date,Agenda),assert(agenda_operation_room1(Or,Date,Agenda)),
+    findall(_,(agenda_staff1(D,Date,L),free_agenda0(L,LFA),adapt_timetable(D,Date,LFA,LFA2),assertz(availability(D,Date,LFA2))),_),
+    findall(OpCode,surgery_id(OpCode,_),LOpCode),
 
-
-% ========================================================
-
-
+    availability_all_surgeries(LOpCode,Room,Day),!.
 
 availability_all_surgeries([],_,_).
 availability_all_surgeries([OpCode|LOpCode],Room,Day):-
-
-    surgery_id(OpCode,OpType) , surgery(OpType, TAnesthesia, TSurgery, TCleaning),
-    availability_operation(OpCode, Room, Day, Interval, LDoctorsSurgery, LStaffAnesthesia, LStaffCleaning),
-    calculate_intervals(Interval, TAnesthesia, TSurgery, TCleaning, MinuteStartAnesthesia, MinuteStartSurgery, MinuteStartCleaning, MinuteEndProcess),
-
-
+    surgery_id(OpCode,OpType),surgery(OpType,_,TSurgery,_),
+    availability_operation(OpCode,Room,Day,LPossibilities,LDoctors),
+    schedule_first_interval(TSurgery,LPossibilities,(TinS,TfinS)),
     retract(agenda_operation_room1(Room,Day,Agenda)),
-    insert_agenda((MinuteStartAnesthesia,MinuteEndProcess,OpCode),Agenda,Agenda1),
+    insert_agenda((TinS,TfinS,OpCode),Agenda,Agenda1),
     assertz(agenda_operation_room1(Room,Day,Agenda1)),
-
-    insert_agenda_staff((MinuteStartSurgery,MinuteStartCleaning,OpCode),Day,LDoctorsSurgery),
-    insert_agenda_staff((MinuteStartAnesthesia,MinuteStartCleaning,OpCode),Day,LStaffAnesthesia),
-    insert_agenda_staff((MinuteStartCleaning, MinuteEndProcess, OpCode), Day, LStaffCleaning),
-
+    insert_agenda_doctors((TinS,TfinS,OpCode),Day,LDoctors),
     availability_all_surgeries(LOpCode,Room,Day).
 
 
 
-% ========================================================
+availability_operation(OpCode,Room,Day,LPossibilities,LDoctors):-surgery_id(OpCode,OpType),surgery(OpType,_,TSurgery,_),
+    findall(Doctor,assignment_surgery(OpCode,Doctor),LDoctors),
+    intersect_all_agendas(LDoctors,Day,LA),
+    agenda_operation_room1(Room,Day,LAgenda),
+    free_agenda0(LAgenda,LFAgRoom),
+    intersect_2_agendas(LA,LFAgRoom,LIntAgDoctorsRoom),
+    remove_unf_intervals(TSurgery,LIntAgDoctorsRoom,LPossibilities).
 
-
-calculate_intervals((Start, End), TAnesthesia, TSurgery, TCleaning, MinuteStartAnesthesia, MinuteStartSurgery, MinuteStartCleaning, MinuteEndProcess) :-
-
-    MinuteStartAnesthesia = Start,
-
-    MinuteStartSurgery is MinuteStartAnesthesia + TAnesthesia,
-    MinuteStartCleaning is MinuteStartSurgery + TSurgery,
-    MinuteEndProcess is MinuteStartCleaning + TCleaning,
-
-    MinuteEndProcess =< End.
-
-
-%%
-availability_operation(OpCode,Room,Day,Interval,LDoctorsSurgery,LStaffAnesthesia, LStaffCleaning):-
-    surgery_id(OpCode, OpType) , surgery(OpType, TAnesthesia, TSurgery, TCleaning),
-    findall(Staff, (assignment_surgery(OpCode, Staff) , staff(Staff,_,surgeon,_)), LDoctorsSurgery),
-    findall(Staff, (assignment_surgery(OpCode, Staff) , staff(Staff,_,anesthesia,_)), LStaffAnesthesia),
-    findall(Staff, (assignment_surgery(OpCode, Staff) , staff(Staff,_,cleaning,_)), LStaffCleaning),
-   
-    intersect_all_agendas(LDoctorsSurgery, Day, LSurgery),
-    intersect_all_agendas(LStaffAnesthesia, Day, LAnesthesia),
-    intersect_all_agendas(LStaffCleaning, Day, LCleaning),
-    
-    agenda_operation_room1(Room, Day, LAgenda),
-    free_agenda0(LAgenda, LFAgRoom),
-
-    find_first_interval(LAnesthesia, LSurgery, LCleaning, LFAgRoom, TAnesthesia, TSurgery, TCleaning, Interval).
-
-%%
-
-
-
-
-find_first_interval(LAnesthesia, LSurgery, LCleaning, LFAgRoom, TAnesthesia, TSurgery, TCleaning, Interval) :-
-    once(find_first0(LAnesthesia, LSurgery, LCleaning, LFAgRoom, TAnesthesia, TSurgery, TCleaning, Interval)).
-
-
-find_first0(LAnesthesia, LSurgery, LCleaning, RoomsAvailable, TAnesthesia, TSurgery, TCleaning, Interval) :-
-    member((RoomStart, RoomEnd), RoomsAvailable),
-
-    TotalTime is TAnesthesia + TSurgery + TCleaning,
-    MaxStart is RoomEnd - TotalTime,
-    between(RoomStart, MaxStart, StartAnesthesia),
-
-    StartAnesthesia + TAnesthesia + TSurgery =< 1400,
-    StartSurgery is StartAnesthesia + TAnesthesia,
-    StartCleaning is StartSurgery + TSurgery,
-
-    member((AnesthesiaStart,AnesthesiaEnd), LAnesthesia),
-    AnesthesiaStart =< StartAnesthesia,
-    AnesthesiaEnd >= (StartAnesthesia + TAnesthesia + TSurgery),
-
-    member((SurgeryStart, SurgeryEnd), LSurgery),
-    SurgeryStart =< StartSurgery,
-    SurgeryEnd >= (StartSurgery + TSurgery),
-
-    member((CleaningStart, CleaningEnd), LCleaning),
-    CleaningStart =< StartCleaning,
-    CleaningEnd >= (StartCleaning + TCleaning),
-
-    RoomStart =< StartAnesthesia,
-    RoomEnd >= (StartAnesthesia + TAnesthesia + TSurgery + TCleaning),
-
-    EndProcess is StartAnesthesia + TAnesthesia + TSurgery + TCleaning,
-
-    Interval = (StartAnesthesia, EndProcess).
-
-%%
-
-% ========================================================
 
 remove_unf_intervals(_,[],[]).
 remove_unf_intervals(TSurgery,[(Tin,Tfin)|LA],[(Tin,Tfin)|LA1]):-DT is Tfin-Tin+1,TSurgery=<DT,!,
     remove_unf_intervals(TSurgery,LA,LA1).
 remove_unf_intervals(TSurgery,[_|LA],LA1):- remove_unf_intervals(TSurgery,LA,LA1).
 
-% ========================================================
-
-
-
-% schedule_first_interval(TSurgery, LPossibilites, (Tin, TfinS))
 
 schedule_first_interval(TSurgery,[(Tin,_)|_],(Tin,TfinS)):-
     TfinS is Tin + TSurgery - 1.
-
-
 
 insert_agenda((TinS,TfinS,OpCode),[],[(TinS,TfinS,OpCode)]).
 insert_agenda((TinS,TfinS,OpCode),[(Tin,Tfin,OpCode1)|LA],[(TinS,TfinS,OpCode),(Tin,Tfin,OpCode1)|LA]):-TfinS<Tin,!.
 insert_agenda((TinS,TfinS,OpCode),[(Tin,Tfin,OpCode1)|LA],[(Tin,Tfin,OpCode1)|LA1]):-insert_agenda((TinS,TfinS,OpCode),LA,LA1).
 
-
-
-% ==========================================================================
-    
-insert_agenda_staff(_,_,[]).
-insert_agenda_staff((TinS,TfinS,OpCode),Day,[Doctor|LDoctors]):-
+insert_agenda_doctors(_,_,[]).
+insert_agenda_doctors((TinS,TfinS,OpCode),Day,[Doctor|LDoctors]):-
     retract(agenda_staff1(Doctor,Day,Agenda)),
     insert_agenda((TinS,TfinS,OpCode),Agenda,Agenda1),
     assert(agenda_staff1(Doctor,Day,Agenda1)),
-    insert_agenda_staff((TinS,TfinS,OpCode),Day,LDoctors).
-
-% ========================================================
-
-
-
-
-
+    insert_agenda_doctors((TinS,TfinS,OpCode),Day,LDoctors).
 
 
 
@@ -392,6 +284,8 @@ obtain_better_sol1(Room,Day):-
 		update_better_sol(Day,Room,AgendaR,LOpCode),
 		fail.
 
+
+
 update_better_sol(Day,Room,Agenda,LOpCode):-
                 better_sol(Day,Room,_,_,FinTime),
                 reverse(Agenda,AgendaR),
@@ -406,6 +300,8 @@ update_better_sol(Day,Room,Agenda,LOpCode):-
                 list_doctors_agenda(Day,LDoctors,LDAgendas),
 		asserta(better_sol(Day,Room,Agenda,LDAgendas,FinTime1)).
 
+
+
 evaluate_final_time([],_,1441).
 evaluate_final_time([(_,Tfin,OpCode)|_],LOpCode,Tfin):-member(OpCode,LOpCode),!.
 evaluate_final_time([_|AgR],LOpCode,Tfin):-evaluate_final_time(AgR,LOpCode,Tfin).
@@ -416,6 +312,11 @@ list_doctors_agenda(Day,[D|LD],[(D,AgD)|LAgD]):-agenda_staff1(D,Day,AgD),list_do
 remove_equals([],[]).
 remove_equals([X|L],L1):-member(X,L),!,remove_equals(L,L1).
 remove_equals([X|L],[X|L1]):-remove_equals(L,L1).
+
+
+
+
+
 
 
 
