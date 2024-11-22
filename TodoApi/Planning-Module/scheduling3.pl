@@ -253,7 +253,7 @@ find_first0(LAnesthesia, LSurgery, LCleaning, RoomsAvailable, TAnesthesia, TSurg
     MaxStart is RoomEnd - TotalTime,
     between(RoomStart, MaxStart, StartAnesthesia),
 
-    StartAnesthesia + TAnesthesia + TSurgery =< 1400,
+    StartAnesthesia + TAnesthesia + TSurgery + TCleaning =< 1400,
     StartSurgery is StartAnesthesia + TAnesthesia,
     StartCleaning is StartSurgery + TSurgery,
 
