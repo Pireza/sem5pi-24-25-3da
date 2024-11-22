@@ -23,6 +23,10 @@ export class DoctorUiComponent implements OnInit {
   redirectToFilterRequests(): void {
     this.router.navigate(['/filter-requests']);
   }
+
+  redirectToCreateOperationRequests(): void {
+    this.router.navigate(['/create-operation-doctor']);
+  }
   redirectToUpdateOperationRequests(): void {
     this.router.navigate(['/update-operation-request']);
     }

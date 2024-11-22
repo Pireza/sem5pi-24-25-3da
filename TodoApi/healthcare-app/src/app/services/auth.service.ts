@@ -13,6 +13,7 @@ import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
 import { map } from 'rxjs/operators';
+import { CreateOperationRequest } from '../Models/CreateOperationRequest';
 
 
 // Update the DecodedToken interface to include the roles property
@@ -52,6 +53,7 @@ export class AuthService {
   public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search';
   public getAllTypesNamesEP = 'http://localhost:5174/api/Operation/type-names';
   public getAllSpecsNamesEP = 'http://localhost:5174/api/Specialization/names';
+  public createOperationRequestUrl = 'http://localhost:5174/api/OperationRequests/CreateOperationRequest'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -239,6 +241,28 @@ export class AuthService {
 
     return this.http.post(this.createPatientProfileAsAdmin, patientData, { headers });
   }
+  
+  createOperationRequestAsDoctor(request: {
+    patientId: number;
+    operationTypeId: number;
+    priorityId: number;
+    deadline: string; // Ensure date format validation if needed
+  }): Observable<string> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json',
+    });
+  
+    // Adjusting responseType to 'text' for plain text responses from the backend
+    return this.http.post<string>(this.createOperationRequestUrl, request, {
+      headers,
+      responseType: 'text' as 'json', // Expecting a plain text response
+    });
+  }
+  
+
+
+
   updateOperationRequestAsDoctor(
     id: number,
     operationPriorityId?: number,

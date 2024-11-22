@@ -24,7 +24,7 @@ import { RemoveOperationTypeAdminComponent } from './components/remove-operation
 import { DeletePatientProfileAdminComponent } from './components/delete-patient-profile-admin/delete-patient-profile-admin.component';
 import { DeactivateStaffProfileAdminComponent } from './components/deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
 import { SearchStaffProfileAdminComponent} from './components/filter-staff-admin/filter-staff-admin.component';
-
+import { CreateOperationDoctorComponent} from './components/create-operation-doctor/create-operation-doctor.component'
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -53,7 +53,7 @@ export const routes: Routes = [
   {path: 'delete-patient-profile-admin', component: DeletePatientProfileAdminComponent},
   {path: 'deactivate-staff-profile-admin', component: DeactivateStaffProfileAdminComponent},
   {path: 'filter-staff-admin', component: SearchStaffProfileAdminComponent},
-
+  {path: 'create-operation-doctor', component: CreateOperationDoctorComponent},
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
 ];
