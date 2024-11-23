@@ -392,3 +392,60 @@ calcular_tempo_ocupado([(Tin, Tfin, _) | Resto], TempoTotalOcupado):-
     Duracao is Tfin - Tin,
     calcular_tempo_ocupado(Resto, TempoResto),
     TempoTotalOcupado is Duracao + TempoResto.
+
+
+obtain_better_sol_heuristica1(Room, Day, AgOpRoomBetter, LAgDoctorsBetter, TFinOp):-
+    get_time(Ti),
+    (obtain_better_sol1_heuristica1(Room, Day); true),
+    retract(better_sol(Day, Room, AgOpRoomBetter, LAgDoctorsBetter, TFinOp)),
+    write('Final Result: AgOpRoomBetter='), write(AgOpRoomBetter), nl,
+    write('LAgDoctorsBetter='), write(LAgDoctorsBetter), nl,
+    write('TFinOp='), write(TFinOp), nl,
+    get_time(Tf),
+    T is Tf - Ti,
+    write('Tempo de geracao da solucao:'), write(T), nl.
+
+obtain_better_sol1_heuristica1(Room, Day):-
+    asserta(better_sol(Day, Room, _, _, 1441)),
+    findall(OpCode, surgery_id(OpCode, _), LOC), !,
+    ordenar_cirurgias_por_disponibilidade(LOC, Day, LOpCode), % Ordenar cirurgias pela disponibilidade do medico
+    retractall(agenda_staff1(_, _, _)),
+    retractall(agenda_operation_room1(_, _, _)),
+    retractall(availability(_, _, _)),
+    findall(_, (agenda_staff(D, Day, Agenda), assertz(agenda_staff1(D, Day, Agenda))), _),
+    agenda_operation_room(Room, Day, Agenda), assert(agenda_operation_room1(Room, Day, Agenda)),
+    findall(_, (agenda_staff1(D, Day, L), free_agenda0(L, LFA), adapt_timetable(D, Day, LFA, LFA2), assertz(availability(D, Day, LFA2))), _),
+    availability_all_surgeries(LOpCode, Room, Day),
+    agenda_operation_room1(Room, Day, AgendaR),
+    update_better_sol(Day, Room, AgendaR, LOpCode),
+    fail.
+
+
+ordenar_cirurgias_por_disponibilidade(LOpCode, Day, LOpCodeOrdenada):-
+    findall((TempoDisponivel, OpCode),
+            (
+                member(OpCode, LOpCode),
+                findall(TempoDisponivelMedico,
+                        (
+                            assignment_surgery(OpCode, Medico),
+                            calcular_disponibilidade_inicial(Medico, Day, TempoDisponivelMedico)
+                        ), 
+                        ListaTemposDisponiveis),
+                min_list(ListaTemposDisponiveis, TempoDisponivel)
+            ),
+            ListaOpCodesComDisponibilidade),
+    sort(ListaOpCodesComDisponibilidade, ListaOpCodesComDisponibilidadeOrdenada),
+    findall(OpCode, member((_, OpCode), ListaOpCodesComDisponibilidadeOrdenada), LOpCodeOrdenada).
+
+calcular_disponibilidade_inicial(Medico, Dia, TempoDisponivel):-
+    timetable(Medico, Dia, (Inicio, _)),
+    agenda_staff(Medico, Dia, Agenda),
+    calcular_primeiro_horario_disponivel(Agenda, Inicio, TempoDisponivel).
+
+calcular_primeiro_horario_disponivel([], Inicio, Inicio).
+calcular_primeiro_horario_disponivel([(InicioCompromisso, _, _) | _], Inicio, TempoDisponivel):-
+    InicioCompromisso > Inicio,
+    TempoDisponivel is Inicio.
+calcular_primeiro_horario_disponivel([(_, FimCompromisso, _) | Resto], Inicio, TempoDisponivel):-
+    FimCompromisso < Inicio,
+    calcular_primeiro_horario_disponivel(Resto, Inicio, TempoDisponivel).
