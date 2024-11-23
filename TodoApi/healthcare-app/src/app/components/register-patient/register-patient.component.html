@@ -58,7 +58,7 @@
         <button type="button" (click)="addCondition()">Add</button>
       </div>
       <ul>
-        <li *ngFor="let condition of patient.medicalConditions; let i = index">
+        <li *ngFor="let condition of patient.medicalConditions; let i = index" id="listConditions">
           {{ condition }}
           <button type="button" (click)="removeCondition(i)">Remove</button>
         </li>
