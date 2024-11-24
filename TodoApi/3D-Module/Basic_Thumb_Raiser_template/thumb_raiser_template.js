@@ -136,6 +136,9 @@ import UserInterface from "./user_interface_template.js";
  * }
  */
 
+
+
+
 export default class ThumbRaiser {
     constructor(generalParameters, mazeParameters,
         lightsParameters, fogParameters, fixedViewCameraParameters,
@@ -151,6 +154,13 @@ export default class ThumbRaiser {
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
 
+
+        this.movementKeys = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false,
+        };
         // Create a 2D scene (the viewports frames)
         this.scene2D = new THREE.Scene();
 
@@ -398,24 +408,30 @@ export default class ThumbRaiser {
             if (event.code == "Space" || event.code == "ArrowLeft" || event.code == "ArrowRight" || event.code == "ArrowDown" || event.code == "ArrowUp") {
                 event.preventDefault();
             }
-            
-        }
-    }
 
-   mouseDown(event) {
-    if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
-        this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
-        const cameraView = this.getPointedViewport(this.mousePosition);
-        if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
-            const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
-            this.view.options.selectedIndex = cameraIndex;
-            this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
-            if (event.buttons == 2) { // Only allow secondary button for orientation
-                this.changeCameraOrientation = true;
+            switch (event.code) {
+                case "KeyW": this.movementKeys.forward = state; break;
+                case "KeyS": this.movementKeys.backward = state; break;
+                case "KeyA": this.movementKeys.left = state; break;
+                case "KeyD": this.movementKeys.right = state; break;
             }
         }
     }
-}
+
+    mouseDown(event) {
+        if (event.buttons == 1 || event.buttons == 2) { // Primary or secondary button down
+            this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
+            const cameraView = this.getPointedViewport(this.mousePosition);
+            if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
+                const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
+                this.view.options.selectedIndex = cameraIndex;
+                this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
+                if (event.buttons == 2) { // Only allow secondary button for orientation
+                    this.changeCameraOrientation = true;
+                }
+            }
+        }
+    }
 
 
     mouseMove(event) {
@@ -553,9 +569,34 @@ export default class ThumbRaiser {
         }
         else {
             // Update the model animations
-            const deltaT = this.clock.getDelta();
+            const deltaT = this.clock.getDelta(); // Time elapsed since the last frame
 
+            // Movement speed
+            const speed = 5 * deltaT;
 
+            // Calculate direction vectors
+            const forward = new THREE.Vector3();
+            const right = new THREE.Vector3();
+
+            // Get the camera's forward direction
+            this.activeViewCamera.object.getWorldDirection(forward);
+
+            // Calculate the right direction (perpendicular to forward and up)
+            right.crossVectors(forward, this.activeViewCamera.object.up).normalize();
+
+            // Update the camera's position based on key states
+            if (this.movementKeys.forward) {
+                this.activeViewCamera.object.position.add(forward.multiplyScalar(speed));
+            }
+            if (this.movementKeys.backward) {
+                this.activeViewCamera.object.position.add(forward.multiplyScalar(-speed));
+            }
+            if (this.movementKeys.left) {
+                this.activeViewCamera.object.position.add(right.multiplyScalar(-speed));
+            }
+            if (this.movementKeys.right) {
+                this.activeViewCamera.object.position.add(right.multiplyScalar(speed));
+            }
 
 
             // Update statistics

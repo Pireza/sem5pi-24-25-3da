@@ -8,32 +8,58 @@
     "rooms": [
         {
             "name": "or1",
-            "width": 3,
-            "length": 3,
-            "x": 0,
-            "y": 0,
+            "width": 5,
+            "length": 5,
+            "x": -5,
+            "y": 6,
+            "bedDirection": "east",
+            "door": "right"
+        },
+        {
+            "name": "or2",
+            "width": 5,
+            "length": 5,
+            "x": -5,
+            "y": -1.0,
+            "bedDirection": "east",
+            "door": "right"
+        },
+        {
+            "name": "or3",
+            "width": 5,
+            "length": 5,
+            "x": -5,
+            "y": -8.0,
+            "bedDirection": "east",
+            "door": "right"
+        },
+        {
+            "name": "or4",
+            "width": 5,
+            "length": 5,
+            "x": 5,
+            "y": 6,
             "bedDirection": "east",
             "door": "left"
         },
         {
-            "name" : "or2",
-            "width": 3,
-            "length": 3,
-            "x": 3,
-            "y": 3,
-            "bedDirection": "west",
-            "door": "right"
+            "name": "or5",
+            "width": 5,
+            "length": 5,
+            "x": 5,
+            "y": -1.0,
+            "bedDirection": "east",
+            "door": "left"
         },
         {
-            "name" : "or3",
-            "width": 3,
-            "length": 3,
-            "x": -3.0,
-            "y": 3.0,
-            "bedX" : 0.5,
-            "bedY" : 0.0,
-            "bedDirection": "north",
-            "door": "front"
+            "name": "or6",
+            "width": 5,
+            "length": 5,
+            "x": 5,
+            "y": -8,
+            "bedDirection": "east",
+            "door": "left"
         }
+        
     ]
 }
