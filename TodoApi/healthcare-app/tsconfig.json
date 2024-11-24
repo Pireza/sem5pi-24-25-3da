@@ -24,7 +24,8 @@
       "ES2022",
       "dom"
     ]
-  },
+  }, "include": ["src", "cypress"],
+  "exclude": ["cypress"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

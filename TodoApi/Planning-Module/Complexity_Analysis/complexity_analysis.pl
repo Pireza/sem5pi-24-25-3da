@@ -10,19 +10,26 @@
 %%
 % For the Complexity Study
 
-%agenda_staff(d001,20241028,[(720,790,m01),(1080,1140,c01)]).
-%agenda_staff(d002,20241028,[(850,900,m02),(901,960,m02),(1380,1440,c02)]).
-%agenda_staff(d003,20241028,[(720,790,m01),(910,980,m02)]).
-%agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
+staff(d001,doctor,orthopaedist,[so2,so3,so4]).
+staff(d002,doctor,orthopaedist,[so2,so3,so4]).
+staff(d003,doctor,orthopaedist,[so2,so3,so4]).
+surgery(so2,45,60,45).
+surgery(so3,45,90,45).
+surgery(so4,45,75,45).
 
-%timetable(d001,20241028,(480,1200)).
-%timetable(d002,20241028,(500,1440)).
-%timetable(d003,20241028,(520,1320)).
+agenda_staff(d001,20241028,[(720,790,m01),(1080,1140,c01)]).
+agenda_staff(d002,20241028,[(850,900,m02),(901,960,m02),(1380,1440,c02)]).
+agenda_staff(d003,20241028,[(720,790,m01),(910,980,m02)]).
+%agenda_staff(d004,20241028,[(850,900,m02),(940,980,c04)]).
+timetable(d001,20241028,(480,1200)).
+timetable(d002,20241028,(500,1440)).
+timetable(d003,20241028,(520,1320)).
 %timetable(d004,20241028,(620,1020)).
 
-%surgery_id(so100001,so2).
-%surgery_id(so100002,so3).
-%surgery_id(so100003,so4).
+
+surgery_id(so100001,so2).
+surgery_id(so100002,so3).
+surgery_id(so100003,so4).
 %surgery_id(so100004,so2).
 %surgery_id(so100005,so4).
 %surgery_id(so100006,so2).
@@ -34,9 +41,9 @@
 %surgery_id(so100012,so2).
 %surgery_id(so100013,so2).
 
-%assignment_surgery(so100001,d001).
-%assignment_surgery(so100002,d002).
-%assignment_surgery(so100003,d003).
+assignment_surgery(so100001,d001).
+assignment_surgery(so100002,d002).
+assignment_surgery(so100003,d003).
 %assignment_surgery(so100004,d001).
 %assignment_surgery(so100004,d002).
 %assignment_surgery(so100005,d002).
@@ -53,30 +60,33 @@
 %assignment_surgery(so100013,d004).
 
 
+agenda_operation_room(or1,20241028,[(750, 780, mnt0001),(1080, 1110, mnt0002)]).
+
+
 %%
 
 % Other data
 
-staff(d001,doctor,anesthesia,[so2,so3,so4]).
-staff(d002,doctor,cleaning,[so2,so3,so4]).
-staff(d003,doctor,surgeon,[so2,so3,so4]).
-staff(d004,doctor,surgeon,[so2,so3,so4]).
+%staff(d001,doctor,anesthesia,[so2,so3,so4]).
+%staff(d002,doctor,cleaning,[so2,so3,so4]).
+%staff(d003,doctor,surgeon,[so2,so3,so4]).
+%staff(d004,doctor,surgeon,[so2,so3,so4]).
 
-surgery(so2,45,60,45).
-surgery(so3,45,90,45).
-surgery(so4,45,75,45).
+%surgery(so2,45,60,45).
+%surgery(so3,45,90,45).
+%surgery(so4,45,75,45).
 
-agenda_staff(d001,20241028,[]).
-agenda_staff(d002,20241028,[]).
-agenda_staff(d003,20241028,[]).
-agenda_staff(d004,20241028,[]).
-timetable(d001,20241028,(480,1200)).
-timetable(d002,20241028,(500,1440)).
-timetable(d003,20241028,(520,1320)).
-timetable(d004,20241028,(620,1020)).
+%agenda_staff(d001,20241028,[]).
+%agenda_staff(d002,20241028,[]).
+%agenda_staff(d003,20241028,[]).
+%agenda_staff(d004,20241028,[]).
+%timetable(d001,20241028,(480,1200)).
+%timetable(d002,20241028,(500,1440)).
+%timetable(d003,20241028,(520,1320)).
+%timetable(d004,20241028,(620,1020)).
 
 
-surgery_id(so100001,so2).
+%surgery_id(so100001,so2).
 %surgery_id(so100002,so3).
 %surgery_id(so100003,so4).
 %surgery_id(so100004,so2).
@@ -88,11 +98,11 @@ surgery_id(so100001,so2).
 %surgery_id(so100010,so2).
 %surgery_id(so100011,so4).
 %surgery_id(so100012,so2).
-surgery_id(so100013,so2).
+%surgery_id(so100013,so2).
 
-assignment_surgery(so100001,d001).
-assignment_surgery(so100001,d002).
-assignment_surgery(so100001,d003).
+%assignment_surgery(so100001,d001).
+%assignment_surgery(so100001,d002).
+%assignment_surgery(so100001,d003).
 %assignment_surgery(so100002,d001).
 %assignment_surgery(so100002,d002).
 %assignment_surgery(so100002,d003).
@@ -128,15 +138,16 @@ assignment_surgery(so100001,d003).
 %assignment_surgery(so100012,d001).
 %assignment_surgery(so100012,d002).
 %assignment_surgery(so100012,d003).
-assignment_surgery(so100013,d001).
-assignment_surgery(so100013,d002).
-assignment_surgery(so100013,d003).
-assignment_surgery(so100013,d004).
+%assignment_surgery(so100013,d001).
+%assignment_surgery(so100013,d002).
+%assignment_surgery(so100013,d003).
+%assignment_surgery(so100013,d004).
 
 
 
-agenda_operation_room(or1,20241028,[(750, 780, mnt0001),(1080, 1110, mnt0002)]).
+%agenda_operation_room(or1,20241028,[(750, 780, mnt0001),(1080, 1110, mnt0002)]).
 
+%%
 
 free_agenda0([],[(0,1440)]).
 free_agenda0([(0,Tfin,_)|LT],LT1):-!,free_agenda1([(0,Tfin,_)|LT],LT1).
@@ -392,3 +403,60 @@ calcular_tempo_ocupado([(Tin, Tfin, _) | Resto], TempoTotalOcupado):-
     Duracao is Tfin - Tin,
     calcular_tempo_ocupado(Resto, TempoResto),
     TempoTotalOcupado is Duracao + TempoResto.
+
+
+obtain_better_sol_heuristica1(Room, Day, AgOpRoomBetter, LAgDoctorsBetter, TFinOp):-
+    get_time(Ti),
+    (obtain_better_sol1_heuristica1(Room, Day); true),
+    retract(better_sol(Day, Room, AgOpRoomBetter, LAgDoctorsBetter, TFinOp)),
+    write('Final Result: AgOpRoomBetter='), write(AgOpRoomBetter), nl,
+    write('LAgDoctorsBetter='), write(LAgDoctorsBetter), nl,
+    write('TFinOp='), write(TFinOp), nl,
+    get_time(Tf),
+    T is Tf - Ti,
+    write('Tempo de geracao da solucao:'), write(T), nl.
+
+obtain_better_sol1_heuristica1(Room, Day):-
+    asserta(better_sol(Day, Room, _, _, 1441)),
+    findall(OpCode, surgery_id(OpCode, _), LOC), !,
+    ordenar_cirurgias_por_disponibilidade(LOC, Day, LOpCode), % Ordenar cirurgias pela disponibilidade do medico
+    retractall(agenda_staff1(_, _, _)),
+    retractall(agenda_operation_room1(_, _, _)),
+    retractall(availability(_, _, _)),
+    findall(_, (agenda_staff(D, Day, Agenda), assertz(agenda_staff1(D, Day, Agenda))), _),
+    agenda_operation_room(Room, Day, Agenda), assert(agenda_operation_room1(Room, Day, Agenda)),
+    findall(_, (agenda_staff1(D, Day, L), free_agenda0(L, LFA), adapt_timetable(D, Day, LFA, LFA2), assertz(availability(D, Day, LFA2))), _),
+    availability_all_surgeries(LOpCode, Room, Day),
+    agenda_operation_room1(Room, Day, AgendaR),
+    update_better_sol(Day, Room, AgendaR, LOpCode),
+    fail.
+
+
+ordenar_cirurgias_por_disponibilidade(LOpCode, Day, LOpCodeOrdenada):-
+    findall((TempoDisponivel, OpCode),
+            (
+                member(OpCode, LOpCode),
+                findall(TempoDisponivelMedico,
+                        (
+                            assignment_surgery(OpCode, Medico),
+                            calcular_disponibilidade_inicial(Medico, Day, TempoDisponivelMedico)
+                        ), 
+                        ListaTemposDisponiveis),
+                min_list(ListaTemposDisponiveis, TempoDisponivel)
+            ),
+            ListaOpCodesComDisponibilidade),
+    sort(ListaOpCodesComDisponibilidade, ListaOpCodesComDisponibilidadeOrdenada),
+    findall(OpCode, member((_, OpCode), ListaOpCodesComDisponibilidadeOrdenada), LOpCodeOrdenada).
+
+calcular_disponibilidade_inicial(Medico, Dia, TempoDisponivel):-
+    timetable(Medico, Dia, (Inicio, _)),
+    agenda_staff(Medico, Dia, Agenda),
+    calcular_primeiro_horario_disponivel(Agenda, Inicio, TempoDisponivel).
+
+calcular_primeiro_horario_disponivel([], Inicio, Inicio).
+calcular_primeiro_horario_disponivel([(InicioCompromisso, _, _) | _], Inicio, TempoDisponivel):-
+    InicioCompromisso > Inicio,
+    TempoDisponivel is Inicio.
+calcular_primeiro_horario_disponivel([(_, FimCompromisso, _) | Resto], Inicio, TempoDisponivel):-
+    FimCompromisso < Inicio,
+    calcular_primeiro_horario_disponivel(Resto, Inicio, TempoDisponivel).

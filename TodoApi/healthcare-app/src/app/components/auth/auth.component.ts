@@ -20,7 +20,7 @@ import { RemoveOperationTypeAdminComponent } from '../remove-operation-type-admi
 import { DeactivateStaffProfileAdminComponent } from '../deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
 import { SearchStaffProfileAdminComponent } from '../filter-staff-admin/filter-staff-admin.component';
 import { CreateOperationDoctorComponent} from '../create-operation-doctor/create-operation-doctor.component';
-
+import { UpdateOperationTypeComponent} from '../update-operation-type/update-operation-type.component';
 
 
 import { CommonModule } from '@angular/common';
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent] 
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent] 
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -143,6 +143,8 @@ export class AuthComponent {
       this.activeComponent = CreateOperationDoctorComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
+    } else if (action === 'Update Operation Type') {
+      this.activeComponent = UpdateOperationTypeComponent;
     } else if (action === 'Update Profile') {
       this.activeComponent = UpdateProfileComponent;
     } else if (action === 'Search Staff Profile') {
@@ -183,7 +185,7 @@ export class AuthComponent {
     } else if (menuItem === 'Manage Staff') {
       return ['Search Staff Profile', 'Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile' , 'Deactivate Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
-      return ['Add New Operation Type', 'Search Operation Types', 'Delete Operation Type'];
+      return ['Add New Operation Type', 'Edit Operation Types', 'Search Operation Types', 'Delete Operation Type'];
     } else if (menuItem === 'Manage Operation Requests') {
       return ['Search Operation Requests','Create Operation Request', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {

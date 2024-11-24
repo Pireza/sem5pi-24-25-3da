@@ -54,6 +54,7 @@ export class AuthService {
   public getAllTypesNamesEP = 'http://localhost:5174/api/Operation/type-names';
   public getAllSpecsNamesEP = 'http://localhost:5174/api/Specialization/names';
   public createOperationRequestUrl = 'http://localhost:5174/api/OperationRequests/CreateOperationRequest'
+  public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -209,6 +210,25 @@ export class AuthService {
     const requestUrl = `${this.updateProfileAsPatientUrl}/${encodeURIComponent(email)}?${params.toString()}`;
     return this.http.put<void>(requestUrl, {}, { headers });
   }
+
+  updateOperationType(id: number, name?: string, duration?: string): Observable<void> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Ensure accessToken is properly managed
+      'Content-Type': 'application/json', // Explicitly set content type
+    });
+  
+    // Construct query parameters dynamically
+    const params = new URLSearchParams();
+    if (name) params.append('name', name);
+    if (duration) params.append('duration', duration);
+  
+    const requestUrl = `${this.updateOperationTypeUrl}/${encodeURIComponent(id)}?${params.toString()}`;
+    
+    return this.http.put<void>(requestUrl, {}, { headers });
+  }
+  
+
+  
   searchPatientProfiles(
     name?: string,
     email?: string,

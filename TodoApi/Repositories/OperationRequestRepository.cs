@@ -417,29 +417,14 @@ public class OperationRequestRepository
             throw new NotFoundResource("Invalid specialized staff ID");
     }
 
-    public async Task UpdateTypeAsync(OperationType existingType, IEnumerable<long> newStaffIds)
+    public async Task UpdateTypeAsync(OperationType existingType)
     {
-        // Update the basic fields of OperationType
+        // Marca o tipo de operação como modificado
         _context.Types.Update(existingType);
 
-        // Remove old staff associations
-        var existingAssociations = _context.Type_Staff
-            .Where(ts => ts.OperationTypeId == existingType.Id);
-        _context.Type_Staff.RemoveRange(existingAssociations);
-
-        // Add new staff associations
-        foreach (long staffId in newStaffIds)
-        {
-            var newAssociation = new OperationType_Staff
-            {
-                OperationTypeId = existingType.Id,
-                SpecializedStaffId = staffId
-            };
-            _context.Type_Staff.Add(newAssociation);
-        }
-
-        // Save all changes in a single transaction
+        // Salva as alterações no contexto
         await _context.SaveChangesAsync();
     }
+
 
 }

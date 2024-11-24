@@ -21,7 +21,7 @@
 
         <!-- Buttons shown only if not authenticated -->
         <div class="nav-buttons" *ngIf="!isAuthenticated">
-            <button (click)="onCreateAccountClient()" class="styled-button">Create Account</button>
+            <button (click)="onCreateAccountClient()" class="styled-button" id="createAccount">Create Account</button>
             <button (click)="onAuthenticate()" class="styled-button" id="login">Login</button>
             <div class="clickable-text" id="forgot-password" (click)="onPasswordReset()">Forgot Password?</div>
         </div>

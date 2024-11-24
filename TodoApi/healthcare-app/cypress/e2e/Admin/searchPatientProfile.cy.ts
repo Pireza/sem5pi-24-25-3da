@@ -21,6 +21,22 @@ describe('Admin page testing', () => {
         cy.get('#submit').click();
         
     });
+    it('admin can navigate to the next and previous pages of search results', () => {
+        cy.get('#burger', { timeout: 10000 }).should('be.visible').click();
+        cy.contains('.sidebar-menu li', 'Manage Patients').click();
+        cy.contains('.sidebar-menu li', 'Search Patients').click();
+    
+        cy.get('#submit').click();
+    
+        // Navigate to the next page
+        cy.get('button#nextPage').should('be.visible').click();
+ 
+    
+        // Navigate back to the previous page
+        cy.get('button#previousPage').should('be.visible');
+     
+    });
+    
     it('admin can search for a patient by name', () => {
         cy.get('#burger', { timeout: 10000 }).should('be.visible').click();
         cy.contains('.sidebar-menu li', 'Manage Patients').click();
@@ -66,5 +82,19 @@ describe('Admin page testing', () => {
 
         cy.contains('Search Results:').should('be.visible');
     });
-
+    it('admin can search using multiple criteria', () => {
+        cy.get('#burger', { timeout: 10000 }).should('be.visible').click();
+        cy.contains('.sidebar-menu li', 'Manage Patients').click();
+        cy.contains('.sidebar-menu li', 'Search Patients').click();
+    
+        cy.get('input#name').clear().type('gabriel');
+        cy.get('input#email').clear().type('gabrielpedromonteiro@gmail.com');
+        cy.get('#submit').click();
+    
+        cy.contains('Search Results:').should('be.visible');
+        cy.contains('gabriel').should('be.visible');
+        cy.contains('gabrielpedromonteiro@gmail.com').should('be.visible');
+    });
+   
+        
 })

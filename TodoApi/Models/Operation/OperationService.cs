@@ -98,34 +98,28 @@ public class OperationService
     }
 
     public async Task UpdateTypeAsync(long id, OperationTypeDTO typeDTO)
-{
-    // Retrieve the existing OperationType from the repository
+    {
+    // Recupera o tipo de operação existente pelo ID
     var existingType = await _repo.GetTypeByIdAsync(id);
     if (existingType == null)
     {
-        throw new NotFoundResource("Operation type not found");
+        throw new NotFoundResource("Tipo de operação não encontrado.");
     }
 
-    // Validate the duration format
+    // Valida o formato da duração
     if (!ValidDuration(typeDTO.Duration))
     {
-        throw new FormatException();
+        throw new FormatException("Duração inválida.");
     }
 
-    // Validate each SpecializedStaff ID
-    foreach (long staffId in typeDTO.Staff)
-    {
-        await _repo.checkStaffIdAsync(staffId); // throws NotFoundResource if invalid
-    }
-
-    // Update fields in the existing entity
+    // Atualiza os campos editáveis: Nome e Duração
     existingType.Name = typeDTO.Name;
     existingType.Duration = typeDTO.Duration;
-    
 
-    // Update the entity and associated staff in the repository
-    await _repo.UpdateTypeAsync(existingType, typeDTO.Staff);
+    // Atualiza no repositório
+    await _repo.UpdateTypeAsync(existingType);
 }
+
 
 // Helper method to validate duration format
 private bool ValidDuration(string duration)
