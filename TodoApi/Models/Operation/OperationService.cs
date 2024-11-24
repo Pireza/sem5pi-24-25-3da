@@ -100,7 +100,7 @@ public class OperationService
     public async Task UpdateTypeAsync(long id, OperationTypeDTO typeDTO)
     {
     // Recupera o tipo de operação existente pelo ID
-    var existingType = await _repo.GetTypeByIdAsync(id);
+    var existingType = await _repo.GetTypeById(id);
     if (existingType == null)
     {
         throw new NotFoundResource("Tipo de operação não encontrado.");

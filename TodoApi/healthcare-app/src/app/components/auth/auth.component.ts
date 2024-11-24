@@ -143,7 +143,7 @@ export class AuthComponent {
       this.activeComponent = CreateOperationDoctorComponent;
     } else if (action === 'Update Operation Request') {
       this.activeComponent = UpdateOperationRequestComponent;
-    } else if (action === 'Update Operation Type') {
+    } else if (action === 'Edit Operation Type') {
       this.activeComponent = UpdateOperationTypeComponent;
     } else if (action === 'Update Profile') {
       this.activeComponent = UpdateProfileComponent;
@@ -185,7 +185,7 @@ export class AuthComponent {
     } else if (menuItem === 'Manage Staff') {
       return ['Search Staff Profile', 'Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile' , 'Deactivate Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
-      return ['Add New Operation Type', 'Edit Operation Types', 'Search Operation Types', 'Delete Operation Type'];
+      return ['Add New Operation Type', 'Edit Operation Type', 'Search Operation Types', 'Delete Operation Type'];
     } else if (menuItem === 'Manage Operation Requests') {
       return ['Search Operation Requests','Create Operation Request', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {

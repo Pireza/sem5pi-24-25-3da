@@ -1,30 +1,36 @@
 <div class="form-container">
+  <h2>Update Operation Type</h2>
   <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="id">Operation Type ID</label>
-      <input id="id" type="text" formControlName="id" />
+      <input id="id" type="text" formControlName="id" placeholder="Enter Operation Type ID" />
       <div *ngIf="updateForm.get('id')?.invalid && updateForm.get('id')?.touched">
-        <small class="error">ID is required.</small>
+        <small class="text-danger">ID is required.</small>
       </div>
     </div>
 
     <div class="form-group">
       <label for="name">Operation Name</label>
-      <input id="name" type="text" formControlName="name" />
+      <input id="name" type="text" formControlName="name" placeholder="Enter Operation Name" />
       <div *ngIf="updateForm.get('name')?.invalid && updateForm.get('name')?.touched">
-        <small class="error">Name is required and must be under 100 characters.</small>
+        <small class="text-danger">Name is required and must be under 100 characters.</small>
       </div>
     </div>
 
     <div class="form-group">
       <label for="duration">Estimated Duration (HH:mm:ss)</label>
-      <input id="duration" type="text" formControlName="duration" />
+      <input id="duration" type="text" formControlName="duration" placeholder="Enter Duration (HH:mm:ss)" />
       <div *ngIf="updateForm.get('duration')?.errors?.['invalidDuration'] && updateForm.get('duration')?.touched">
-        <small class="error">Invalid duration format. Please use HH:mm:ss.</small>
+        <small class="text-danger">Invalid duration format. Please use HH:mm:ss.</small>
       </div>
     </div>
 
-    <button type="submit" [disabled]="updateForm.invalid || isLoading">Update</button>
+    <div class="form-group">
+      <label for="staff">Staff IDs (comma-separated)</label>
+      <input id="staff" type="text" formControlName="staff" placeholder="Enter Staff IDs (e.g., 1,2,3)" />
+    </div>
+
+    <button type="submit" [disabled]="updateForm.invalid || isLoading" class="btn">Update</button>
     <div *ngIf="message" class="message" [ngClass]="messageType">
       {{ message }}
     </div>

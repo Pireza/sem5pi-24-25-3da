@@ -13,7 +13,7 @@ import {Staff} from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
 import { map } from 'rxjs/operators';
-import { CreateOperationRequest } from '../Models/CreateOperationRequest';
+import { UpdateOperationType } from '../Models/UpdateOperationType';
 
 
 // Update the DecodedToken interface to include the roles property
@@ -211,22 +211,17 @@ export class AuthService {
     return this.http.put<void>(requestUrl, {}, { headers });
   }
 
-  updateOperationType(id: number, name?: string, duration?: string): Observable<void> {
+  updateOperationType(operation: Partial<OperationType>): Observable<void> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.accessToken}`, // Ensure accessToken is properly managed
-      'Content-Type': 'application/json', // Explicitly set content type
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json',
     });
-  
-    // Construct query parameters dynamically
-    const params = new URLSearchParams();
-    if (name) params.append('name', name);
-    if (duration) params.append('duration', duration);
-  
-    const requestUrl = `${this.updateOperationTypeUrl}/${encodeURIComponent(id)}?${params.toString()}`;
-    
-    return this.http.put<void>(requestUrl, {}, { headers });
-  }
-  
+
+    // Build URL dynamically
+    const requestUrl = `${this.updateOperationTypeUrl}/${operation.id}`;
+
+    return this.http.put<void>(requestUrl, operation, { headers });
+  }  
 
   
   searchPatientProfiles(

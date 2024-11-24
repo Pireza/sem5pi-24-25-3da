@@ -1,50 +1,58 @@
+// components/update-operation-type/update-operation-type.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { UpdateOperationType } from '../../Models/UpdateOperationType';
 
 @Component({
   selector: 'app-update-operation-type',
   templateUrl: './update-operation-type.component.html',
   styleUrls: ['./update-operation-type.component.css'],
   standalone: true,
-  imports: [
-    CommonModule,        // For structural directives like *ngIf, *ngFor, and ngClass
-    ReactiveFormsModule, // For reactive forms and formGroup bindings
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class UpdateOperationTypeComponent {
-  updateForm: FormGroup; // Reactive form to capture user inputs
-  isLoading: boolean = false; // Loading indicator for UI feedback
-  message: string = ''; // Feedback message to show in the template
-  messageType: 'success' | 'error' = 'success'; // Type of message for styling
+  updateForm: FormGroup;
+  isLoading: boolean = false;
+  message: string = '';
+  messageType: 'success' | 'error' = 'success';
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    // Initialize the form with fields and validation rules
+    // Initialize the form
     this.updateForm = this.fb.group({
-      id: ['', [Validators.required]], // ID of the operation type
-      name: ['', [Validators.required, Validators.maxLength(100)]], // Name field
-      duration: ['', [Validators.required, this.validateDurationFormat]] // Duration in HH:mm:ss
+      id: ['', [Validators.required]], // Operation ID
+      name: ['', [Validators.required, Validators.maxLength(100)]], // Operation Name
+      duration: ['', [Validators.required, this.validateDurationFormat]], // Duration
+      staff: [''], // Staff IDs (optional, comma-separated)
     });
   }
 
-  // Method to submit the form
   onSubmit() {
     if (this.updateForm.invalid) {
       this.showMessage('Please correct the errors in the form.', 'error');
       return;
     }
 
-    this.isLoading = true; // Show loading spinner
-    this.message = ''; // Clear previous messages
+    this.isLoading = true;
+    this.message = '';
 
-    const { id, name, duration } = this.updateForm.value;
+    // Extract form values
+    const { id, name, duration, staff } = this.updateForm.value;
 
-    // Call the AuthService's updateOperationType method
-    this.authService.updateOperationType(id, name, duration).subscribe({
+    // Prepare the operation type object
+    const operation: Partial<UpdateOperationType> = {
+      id: Number(id), // Ensure ID is a number
+      name: name || undefined,
+      duration: duration || undefined,
+      staff: staff ? staff.split(',').map((s: string) => parseInt(s.trim(), 10)) : undefined, // Parse staff into an array of numbers
+    };
+
+    // Call the update service
+    this.authService.updateOperationType(operation).subscribe({
       next: () => {
         this.showMessage('Operation type updated successfully!', 'success');
-        this.updateForm.reset(); // Reset the form
+        this.updateForm.reset();
       },
       error: (error) => {
         if (error.status === 400) {
@@ -56,20 +64,18 @@ export class UpdateOperationTypeComponent {
         }
       },
       complete: () => {
-        this.isLoading = false; // Hide loading spinner
-      }
+        this.isLoading = false;
+      },
     });
   }
 
-  // Method to show feedback messages
   private showMessage(message: string, type: 'success' | 'error') {
     this.message = message;
     this.messageType = type;
   }
 
-  // Custom validator for duration format (HH:mm:ss)
   private validateDurationFormat(control: { value: string }) {
-    const durationRegex = /^([0-1]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/; // Regex for HH:mm:ss
+    const durationRegex = /^([0-1]?\d|2[0-3]):[0-5]?\d:[0-5]?\d$/;
     return durationRegex.test(control.value) ? null : { invalidDuration: true };
   }
 }

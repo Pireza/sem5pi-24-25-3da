@@ -394,7 +394,6 @@ public class OperationRequestRepository
     public async Task<OperationType?> GetOperationTypeByIdAsync(long id)
     {
         return await _context.OperationTypes
-            .Include(o => o.Specialization) // Include Specialization data
             .FirstOrDefaultAsync(o => o.Id == id);
     }
 

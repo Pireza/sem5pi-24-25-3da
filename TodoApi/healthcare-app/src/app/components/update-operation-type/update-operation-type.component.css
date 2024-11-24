@@ -1,44 +1,109 @@
-/* Center the form */
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* Form groups */
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  /* Error message styling */
-  .text-danger {
-    font-size: 0.875em;
-    color: red;
-  }
-  
-  /* Feedback message styling */
-  .message {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1em;
-    text-align: center;
-  }
-  
-  .message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-  }
-  
-  .message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-  }
-  
-  /* Button styling */
-  .btn {
-    width: 100%;
-  }
-  
+/* Center the form container */
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: Arial, sans-serif; /* Clean font */
+}
+
+/* Title */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333; /* Dark gray */
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Labels */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1em;
+  color: #333; /* Dark gray */
+  font-weight: bold;
+}
+
+/* Input fields */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded edges */
+  box-sizing: border-box;
+  background-color: #f9f9f9; /* Light gray background */
+  color: #333; /* Dark text */
+}
+
+/* Input placeholder */
+.form-group input::placeholder {
+  color: #aaa; /* Light gray */
+}
+
+/* Focus state */
+.form-group input:focus {
+  border-color: #28a745; /* Green border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); /* Subtle green glow */
+}
+
+/* Error message */
+.text-danger {
+  font-size: 0.875em;
+  color: red;
+  margin-top: 5px;
+}
+
+/* Success/Error message styling */
+.message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-align: center;
+}
+
+.message.success {
+  background-color: #d4edda; /* Light green */
+  color: #155724; /* Dark green */
+  border: 1px solid #c3e6cb; /* Green border */
+}
+
+.message.error {
+  background-color: #f8d7da; /* Light red */
+  color: #721c24; /* Dark red */
+  border: 1px solid #f5c6cb; /* Red border */
+}
+
+/* Button styling */
+.btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  color: #fff;
+  background-color: #28a745; /* Green button */
+  border: none;
+  border-radius: 4px; /* Rounded edges */
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.btn:hover {
+  background-color: #218838; /* Darker green */
+}
+
+.btn:disabled {
+  background-color: #ccc; /* Disabled state */
+  cursor: not-allowed;
+}
