@@ -60,4 +60,7 @@ export class AdminUiComponent implements OnInit {
   redirectToSearchStaffProfile(): void{
     this.router.navigate(['/filter-staff-admin']);
   }
+  redirectToEditOperationType(): void{
+    this.router.navigate(['/update-operation-type']);
+  }
 }

@@ -174,27 +174,28 @@ public class OperationController : ControllerBase
 
     }
 
-    // PUT: api/operation/type/{id}
     [Authorize(Policy = "AdminOnly")]
     [HttpPut("UpdateOperationTypeAsAdmin/{id}")]
-    public async Task<IActionResult> PutType(long id, OperationTypeDTO typeDTO)
+    public async Task<IActionResult> UpdateOperationTypeAsAdmin(long id, OperationTypeDTO typeDTO)
     {
         try
         {
+            // Chamada ao serviço para atualizar o tipo de operação
             await _service.UpdateTypeAsync(id, typeDTO);
-            return NoContent(); // Successfully updated, no content to return
+
+            return NoContent(); // Atualização bem-sucedida, sem conteúdo retornado
         }
         catch (FormatException)
         {
-            return BadRequest("Input duration format must be HH:mm:ss");
+            return BadRequest("O formato da duração deve ser HH:mm:ss.");
         }
         catch (NotFoundResource)
         {
-            return NotFound("Operation type or specialized staff ID not found");
+            return NotFound("O tipo de operação não foi encontrado.");
         }
         catch (Exception ex)
         {
-            return BadRequest($"An error occurred: {ex.Message}");
+            return BadRequest($"Ocorreu um erro: {ex.Message}");
         }
     }
 
