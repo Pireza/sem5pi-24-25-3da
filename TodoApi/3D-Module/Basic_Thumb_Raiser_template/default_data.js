@@ -23,12 +23,39 @@ export const playerData = {
     keyCodes: { fixedView: "Digit1", firstPersonView: "Digit2", thirdPersonView: "Digit3", topView: "Digit4", viewMode: "KeyV", userInterface: "KeyU", miniMap: "KeyM", help: "KeyH", statistics: "KeyS", run: "KeyR", left: "ArrowLeft", right: "ArrowRight", backward: "ArrowDown", forward: "ArrowUp", jump: "KeyJ", yes: "KeyY", no: "KeyN", wave: "KeyW", punch: "KeyP", thumbsUp: "KeyT" }
 }
 
+export const ambientLightData = {
+    visible: true,
+    color: new THREE.Color(0xffffff),
+    intensity: .3,
+    intensityMin: 0.0,
+    intensityMax: 1.0,
+    intensityStep: 0.01
+}
 
-export const lightsData = {
-    ambientLight: { color: 0xffffff, intensity: 1.0 },
-    pointLight1: { color: 0xffffff, intensity: 1.0, distance: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0) },
-    pointLight2: { color: 0xffffff, intensity: 1.0, distance: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0) },
-    spotLight: { color: 0xffffff, intensity: 1.0, distance: 0.0, angle: Math.PI / 3.0, penumbra: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0), direction: 0.0 } // angle and direction expressed in radians
+export const directionalLightData = {
+    visible: true,
+    color: new THREE.Color(0xffffff),
+    intensity: 1.0,
+    intensityMin: 0.0,
+    intensityMax: 1.0,
+    intensityStep: 0.01,
+    distance: 1.0,
+    orientation: new Orientation(0.0, 90.0),
+    orientationMin: new Orientation(-180.0, 0.0),
+    orientationMax: new Orientation(180.0, 90.0),
+    orientationStep: new Orientation(1.0, 1.0),
+    castShadow: true,
+    shadow: {
+        mapSize: new THREE.Vector2(512, 512), // Shadow map size
+        camera: { // The light's view of the world
+            left: -5.0,
+            right: 5.0,
+            top: 5.0,
+            bottom: -5.0,
+            near: 0.5,
+            far: 500.0
+        }
+    }
 }
 
 export const fogData = {

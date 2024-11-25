@@ -1,72 +1,198 @@
 import * as THREE from "three";
+import { merge } from "./merge.js";
+import Orientation from "./orientation.js";
 
 /*
  * parameters = {
- *  ambientLight: { color: Integer, intensity: Float },
- *  pointLight1: { color: Integer, intensity: Float, distance: Float, position: Vector3 },
- *  pointLight2: { color: Integer, intensity: Float, distance: Float, position: Vector3 },
- *  spotLight: { color: Integer, intensity: Float, distance: Float, angle: Float, penumbra: Float, position: Vector3, direction: Float }
+ *  visible: Boolean,
+ *  color: Color,
+ *  intensity: Float,
+ *  intensityMin: Float,
+ *  intensityMax: Float,
+ *  intensityStep: Float
  * }
  */
 
-export default class Lights {
+export class AmbientLight extends THREE.AmbientLight {
     constructor(parameters) {
-        for (const [key, value] of Object.entries(parameters)) {
-            this[key] = value;
-        }
+        super();
+        merge(this, parameters);
+    }
+}
 
-        // Create a group of objects
-        this.object = new THREE.Group();
+/*
+ * parameters = {
+ *  visible: Boolean,
+ *  color: Color,
+ *  intensity: Float,
+ *  intensityMin: Float,
+ *  intensityMax: Float,
+ *  intensityStep: Float,
+ *  distance: Float,
+ *  orientation: Orientation,
+ *  orientationMin: Orientation,
+ *  orientationMax: Orientation,
+ *  orientationStep: Orientation,
+ *  castShadow: Boolean,
+ *  shadow: {
+ *   mapSize: Vector2,
+ *   camera: {
+ *    left: Float,
+ *    right: Float,
+ *    top: Float,
+ *    bottom: Float,
+ *    near: Float,
+ *    far: Float
+ *   }
+ *  }
+ * }
+ */
 
-        // Create the ambient light
-        this.object.ambientLight = new THREE.AmbientLight(this.ambientLight.color, this.ambientLight.intensity);
+export class DirectionalLight extends THREE.DirectionalLight {
+    constructor(parameters) {
+        super();
+        merge(this, parameters);
 
-        this.object.add(this.object.ambientLight);
+        // Set light position
+        const position = this.orientationToPosition(this.distance, this.orientation);
+        this.position.set(position.x, position.y, position.z);
+    }
 
-        /* To-do #26 - Create the first point light and set its position in the scene
-            - light color: this.pointLight1.color
-            - light intensity: this.pointLight1.intensity
-            - light distance: this.pointLight1.distance
-            - light position: this.pointLight1.position.x, this.pointLight1.position.y, this.pointLight1.position.z
-        this.object.pointLight1 = new ...;
-        this.object.pointLight1...; */
-        /* To-do #31 - Turn on shadows for this light and set its properties:
-            - shadow map width: 512
-            - shadow map height: 512
-            - shadow camera near plane: 5.0
-            - shadow camera far plane: 15.0
+    orientationToPosition(distance, orientation) {
+        const cosH = Math.cos(THREE.MathUtils.degToRad(orientation.h));
+        const sinH = Math.sin(THREE.MathUtils.degToRad(orientation.h));
+        const cosV = Math.cos(THREE.MathUtils.degToRad(orientation.v));
+        const sinV = Math.sin(THREE.MathUtils.degToRad(orientation.v));
+        const positionX = distance * sinH * cosV;
+        const positionY = distance * sinV;
+        const positionZ = distance * cosH * cosV;
+        return new THREE.Vector3(positionX, positionY, positionZ);
+    }
+}
 
-        this.object.pointLight1.castShadow = ...;
+/*
+ * parameters = {
+ *  visible: Boolean,
+ *  color: Color,
+ *  intensity: Float,
+ *  intensityMin: Float,
+ *  intensityMax: Float,
+ *  intensityStep: Float,
+ *  distance: Float,
+ *  distanceMin: Float,
+ *  distanceMax: Float,
+ *  distanceStep: Float,
+ *  angle: Float,
+ *  angleMin: Float,
+ *  angleMax: Float,
+ *  angleStep: Float,
+ *  penumbra: Float,
+ *  penumbraMin: Float,
+ *  penumbraMax: Float,
+ *  penumbraStep: Float,
+ *  position: Vector3,
+ *  positionMin: Vector3,
+ *  positionMax: Vector3,
+ *  positionStep: Vector3,
+ *  castShadow: Boolean,
+ *  shadow: {
+ *   mapSize: Vector2,
+ *   camera: {
+ *    near: Float,
+ *    far: Float
+ *   },
+ *   focus: Float
+ *  }
+ * }
+ */
 
-        // Set up shadow properties for this light
-        this.object.pointLight1.shadow... = ...;
-        this.object.pointLight1.shadow... = ...;
-        this.object.pointLight1.shadow... = ...;
-        this.object.pointLight1.shadow... = ...; */
-        /* To-do #28 - Add this light to the scene
-        this.object.add(...); */
+export class SpotLight extends THREE.SpotLight {
+    constructor(parameters) {
+        super();
+        merge(this, parameters);
 
-        /* To-do #27 - Create the second point light and set its position in the scene
-            - light color: this.pointLight2.color
-            - light intensity: this.pointLight2.intensity
-            - light distance: this.pointLight2.distance
-            - light position: this.pointLight2.position.x, this.pointLight2.position.y, this.pointLight2.position.z
-        this.object.pointLight2 = new ...;
-        this.object.pointLight2...; */
-        /* To-do #32 - Turn on shadows for this light and set its properties:
-            - shadow map width: 512
-            - shadow map height: 512
-            - shadow camera near plane: 5.0
-            - shadow camera far plane: 15.0
+        // Convert this light's angle from degrees to radians
+        this.angle = THREE.MathUtils.degToRad(this.angle);
+    }
+}
 
-        this.object.pointLight2.castShadow = ...;
+/*
+ * parameters = {
+ *  visible: Boolean,
+ *  color: Color,
+ *  intensity: Float,
+ *  intensityMin: Float,
+ *  intensityMax: Float,
+ *  intensityStep: Float,
+ *  distance: Float,
+ *  distanceMin: Float,
+ *  distanceMax: Float,
+ *  distanceStep: Float,
+ *  angle: Float,
+ *  angleMin: Float,
+ *  angleMax: Float,
+ *  angleStep: Float,
+ *  penumbra: Float,
+ *  penumbraMin: Float,
+ *  penumbraMax: Float,
+ *  penumbraStep: Float,
+ *  orientation: Orientation,
+ *  orientationMin: Orientation,
+ *  orientationMax: Orientation,
+ *  orientationStep: Orientation,
+ *  castShadow: Boolean,
+ *  shadow: {
+ *   mapSize: Vector2,
+ *   camera: {
+ *    near: Float,
+ *    far: Float
+ *   },
+ *   focus: Float
+ *  }
+ * }
+ */
 
-        // Set up shadow properties for this light
-        this.object.pointLight2.shadow... = ...;
-        this.object.pointLight2.shadow... = ...;
-        this.object.pointLight2.shadow... = ...;
-        this.object.pointLight2.shadow... = ...; */
-        /* To-do #29 - Add this light to the scene
-        this.object.add(...); */
+export class FlashLight extends THREE.SpotLight {
+    constructor(parameters) {
+        super();
+        merge(this, parameters);
+
+        // Convert this light's angle from degrees to radians
+        this.angle = THREE.MathUtils.degToRad(this.angle);
+
+        // The player radius is needed to compute the position of this light
+        this.playerRadius = 0.0;
+
+        // The player orientation is needed to compute the orientation of this light
+        this.playerOrientation = new THREE.Quaternion().identity();
+    }
+
+    orientationToPosition(distance, orientation) {
+        const cosH = Math.cos(THREE.MathUtils.degToRad(orientation.h));
+        const sinH = Math.sin(THREE.MathUtils.degToRad(orientation.h));
+        const cosV = Math.cos(THREE.MathUtils.degToRad(orientation.v));
+        const sinV = Math.sin(THREE.MathUtils.degToRad(orientation.v));
+        const positionX = distance * sinH * cosV;
+        const positionY = distance * sinV;
+        const positionZ = distance * cosH * cosV;
+        return new THREE.Vector3(positionX, positionY, positionZ);
+    }
+
+    // Set this light's position, orientation and target (positive Y-semiaxis up)
+    setLightingParameters() {
+        const playerOrientation = new THREE.Euler().setFromQuaternion(this.playerOrientation, "YXZ"); // Order: yaw, pitch and roll
+        playerOrientation.x = THREE.MathUtils.radToDeg(-playerOrientation.x) + this.orientation.v;
+        playerOrientation.y = THREE.MathUtils.radToDeg(playerOrientation.y) + this.orientation.h;
+        playerOrientation.z = THREE.MathUtils.radToDeg(-playerOrientation.z);
+        const target = this.orientationToPosition(this.distance, new Orientation(playerOrientation.y, playerOrientation.x));
+        this.target.translateX(target.x);
+        this.target.translateY(target.y);
+        this.target.translateZ(target.z);
+    }
+
+    setTarget(target) {
+        this.position.set(target.x, target.y, target.z);
+        this.target.position.set(target.x, target.y, target.z);
+        this.setLightingParameters();
     }
 }
