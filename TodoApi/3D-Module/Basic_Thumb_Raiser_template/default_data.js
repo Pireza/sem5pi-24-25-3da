@@ -35,28 +35,29 @@ export const ambientLightData = {
 export const directionalLightData = {
     visible: true,
     color: new THREE.Color(0xffffff),
-    intensity: 1.0,
-    intensityMin: 0.0,
-    intensityMax: 1.0,
-    intensityStep: 0.01,
-    distance: 1.0,
-    orientation: new Orientation(0.0, 90.0),
-    orientationMin: new Orientation(-180.0, 0.0),
-    orientationMax: new Orientation(180.0, 90.0),
-    orientationStep: new Orientation(1.0, 1.0),
+    intensity: 0.8, // Slightly dimmer than before
+    intensityMin: 0.1, // Minimum intensity
+    intensityMax: 1.0, // Maximum intensity stays the same
+    intensityStep: 0.05, // Larger step for intensity changes
+    distance: 5.0, // Increased distance
+    orientation: new Orientation(30.0, 120.0), // New orientation angles
+    orientationMin: new Orientation(-90.0, 30.0), // Adjusted min orientation
+    orientationMax: new Orientation(90.0, 150.0), // Adjusted max orientation
+    orientationStep: new Orientation(2.0, 2.0), // Larger step for orientation
     castShadow: true,
     shadow: {
-        mapSize: new THREE.Vector2(512, 512), // Shadow map size
-        camera: { // The light's view of the world
-            left: -5.0,
-            right: 5.0,
-            top: 5.0,
-            bottom: -5.0,
-            near: 0.5,
-            far: 500.0
+        mapSize: new THREE.Vector2(1024, 1024), // Increased shadow map size for better quality
+        camera: { 
+            left: -10.0, 
+            right: 10.0, 
+            top: 10.0, 
+            bottom: -10.0, 
+            near: 1.0, // Nearer clipping plane
+            far: 1000.0 // Farther clipping plane for larger scene
         }
     }
 }
+
 
 export const fogData = {
     enabled: false,
