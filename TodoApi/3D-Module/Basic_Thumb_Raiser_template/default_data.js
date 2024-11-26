@@ -27,13 +27,41 @@ export const playerData = {
     keyCodes: { fixedView: "Digit1", firstPersonView: "Digit2", thirdPersonView: "Digit3", topView: "Digit4", viewMode: "KeyV", userInterface: "KeyU", miniMap: "KeyM", help: "KeyH", statistics: "KeyS", run: "KeyR", left: "ArrowLeft", right: "ArrowRight", backward: "ArrowDown", forward: "ArrowUp", jump: "KeyJ", yes: "KeyY", no: "KeyN", wave: "KeyW", punch: "KeyP", thumbsUp: "KeyT" }
 }
 
-
-export const lightsData = {
-    ambientLight: { color: 0xffffff, intensity: 1.0 },
-    pointLight1: { color: 0xffffff, intensity: 1.0, distance: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0) },
-    pointLight2: { color: 0xffffff, intensity: 1.0, distance: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0) },
-    spotLight: { color: 0xffffff, intensity: 1.0, distance: 0.0, angle: Math.PI / 3.0, penumbra: 0.0, position: new THREE.Vector3(0.0, 0.0, 0.0), direction: 0.0 } // angle and direction expressed in radians
+export const ambientLightData = {
+    visible: true,
+    color: new THREE.Color(0xffffff),
+    intensity: .3,
+    intensityMin: 0.0,
+    intensityMax: 1.0,
+    intensityStep: 0.01
 }
+
+export const directionalLightData = {
+    visible: true,
+    color: new THREE.Color(0xffffff),
+    intensity: 0.8, // Slightly dimmer than before
+    intensityMin: 0.1, // Minimum intensity
+    intensityMax: 1.0, // Maximum intensity stays the same
+    intensityStep: 0.05, // Larger step for intensity changes
+    distance: 5.0, // Increased distance
+    orientation: new Orientation(30.0, 120.0), // New orientation angles
+    orientationMin: new Orientation(-90.0, 30.0), // Adjusted min orientation
+    orientationMax: new Orientation(90.0, 150.0), // Adjusted max orientation
+    orientationStep: new Orientation(2.0, 2.0), // Larger step for orientation
+    castShadow: true,
+    shadow: {
+        mapSize: new THREE.Vector2(1024, 1024), // Increased shadow map size for better quality
+        camera: { 
+            left: -10.0, 
+            right: 10.0, 
+            top: 10.0, 
+            bottom: -10.0, 
+            near: 1.0, // Nearer clipping plane
+            far: 1000.0 // Farther clipping plane for larger scene
+        }
+    }
+}
+
 
 export const fogData = {
     enabled: false,

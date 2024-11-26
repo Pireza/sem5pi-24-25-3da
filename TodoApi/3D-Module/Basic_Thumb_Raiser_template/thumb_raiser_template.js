@@ -13,10 +13,10 @@
 import * as THREE from "three";
 import Stats from "three/addons/libs/stats.module.js";
 import Orientation from "./orientation.js";
-import { generalData, mazeData, lightsData, fogData, cameraData } from "./default_data.js";
+import { generalData, mazeData, fogData, cameraData, ambientLightData, directionalLightData, } from "./default_data.js";
 import { merge } from "./merge.js";
 import Maze from "./maze_template.js";
-import Lights from "./lights_template.js";
+import { AmbientLight, DirectionalLight } from "./lights_template.js";
 import Camera from "./camera_template.js";
 import { PickHelper } from "./PickHelper.js";
 
@@ -139,23 +139,25 @@ import { PickHelper } from "./PickHelper.js";
 
 
 export default class ThumbRaiser {
-    constructor(generalParameters, mazeParameters,
-        lightsParameters, fogParameters, fixedViewCameraParameters,
+    constructor(generalParameters, mazeParameters, fogParameters, fixedViewCameraParameters,
         firstPersonViewCameraParameters, thirdPersonViewCameraParameters,
-        topViewCameraParameters, miniMapCameraParameters) {
+        topViewCameraParameters, miniMapCameraParameters, ambientLightParameters, directionalLightParameters,) {
 
 
 
         this.pickPosition = { x: 0, y: 0 };
         this.generalParameters = merge({}, generalData, generalParameters);
         this.mazeParameters = merge({}, mazeData, mazeParameters);
-        this.lightsParameters = merge({}, lightsData, lightsParameters);
         this.fogParameters = merge({}, fogData, fogParameters);
         this.fixedViewCameraParameters = merge({}, cameraData, fixedViewCameraParameters);
         this.firstPersonViewCameraParameters = merge({}, cameraData, firstPersonViewCameraParameters);
         this.thirdPersonViewCameraParameters = merge({}, cameraData, thirdPersonViewCameraParameters);
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
+        this.ambientLightParameters = merge({}, ambientLightData, ambientLightParameters);
+        this.directionalLightParameters = merge({}, directionalLightData, directionalLightParameters);
+
+
 
 
 
@@ -188,7 +190,8 @@ export default class ThumbRaiser {
 
 
         // Create the lights
-        this.lights = new Lights(this.lightsParameters);
+        this.ambientLight = new AmbientLight(this.ambientLightParameters);
+        this.directionalLight = new DirectionalLight(this.directionalLightParameters);
 
 
         // Create the fog
@@ -320,6 +323,11 @@ export default class ThumbRaiser {
         this.activeElement = document.activeElement;
     }
 
+    enableShadows(enabled) {
+        this.directionalLight.castShadow = enabled;
+        this.spotLight.castShadow = enabled;
+        this.flashLight.castShadow = enabled;
+    }
 
     clearPickPosition() {
         // unlike the mouse which always has a position
@@ -485,14 +493,14 @@ export default class ThumbRaiser {
 
 
                     this.activeViewCamera.setTarget
-                    (
-                        new THREE.Vector3
                         (
-                            this.pickHelper.getPickedObjectParentPosition().x,
-                            0.0,
-                            this.pickHelper.getPickedObjectParentPosition().z
-                        )
-                    );
+                            new THREE.Vector3
+                                (
+                                    this.pickHelper.getPickedObjectParentPosition().x,
+                                    0.0,
+                                    this.pickHelper.getPickedObjectParentPosition().z
+                                )
+                        );
 
 
                 }
@@ -626,8 +634,8 @@ export default class ThumbRaiser {
 
                 this.scene3D.add(this.maze.object);
 
-                this.scene3D.add(this.lights.object);
-
+                this.scene3D.add(this.ambientLight);
+                this.scene3D.add(this.directionalLight);
 
                 // Create the clock
                 this.clock = new THREE.Clock();
