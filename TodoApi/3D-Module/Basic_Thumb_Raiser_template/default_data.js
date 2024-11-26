@@ -5,6 +5,10 @@ export const generalData = {
     setDevicePixelRatio: false
 }
 
+export const bedData = {
+    bedObjectName: "Surgery_Table_LO_M_surgery_table_0"
+}
+
 export const mazeData = {
     url: "./mazes/Loquitas.json",
     credits: "Maze designed by Cecília Fernandes and Nikita.",
@@ -47,10 +51,10 @@ export const cameraData = {
     orientationMax: new Orientation(180.0, 0.0),
     initialDistance: 8.0, // Distance to the target and associated limits
     distanceMin: 4.0,
-    distanceMax: 16.0,
+    distanceMax: 100.0,
     initialZoom: 1.0, // Zoom factor and associated limits
-    zoomMin: 0.5,
-    zoomMax: 2.0,
+    zoomMin: 0.25,
+    zoomMax: 100.0,
     initialFov: 45.0, // Field-of-view (expressed in degrees)
     near: 0.01, // Front clipping plane
     far: 100.0 // Back clipping plane

@@ -8,35 +8,41 @@ export default class RoomTemplate {
         this.wallThickness = 0.1;  // Thickness of the walls
         this.wallHeight = 5;      // Height of the walls
 
+        this.id = 0;
+        this.texture = textureUrl;
         this.directionMap = new Map();
         this.directionMap.set('north', 0.0);
         this.directionMap.set('south', Math.PI);
         this.directionMap.set('west', Math.PI / 2);
         this.directionMap.set('east', 3 * Math.PI / 2);
 
-        // Material that reacts to light
-        if (textureUrl) {
-            const textureLoader = new THREE.TextureLoader();
-            this.material = new THREE.MeshStandardMaterial({
-                map: textureLoader.load(textureUrl),
-                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides
-            });
-        } else {
-            // If no texture, use a basic color
-            this.material = new THREE.MeshStandardMaterial({ color: 0x888888 });
-        }
+        this.rooms = [];
 
         this.roomMesh = new THREE.Group();  // A group to store all the walls
     }
 
     generateRoom(width, depth, occupied, direction = 'north', doorPosition = 'front', bedX = 0.0, bedY = 0.0) {
+
+
+        let material = new THREE.MeshStandardMaterial({ color: 0x888888 });
+        // Material that reacts to light
+        if (this.texture) {
+            const textureLoader = new THREE.TextureLoader();
+            material = new THREE.MeshStandardMaterial({
+                map: textureLoader.load(this.texture),
+                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides
+            });
+        }
+
         this.roomMesh = new THREE.Group();
+        this.rooms.push(this.roomMesh);
+        this.roomMesh.name = "room" + this.id++;
         // Create 4 walls: front, back, left, right
 
         // Front wall
         const frontWall = new THREE.Mesh(
             new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
-            this.material
+            material
         );
         frontWall.position.set(0, this.wallHeight / 2, -depth / 2);
         this.roomMesh.add(frontWall);
@@ -44,7 +50,7 @@ export default class RoomTemplate {
         // Back wall
         const backWall = new THREE.Mesh(
             new THREE.BoxGeometry(width, this.wallHeight, this.wallThickness),
-            this.material
+            material
         );
         backWall.position.set(0, this.wallHeight / 2, depth / 2);
         this.roomMesh.add(backWall);
@@ -52,7 +58,7 @@ export default class RoomTemplate {
         // Left wall
         const leftWall = new THREE.Mesh(
             new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
-            this.material
+            material
         );
         leftWall.position.set(-width / 2, this.wallHeight / 2, 0);
         this.roomMesh.add(leftWall);
@@ -60,7 +66,7 @@ export default class RoomTemplate {
         // Right wall
         const rightWall = new THREE.Mesh(
             new THREE.BoxGeometry(this.wallThickness, this.wallHeight, depth),
-            this.material
+            material
         );
         rightWall.position.set(width / 2, this.wallHeight / 2, 0);
         this.roomMesh.add(rightWall);
@@ -91,6 +97,7 @@ export default class RoomTemplate {
             this.roomMesh.add(this.person.person);
         }
 
+    
         // Add the spotlight
         this.addSpotlight(width, depth);
     }

@@ -18,6 +18,7 @@ export default class BedTemplate {
 
         // Load the GLTF model asynchronously
         this.loadModel();
+
     }
 
     loadModel() {

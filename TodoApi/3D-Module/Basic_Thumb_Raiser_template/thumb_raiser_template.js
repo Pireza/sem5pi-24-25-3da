@@ -18,8 +18,7 @@ import { merge } from "./merge.js";
 import Maze from "./maze_template.js";
 import Lights from "./lights_template.js";
 import Camera from "./camera_template.js";
-import Person from "./person_template.js";
-import UserInterface from "./user_interface_template.js";
+import { PickHelper } from "./PickHelper.js";
 
 /*
  * generalParameters = {
@@ -144,6 +143,10 @@ export default class ThumbRaiser {
         lightsParameters, fogParameters, fixedViewCameraParameters,
         firstPersonViewCameraParameters, thirdPersonViewCameraParameters,
         topViewCameraParameters, miniMapCameraParameters) {
+
+
+
+        this.pickPosition = { x: 0, y: 0 };
         this.generalParameters = merge({}, generalData, generalParameters);
         this.mazeParameters = merge({}, mazeData, mazeParameters);
         this.lightsParameters = merge({}, lightsData, lightsParameters);
@@ -153,6 +156,8 @@ export default class ThumbRaiser {
         this.thirdPersonViewCameraParameters = merge({}, cameraData, thirdPersonViewCameraParameters);
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
+
+
 
 
         this.movementKeys = {
@@ -179,6 +184,8 @@ export default class ThumbRaiser {
 
         // Create the maze
         this.maze = new Maze(this.mazeParameters);
+
+
 
         // Create the lights
         this.lights = new Lights(this.lightsParameters);
@@ -246,6 +253,8 @@ export default class ThumbRaiser {
         this.statisticsCheckBox = document.getElementById("statistics");
         this.statisticsCheckBox.checked = false;
 
+
+        this.pickHelper = new PickHelper();
         // Build the help panel
 
 
@@ -263,6 +272,21 @@ export default class ThumbRaiser {
 
         // Register the event handler to be called on key release
         document.addEventListener("keyup", event => this.keyChange(event, false));
+
+        window.addEventListener('mousemove', event => this.setPickPosition(event));
+        window.addEventListener('mouseout', () => this.clearPickPosition);
+        window.addEventListener('mouseleave', () => this.clearPickPosition);
+
+
+        window.addEventListener('touchstart', (event) => {
+            // prevent the window from scrolling
+            event.preventDefault();
+            setPickPosition(event.touches[0]);
+        }, { passive: false });
+        window.addEventListener('touchmove', (event) => {
+            setPickPosition(event.touches[0]);
+        });
+        window.addEventListener('touchend', () => this.clearPickPosition);
 
         // Register the event handler to be called on mouse down
         this.renderer.domElement.addEventListener("mousedown", event => this.mouseDown(event));
@@ -297,6 +321,33 @@ export default class ThumbRaiser {
     }
 
 
+    clearPickPosition() {
+        // unlike the mouse which always has a position
+        // if the user stops touching the screen we want
+        // to stop picking. For now we just pick a value
+        // unlikely to pick something
+        this.pickPosition.x = -100000;
+        this.pickPosition.y = -100000;
+    }
+
+
+
+    setPickPosition(event) {
+        const pos = this.getCanvasRelativePosition(event);
+        this.pickPosition.x = (pos.x / this.renderer.domElement.width) * 2 - 1;
+        this.pickPosition.y = (pos.y / this.renderer.domElement.height) * -2 + 1;
+    }
+
+
+    getCanvasRelativePosition(event) {
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        return {
+            x: (event.clientX - rect.left) * this.renderer.domElement.width /
+                rect.width,
+            y: (event.clientY - rect.top) * this.renderer.domElement.height /
+                rect.height,
+        };
+    }
 
     displayPanel() {
         this.view.options.selectedIndex = ["fixed", "first-person", "third-person", "top"].indexOf(this.activeViewCamera.view);
@@ -429,6 +480,22 @@ export default class ThumbRaiser {
                 if (event.buttons == 2) { // Only allow secondary button for orientation
                     this.changeCameraOrientation = true;
                 }
+                if (event.buttons == 1) {
+                    this.pickHelper.pick(this.pickPosition, this.scene3D, this.activeViewCamera.object);
+
+
+                    this.activeViewCamera.setTarget
+                    (
+                        new THREE.Vector3
+                        (
+                            this.pickHelper.getPickedObjectParentPosition().x,
+                            0.0,
+                            this.pickHelper.getPickedObjectParentPosition().z
+                        )
+                    );
+
+
+                }
             }
         }
     }
@@ -509,6 +576,7 @@ export default class ThumbRaiser {
                     switch (event.target.id) {
                         case "horizontal":
                         case "vertical":
+                            var tmp = this.activeViewCamera.object.position;
                             this.activeViewCamera.setOrientation(new Orientation(this.horizontal.value, this.vertical.value));
                             break;
                         case "distance":
@@ -560,6 +628,7 @@ export default class ThumbRaiser {
 
                 this.scene3D.add(this.lights.object);
 
+
                 // Create the clock
                 this.clock = new THREE.Clock();
 
@@ -605,6 +674,7 @@ export default class ThumbRaiser {
             // Render primary viewport(s)
             this.renderer.clear();
 
+
             let cameras;
             if (this.multipleViewsCheckBox.checked) {
                 cameras = [this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera];
@@ -628,6 +698,8 @@ export default class ThumbRaiser {
                 this.renderer.render(this.scene3D, this.miniMapCamera.object);
                 this.renderer.render(this.scene2D, this.camera2D);
             }
+
+
         }
     }
 }
