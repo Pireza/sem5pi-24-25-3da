@@ -47,5 +47,18 @@ export class PickHelper {
     getPickedObjectParentPosition(){
         return this.pickedObject.parent.position;
     }
-   
+    getRoomInfo() {
+        if (!this.pickedObject) {
+            return null;
+        }
+    
+        // Check if the picked object belongs to a room group
+        const parent = this.pickedObject.parent;
+        if (parent && parent.name.startsWith("room")) {
+            return parent.userData.info; 
+        }
+    
+        return null;
+    }
+    
 }

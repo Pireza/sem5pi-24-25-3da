@@ -97,7 +97,14 @@ export default class RoomTemplate {
             this.roomMesh.add(this.person.person);
         }
 
-    
+        this.roomMesh.userData.info = {
+            name: this.roomMesh.name,
+            width: width,
+            depth: depth,
+            occupied: occupied,
+            direction: direction,
+            doorPosition: doorPosition,
+        };
         // Add the spotlight
         this.addSpotlight(width, depth);
     }

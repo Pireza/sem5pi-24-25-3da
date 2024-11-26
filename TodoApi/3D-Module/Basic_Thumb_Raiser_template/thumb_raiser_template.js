@@ -290,6 +290,37 @@ export default class ThumbRaiser {
             setPickPosition(event.touches[0]);
         });
         window.addEventListener('touchend', () => this.clearPickPosition);
+        let overlayVisible = false; // To track the visibility of the overlay
+
+window.addEventListener('keydown', (event) => {
+    if (event.key.toLowerCase() === 'i') {
+        const overlay = document.getElementById('room-info-overlay');
+        const roomInfoDetails = document.getElementById('room-info-details');
+
+        if (!overlayVisible) {
+            const roomInfo = this.pickHelper.getRoomInfo();
+            if (roomInfo) {
+                // Update the overlay content
+                roomInfoDetails.innerHTML = `
+                    Name: ${roomInfo.name}<br>
+                    Width: ${roomInfo.width}<br>
+                    Depth: ${roomInfo.depth}<br>
+                    Occupied: ${roomInfo.occupied}<br>
+                    Direction: ${roomInfo.direction}<br>
+                    Door Position: ${roomInfo.doorPosition}
+                `;
+
+                // Show the overlay
+                overlay.style.display = 'flex';
+                overlayVisible = true;
+            }
+        } else {
+            // Hide the overlay
+            overlay.style.display = 'none';
+            overlayVisible = false;
+        }
+    }
+});
 
         // Register the event handler to be called on mouse down
         this.renderer.domElement.addEventListener("mousedown", event => this.mouseDown(event));
