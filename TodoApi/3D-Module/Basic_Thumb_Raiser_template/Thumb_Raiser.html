@@ -23,8 +23,53 @@
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 1.5vmin;
-            color: white;
+            border-radius: 10px;
+            color: #333;
+            font-weight: bold;
         }
+
+
+        #views-panel input[type="button"] {
+            background-color: #98d478;
+            color: #ffffff;
+            border: 2px solid #74ff2970;
+            border-radius: 25px;
+            width: 16ch;
+            height: 5ch;
+            font-size: 1.5vmin;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            line-height: 5ch;
+            transition: all 0.3s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        #views-panel input[type="button"]:hover {
+            background-color: #86ba6a;
+            border-color: #74ff2970;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #views-panel input[type="number"],
+        #views-panel select {
+            background-color: #ffffff;
+            color: #333333;
+            border: 2px solid #a7e784;
+            border-radius: 10px;
+            width: 12ch;
+            height: 4ch;
+            font-size: 1.5vmin;
+            text-align: center;
+            line-height: 4ch;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease-in-out;
+            padding: 0;
+        }
+
+
 
         #help-panel {
             position: absolute;
@@ -34,7 +79,7 @@
             width: 100.0vmin;
             font-family: Arial, sans-serif;
             font-size: 1.5vmin;
-            color: white;
+            color: #333;
         }
 
         #subwindows-panel {
@@ -44,26 +89,32 @@
             z-index: 1;
             width: 100.0vmin;
             font-family: Arial, sans-serif;
+            font-weight: bold;
+            border-radius: 10px;
             font-size: 1.5vmin;
-            color: white;
+            color: #333;
         }
-         /* Styling for the room info overlay */
-         /* Styling for the room info overlay */
-         #room-info-overlay {
+
+        /* Styling for the room info overlay */
+        /* Styling for the room info overlay */
+        #room-info-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-            display: none; /* Initially hidden */
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Semi-transparent black background */
+            display: none;
+            /* Initially hidden */
             justify-content: center;
             align-items: center;
             color: white;
             font-family: Arial, sans-serif;
             font-size: 2vmin;
             z-index: 1000;
-            pointer-events: none; /* Allow interaction with elements beneath the overlay */
+            pointer-events: none;
+            /* Allow interaction with elements beneath the overlay */
         }
 
         #room-info-details {
@@ -74,32 +125,39 @@
             max-height: 80%;
             overflow-y: auto;
         }
+
         table {
             margin-left: auto;
             margin-right: auto;
-            border: 1px solid black;
+            border-radius: 10px;
+            border: 2px solid #a7e784;
+            background-color: #74ff2970;
         }
 
         table.views {
-            background-color: #70707070;
+            background-color: #74ff2970;
             text-align: right;
         }
 
         table.help {
             width: 50vmin;
-            background-color: #70707050;
+            background-color: #74ff2970;
+
         }
 
         table.subwindows {
             position: absolute;
-            background-color: #70707070;
+            background-color: #74ff2970;
             text-align: right;
+            border-radius: 10px;
+
         }
 
         th,
         td {
             overflow: hidden;
-            border: 1px solid black;
+            border-radius: 10px;
+
         }
 
         a {
@@ -127,7 +185,7 @@
         }
 
         input:invalid {
-            background-color: pink;
+            background-color: rgb(255, 255, 255);
         }
 
         canvas {
@@ -184,8 +242,8 @@
                 </tr>
             </table>
         </div>
-         <!-- Room info overlay structure -->
-         <div id="room-info-overlay">
+        <!-- Room info overlay structure -->
+        <div id="room-info-overlay">
             <div id="room-info-details">
                 <!-- Room info content will be updated here -->
             </div>
@@ -305,7 +363,7 @@
                         <input type="checkbox" id="multiple-views">
                     </td>
                 </tr>
-               
+
                 <tr>
                     <td>
                         <label>Mini-map:</label>
@@ -313,7 +371,7 @@
                     </td>
                 </tr>
                 <tr>
-                    
+
                 </tr>
                 <tr>
                     <td>
@@ -362,39 +420,39 @@
             thumbRaiser.update();
         }
         function handleKeyDown(event) {
-    // Check if the 'i' key is pressed to toggle overlay
-    if (event.key === "i") {
-        toggleRoomInfoOverlay();
-    }
-}
+            // Check if the 'i' key is pressed to toggle overlay
+            if (event.key === "i") {
+                toggleRoomInfoOverlay();
+            }
+        }
 
-function handleMouseDown(event) {
-    // Check if the left mouse button (button 1) is pressed
-    if (event.button === 0) { // 0 indicates left mouse button
-        toggleRoomInfoOverlayClose();
-    }
-}
+        function handleMouseDown(event) {
+            // Check if the left mouse button (button 1) is pressed
+            if (event.button === 0) { // 0 indicates left mouse button
+                toggleRoomInfoOverlayClose();
+            }
+        }
 
-function toggleRoomInfoOverlay() {
-    const overlay = document.getElementById("room-info-overlay");
-    
-    // Toggle the overlay visibility
-    if (overlay.style.display === "none" || overlay.style.display === "") {
-        overlay.style.display = "flex"; // Show overlay
-        updateRoomInfo();
-    } else {
-        overlay.style.display = "none"; // Hide overlay
-    }
-}
-function toggleRoomInfoOverlayClose() {
-    const overlay = document.getElementById("room-info-overlay");
-        overlay.style.display = "none"; // Hide overlay
-    
-}
-function updateRoomInfo() {
-    const roomInfoContainer = document.getElementById("room-info-details");
-    roomInfoContainer.innerHTML = "<h2>Room Information</h2><p>Details about the room...</p>";
-}
+        function toggleRoomInfoOverlay() {
+            const overlay = document.getElementById("room-info-overlay");
+
+            // Toggle the overlay visibility
+            if (overlay.style.display === "none" || overlay.style.display === "") {
+                overlay.style.display = "flex"; // Show overlay
+                updateRoomInfo();
+            } else {
+                overlay.style.display = "none"; // Hide overlay
+            }
+        }
+        function toggleRoomInfoOverlayClose() {
+            const overlay = document.getElementById("room-info-overlay");
+            overlay.style.display = "none"; // Hide overlay
+
+        }
+        function updateRoomInfo() {
+            const roomInfoContainer = document.getElementById("room-info-details");
+            roomInfoContainer.innerHTML = "<h2>Room Information</h2><p>Details about the room...</p>";
+        }
         document.addEventListener("keydown", handleKeyDown);
         document.addEventListener("mousedown", handleMouseDown);
         initialize();

@@ -39,7 +39,7 @@ export class PickHelper {
             this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
             // set its emissive color to flashing red/yellow
             this.pickedObject.material.emissive.setHex(
-                0xFF0000
+                0x606060
             );
         }
     }

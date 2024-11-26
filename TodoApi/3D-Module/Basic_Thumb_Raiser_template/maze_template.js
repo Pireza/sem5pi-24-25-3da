@@ -21,14 +21,8 @@ export default class Maze {
             this.ground = new Ground({ textureUrl: description.groundTextureUrl, size: description.size });
             this.object.add(this.ground.object);
 
-            // Create a bed
-            this.bed = new BedTemplate({
-                modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb'
-            });
-            // Create a person
-            this.person = new Person({
-                modelUrl: 'models/gltf/human/3d_scan_man_1.glb'
-            });
+
+            this.generateFloorEnclosure('textures/wall.jpg');
 
             const roomBuilder = new RoomTemplate('textures/wall.jpg');
 
@@ -93,6 +87,60 @@ export default class Maze {
         );
     }
 
+    generateFloorEnclosure(wallTexture) {
+        let material = new THREE.MeshStandardMaterial({ color: 0x888888 });
+        // Material that reacts to light
+        if (wallTexture) {
+            const textureLoader = new THREE.TextureLoader();
+            material = new THREE.MeshStandardMaterial({
+                map: textureLoader.load(wallTexture),
+                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides
+            });
+        }
+
+        const wallThickness = .1, wallHeight = 5;
+
+        const widthWall1 = new THREE.Mesh(
+            new THREE.BoxGeometry(this.size.width, wallHeight, wallThickness),
+            material
+        );
+
+        const widthWall2 = new THREE.Mesh(
+            new THREE.BoxGeometry(this.size.width, wallHeight, wallThickness),
+            material
+        );
+
+        widthWall1.position.set(0, wallHeight / 2, -this.size.height / 2);
+        this.object.add(widthWall1);
+
+        widthWall2.position.set(0, wallHeight / 2, this.size.height / 2);
+        this.object.add(widthWall2);
+
+
+        const lengthWall1 = new THREE.Mesh(
+            new THREE.BoxGeometry(this.size.height, wallHeight, wallThickness),
+            material
+        );
+
+
+        const lengthWall2 = new THREE.Mesh(
+            new THREE.BoxGeometry(this.size.height, wallHeight, wallThickness),
+            material
+        );
+
+        lengthWall1.rotateY(Math.PI / 2);
+        lengthWall2.rotateY(Math.PI / 2);
+
+
+        lengthWall1.position.set(-this.size.width / 2, wallHeight / 2, 0);
+        lengthWall2.position.set(this.size.width / 2, wallHeight / 2, 0);
+
+        this.object.add(lengthWall1);
+        this.object.add(lengthWall2);
+
+
+    }
+
     // Define loadRoomStatus method to load the RoomStatus JSON file
     loadRoomStatus() {
         fetch('mazes/RoomStatus.json')  // Path to the JSON file
@@ -106,20 +154,20 @@ export default class Maze {
     }
 
     // Check if the room is within bounds
-   isRoomWithinBounds(room) {
-    // Room's left and right boundaries
-    const left = room.x - room.width / 2;
-    const right = room.x + room.width / 2;
-    
-    // Room's top and bottom boundaries
-    const top = room.y + room.length / 2;
-    const bottom = room.y - room.length / 2;
+    isRoomWithinBounds(room) {
+        // Room's left and right boundaries
+        const left = room.x - room.width / 2;
+        const right = room.x + room.width / 2;
 
-    // Check if the room is within the maze's boundaries
-    if (left < -this.size.width / 2 || right > this.size.width / 2 || bottom < -this.size.height / 2 || top > this.size.height / 2) {
-        return false; // Room is out of bounds
+        // Room's top and bottom boundaries
+        const top = room.y + room.length / 2;
+        const bottom = room.y - room.length / 2;
+
+        // Check if the room is within the maze's boundaries
+        if (left < -this.size.width / 2 || right > this.size.width / 2 || bottom < -this.size.height / 2 || top > this.size.height / 2) {
+            return false; // Room is out of bounds
+        }
+        return true; // Room is within bounds
     }
-    return true; // Room is within bounds
-}
 
 }
