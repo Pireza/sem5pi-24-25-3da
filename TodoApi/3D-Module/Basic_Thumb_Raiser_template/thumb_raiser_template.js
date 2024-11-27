@@ -63,41 +63,7 @@ import { PickHelper } from "./PickHelper.js";
  *  far: Float
  * }
  *
- * firstPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
  *
- * thirdPersonViewCameraParameters = {
- *  view: String,
- *  multipleViewsViewport: Vector4,
- *  target: Vector3,
- *  initialOrientation: Orientation,
- *  orientationMin: Orientation,
- *  orientationMax: Orientation,
- *  initialDistance: Float,
- *  distanceMin: Float,
- *  distanceMax: Float,
- *  initialZoom: Float,
- *  zoomMin: Float,
- *  zoomMax: Float,
- *  initialFov: Float,
- *  near: Float,
- *  far: Float
- * }
  *
  * topViewCameraParameters = {
  *  view: String,
@@ -140,7 +106,6 @@ import { PickHelper } from "./PickHelper.js";
 
 export default class ThumbRaiser {
     constructor(generalParameters, mazeParameters, fogParameters, fixedViewCameraParameters,
-        firstPersonViewCameraParameters, thirdPersonViewCameraParameters,
         topViewCameraParameters, miniMapCameraParameters, ambientLightParameters, directionalLightParameters,) {
 
 
@@ -150,8 +115,6 @@ export default class ThumbRaiser {
         this.mazeParameters = merge({}, mazeData, mazeParameters);
         this.fogParameters = merge({}, fogData, fogParameters);
         this.fixedViewCameraParameters = merge({}, cameraData, fixedViewCameraParameters);
-        this.firstPersonViewCameraParameters = merge({}, cameraData, firstPersonViewCameraParameters);
-        this.thirdPersonViewCameraParameters = merge({}, cameraData, thirdPersonViewCameraParameters);
         this.topViewCameraParameters = merge({}, cameraData, topViewCameraParameters);
         this.miniMapCameraParameters = merge({}, cameraData, miniMapCameraParameters);
         this.ambientLightParameters = merge({}, ambientLightData, ambientLightParameters);
@@ -196,10 +159,8 @@ export default class ThumbRaiser {
 
         // Create the fog
 
-        // Create the cameras corresponding to the four different views: fixed view, first-person view, third-person view and top view
+        // Create the cameras corresponding to the four different views: fixed view and top view
         this.fixedViewCamera = new Camera(this.fixedViewCameraParameters, window.innerWidth, window.innerHeight);
-        this.firstPersonViewCamera = new Camera(this.firstPersonViewCameraParameters, window.innerWidth, window.innerHeight);
-        this.thirdPersonViewCamera = new Camera(this.thirdPersonViewCameraParameters, window.innerWidth, window.innerHeight);
         this.topViewCamera = new Camera(this.topViewCameraParameters, window.innerWidth, window.innerHeight);
 
         // Create the mini-map camera
@@ -292,16 +253,16 @@ export default class ThumbRaiser {
         window.addEventListener('touchend', () => this.clearPickPosition);
         let overlayVisible = false; // To track the visibility of the overlay
 
-window.addEventListener('keydown', (event) => {
-    if (event.key.toLowerCase() === 'i') {
-        const overlay = document.getElementById('room-info-overlay');
-        const roomInfoDetails = document.getElementById('room-info-details');
+        window.addEventListener('keydown', (event) => {
+            if (event.key.toLowerCase() === 'i') {
+                const overlay = document.getElementById('room-info-overlay');
+                const roomInfoDetails = document.getElementById('room-info-details');
 
-        if (!overlayVisible) {
-            const roomInfo = this.pickHelper.getRoomInfo();
-            if (roomInfo) {
-                // Update the overlay content
-                roomInfoDetails.innerHTML = `
+                if (!overlayVisible) {
+                    const roomInfo = this.pickHelper.getRoomInfo();
+                    if (roomInfo) {
+                        // Update the overlay content
+                        roomInfoDetails.innerHTML = `
                     Name: ${roomInfo.name}<br>
                     Width: ${roomInfo.width}<br>
                     Depth: ${roomInfo.depth}<br>
@@ -310,17 +271,17 @@ window.addEventListener('keydown', (event) => {
                     Door Position: ${roomInfo.doorPosition}
                 `;
 
-                // Show the overlay
-                overlay.style.display = 'flex';
-                overlayVisible = true;
+                        // Show the overlay
+                        overlay.style.display = 'flex';
+                        overlayVisible = true;
+                    }
+                } else {
+                    // Hide the overlay
+                    overlay.style.display = 'none';
+                    overlayVisible = false;
+                }
             }
-        } else {
-            // Hide the overlay
-            overlay.style.display = 'none';
-            overlayVisible = false;
-        }
-    }
-});
+        });
 
         // Register the event handler to be called on mouse down
         this.renderer.domElement.addEventListener("mousedown", event => this.mouseDown(event));
@@ -389,7 +350,7 @@ window.addEventListener('keydown', (event) => {
     }
 
     displayPanel() {
-        this.view.options.selectedIndex = ["fixed", "first-person", "third-person", "top"].indexOf(this.activeViewCamera.view);
+        this.view.options.selectedIndex = ["fixed", "top"].indexOf(this.activeViewCamera.view);
         this.projection.options.selectedIndex = ["perspective", "orthographic"].indexOf(this.activeViewCamera.projection);
         this.horizontal.value = this.activeViewCamera.orientation.h.toFixed(0);
         this.vertical.value = this.activeViewCamera.orientation.v.toFixed(0);
@@ -413,8 +374,6 @@ window.addEventListener('keydown', (event) => {
 
     arrangeViewports(multipleViews) {
         this.fixedViewCamera.setViewport(multipleViews);
-        this.firstPersonViewCamera.setViewport(multipleViews);
-        this.thirdPersonViewCamera.setViewport(multipleViews);
         this.topViewCamera.setViewport(multipleViews);
     }
 
@@ -438,7 +397,7 @@ window.addEventListener('keydown', (event) => {
         // Check if the pointer is over the remaining camera viewports
         let cameras;
         if (this.multipleViewsCheckBox.checked) {
-            cameras = [this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera];
+            cameras = [this.fixedViewCamera, this.topViewCamera];
         }
         else {
             cameras = [this.activeViewCamera];
@@ -481,8 +440,6 @@ window.addEventListener('keydown', (event) => {
 
     windowResize() {
         this.fixedViewCamera.updateWindowSize(window.innerWidth, window.innerHeight);
-        this.firstPersonViewCamera.updateWindowSize(window.innerWidth, window.innerHeight);
-        this.thirdPersonViewCamera.updateWindowSize(window.innerWidth, window.innerHeight);
         this.topViewCamera.updateWindowSize(window.innerWidth, window.innerHeight);
         this.miniMapCamera.updateWindowSize(window.innerWidth, window.innerHeight);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -513,9 +470,9 @@ window.addEventListener('keydown', (event) => {
             this.mousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
             const cameraView = this.getPointedViewport(this.mousePosition);
             if (cameraView != "none" && cameraView != "mini-map") { // Ignore mini-map
-                const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
+                const cameraIndex = ["fixed", "top"].indexOf(cameraView);
                 this.view.options.selectedIndex = cameraIndex;
-                this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex]);
+                this.setActiveViewCamera([this.fixedViewCamera, this.topViewCamera][cameraIndex]);
                 if (event.buttons == 2) { // Only allow secondary button for orientation
                     this.changeCameraOrientation = true;
                 }
@@ -585,9 +542,9 @@ window.addEventListener('keydown', (event) => {
         // Select the camera whose view is being pointed
         const cameraView = this.getPointedViewport(this.mousePosition);
         if (cameraView != "none" && cameraView != "mini-map") { // One of the remaining cameras selected
-            const cameraIndex = ["fixed", "first-person", "third-person", "top"].indexOf(cameraView);
+            const cameraIndex = ["fixed", "top"].indexOf(cameraView);
             this.view.options.selectedIndex = cameraIndex;
-            const activeViewCamera = [this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][cameraIndex];
+            const activeViewCamera = [this.fixedViewCamera, this.topViewCamera][cameraIndex];
             activeViewCamera.updateZoom(-0.001 * event.deltaY);
             this.setActiveViewCamera(activeViewCamera);
         }
@@ -601,7 +558,8 @@ window.addEventListener('keydown', (event) => {
     elementChange(event) {
         switch (event.target.id) {
             case "view":
-                this.setActiveViewCamera([this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera][this.view.options.selectedIndex]);
+                
+                this.setActiveViewCamera([this.fixedViewCamera, this.topViewCamera][this.view.options.selectedIndex]);
                 break;
             case "projection":
                 this.activeViewCamera.setActiveProjection(["perspective", "orthographic"][this.projection.options.selectedIndex]);
@@ -649,8 +607,6 @@ window.addEventListener('keydown', (event) => {
                 break;
             case "reset-all":
                 this.fixedViewCamera.initialize();
-                this.firstPersonViewCamera.initialize();
-                this.thirdPersonViewCamera.initialize();
                 this.topViewCamera.initialize();
                 break;
         }
@@ -716,7 +672,7 @@ window.addEventListener('keydown', (event) => {
 
             let cameras;
             if (this.multipleViewsCheckBox.checked) {
-                cameras = [this.fixedViewCamera, this.firstPersonViewCamera, this.thirdPersonViewCamera, this.topViewCamera];
+                cameras = [this.fixedViewCamera, this.topViewCamera];
             }
             else {
                 cameras = [this.activeViewCamera];

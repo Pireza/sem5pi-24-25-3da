@@ -144,16 +144,9 @@ export default class Camera {
         // Set the projection parameters (perspective: field-of-view, aspect ratio, near and far clipping planes; orthographic: left, right, top, bottom, near and far clipping planes)
         this.setProjectionParameters();
 
-        /* To-do #25 - Set the default camera projection: mini-map: orthographic; remaining views: perspective
-            - mini-map view: "mini-map"
-            - perspective projection: "perspective"
-            - orthographic projection: "orthographic"
-        if (this.view != ...) { */
-            this.setActiveProjection("perspective");
-        /* }
-        else {
-            ...;
-        } */
+
+        this.setActiveProjection("perspective");
+
     }
 
     getViewport() { // Converted from % to pixels
