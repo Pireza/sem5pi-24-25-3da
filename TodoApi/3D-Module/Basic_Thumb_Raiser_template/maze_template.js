@@ -59,10 +59,13 @@ export default class Maze {
 
             // Build the rooms
             let currRoom, bedObject, personObject, doorObject;
+
             for (let i = 0; i < this.rooms.length; i++) { // In order to represent the eastmost walls, the map width is one column greater than the actual maze width
                 currRoom = this.rooms[i];
+                let occupied= false;
                 doorObject = new DoorTemplate({ modelUrl: 'models/gltf/door/door.glb' });
-
+                const roomGroup = new THREE.Group();
+                
                 switch (currRoom.door) {
                     case 'right':
                         side = 0;
@@ -85,24 +88,24 @@ export default class Maze {
                         wallObject = this.wallDoor.object.clone();
                         doorObject.door.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.2, currRoom.y - currRoom.length / 2.0);
                         doorObject.door.rotation.y = Math.PI / 2;
-                        this.object.add(doorObject.door);
+                        roomGroup.add(doorObject.door);
                     } else {
                         wallObject = this.wall.object.clone();
                     }
                     wallObject.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.5, currRoom.y - currRoom.length / 2.0);
-                    this.object.add(wallObject);
+                    roomGroup.add(wallObject);
 
                     if (side == 1 && j == (currRoom.width / 2 | 0)) {
                         wallObject = this.wallDoor.object.clone();
                         doorObject.door.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.2, currRoom.y + currRoom.length / 2.0);
                         doorObject.door.rotation.y = Math.PI / 2;
-                        this.object.add(doorObject.door);
+                        roomGroup.add(doorObject.door);
                     } else {
                         wallObject = this.wall.object.clone();
                     }
 
                     wallObject.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.5, currRoom.y + currRoom.length / 2.0);
-                    this.object.add(wallObject);
+                    roomGroup.add(wallObject);
 
                 }
 
@@ -112,20 +115,20 @@ export default class Maze {
                     if (side == 2 && k == (currRoom.length / 2 | 0)) {
                         wallObject = this.wallDoor.object.clone();
                         doorObject.door.position.set(currRoom.x - currRoom.width / 2.0, 1.2, currRoom.y - currRoom.length / 2.0 + k + .5);
-                        this.object.add(doorObject.door);
+                        roomGroup.add(doorObject.door);
                     } else {
                         wallObject = this.wall.object.clone();
                     }
 
                     wallObject.position.set(currRoom.x - currRoom.width / 2.0, 1.5, currRoom.y - currRoom.length / 2.0 + k + .5);
                     wallObject.rotateY(Math.PI / 2.0);
-                    this.object.add(wallObject);
+                    roomGroup.add(wallObject);
 
 
                     if (side == 3 && k == (currRoom.length / 2 | 0)) {
                         wallObject = this.wallDoor.object.clone();
                         doorObject.door.position.set(currRoom.x + currRoom.width / 2.0, 1.2, currRoom.y - currRoom.length / 2.0 + k + .5);
-                        this.object.add(doorObject.door);
+                        roomGroup.add(doorObject.door);
                     } else {
                         wallObject = this.wall.object.clone();
                     }
@@ -133,21 +136,38 @@ export default class Maze {
                     wallObject.position.set(currRoom.x + currRoom.width / 2.0, 1.5, currRoom.y - currRoom.length / 2.0 + k + .5);
                     wallObject.rotateY(Math.PI / 2.0);
 
-                    this.object.add(wallObject);
+                    roomGroup.add(wallObject);
 
                 }
 
                 bedObject = new BedTemplate({ modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb' });
                 bedObject.bed.position.set(currRoom.x, 0.0, currRoom.y);
                 bedObject.bed.rotation.y = this.convertDegreesToRadians(currRoom.bedDirection);
-                this.object.add(bedObject.bed);
+                roomGroup.add(bedObject.bed);
 
                 if (this.roomsStatus.rooms.includes(currRoom.name)) {
                     personObject = new Person({ modelUrl: 'models/gltf/human/3d_scan_man_1.glb' });
                     personObject.person.position.set(currRoom.x, .75, currRoom.y);
                     personObject.person.rotation.z = this.convertDegreesToRadians(currRoom.bedDirection);
-                    this.object.add(personObject.person);
-                }
+                    roomGroup.add(personObject.person);
+                    occupied=true;
+                } 
+             
+                  roomGroup.userData.info = {
+                    name: currRoom.name,
+                    width: currRoom.width,
+                    depth: currRoom.length,
+                    occupied: occupied,
+                    direction: currRoom.bedDirection,
+                    doorPosition: currRoom.door,
+                };   
+                roomGroup.name = `room_${currRoom.name}`;
+                roomGroup.width = currRoom.width;
+                roomGroup.length= currRoom.length;
+                roomGroup.bedDirection=currRoom.bedDirection;
+                roomGroup.door= currRoom.door;
+                        
+                this.object.add(roomGroup);
 
             }
 

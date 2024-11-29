@@ -247,13 +247,14 @@ export default class ThumbRaiser {
                     if (roomInfo) {
                         // Update the overlay content
                         roomInfoDetails.innerHTML = `
-                    Name: ${roomInfo.name}<br>
-                    Width: ${roomInfo.width}<br>
-                    Depth: ${roomInfo.depth}<br>
-                    Occupied: ${roomInfo.occupied}<br>
-                    Direction: ${roomInfo.direction}<br>
-                    Door Position: ${roomInfo.doorPosition}
-                `;
+    Name: ${roomInfo.name}<br>
+    Width: ${roomInfo.width}<br>
+    Depth: ${roomInfo.depth}<br>
+    Occupied: ${roomInfo.occupied}<br>
+    Direction: ${roomInfo.direction}<br>
+    Door Position: ${roomInfo.doorPosition}
+`;
+
 
                         // Show the overlay
                         overlay.style.display = 'flex';

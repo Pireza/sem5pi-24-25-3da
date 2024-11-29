@@ -55,14 +55,21 @@ export class PickHelper {
         if (!this.pickedObject) {
             return null;
         }
-
-        // Check if the picked object belongs to a room group
-        const parent = this.pickedObject.parent;
-        if (parent && parent.name.startsWith("room")) {
-            return parent.userData.info;
+    
+        // Traverse up the hierarchy to find the room group
+        let currentObject = this.pickedObject;
+        while (currentObject) {
+            if (currentObject.name.startsWith("room_")) {
+                console.log(currentObject.userData.info);
+                return currentObject.userData.info;
+            }
+            currentObject = currentObject.parent;
+            console.log(currentObject);
         }
-
+    
         return null;
     }
+    
+    
 
 }
