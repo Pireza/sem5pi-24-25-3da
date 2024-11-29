@@ -32,7 +32,7 @@ export default class BedTemplate {
                     this.bed.add(gltf.scene);
 
                     // Scale and position adjustments if necessary
-                    this.bed.scale.set(0.01, 0.01, 0.01);
+                    this.bed.scale.set(0.005, 0.005, 0.005);
 
                     // Recalculate the bounding box based on the loaded model
                     this.bedBox.setFromObject(this.bed);

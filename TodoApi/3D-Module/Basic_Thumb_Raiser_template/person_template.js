@@ -26,7 +26,7 @@ export default class Person {
             (gltf) => {
                 // Once the model is loaded, add it to the `bed` group
                 this.person.add(gltf.scene);
-                this.person.scale.set(1, 1, 2);
+                this.person.scale.set(.5, .5, 1);
                 this.person.rotation.x = -Math.PI/2;
 
                 // Create a bounding box for the bed model

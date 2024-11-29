@@ -3,7 +3,8 @@ import Ground from "./ground_template.js";
 import Wall from "./wall_template.js";
 import BedTemplate from "./bed_template.js";
 import Person from "./person_template.js";
-import RoomTemplate from "./room_template.js";
+import WallDoor from "./wall_with_door.js";
+import DoorTemplate from "./door_template.js"
 
 export default class Maze {
     constructor(parameters) {
@@ -22,35 +23,132 @@ export default class Maze {
             this.object.add(this.ground.object);
 
 
-            this.generateFloorEnclosure('textures/wall.jpg');
+            this.wall = new Wall({ textureUrl: description.wallTextureUrl });
+            this.wallDoor = new WallDoor({ textureUrl: description.wallTextureUrl });
 
-            const roomBuilder = new RoomTemplate('textures/wall.jpg');
 
-            let room, isOccupied;
-            for (let i = 0; i < this.rooms.length; i++) {
-                room = this.rooms[i];
-                isOccupied = false;
-                // Check if the room is occupied based on the status
-                if (this.roomsStatus.rooms.includes(room.name)) {
-                    isOccupied = true;
+            let wallObject, side;
+
+
+
+
+            // Build the floor enclosure
+
+            for (let i = 0; i < this.size.width; i++) {
+                wallObject = this.wall.object.clone();
+                wallObject.position.set(- this.size.width / 2.0 + i + .5, 1.5, - this.size.height / 2.0);
+                this.object.add(wallObject);
+
+                wallObject = this.wall.object.clone();
+                wallObject.position.set(- this.size.width / 2.0 + i + .5, 1.5, + this.size.height / 2.0);
+                this.object.add(wallObject);
+            }
+
+            for (let i = 0; i < this.size.height; i++) {
+                wallObject = this.wall.object.clone();
+                wallObject.position.set(- this.size.width / 2.0, 1.5, - this.size.height / 2.0 + i + .5);
+                wallObject.rotateY(Math.PI / 2.0);
+                this.object.add(wallObject);
+
+                wallObject = this.wall.object.clone();
+                wallObject.position.set(this.size.width / 2.0, 1.5, - this.size.height / 2.0 + i + .5);
+                wallObject.rotateY(Math.PI / 2.0);
+                this.object.add(wallObject);
+            }
+
+
+            // Build the rooms
+            let currRoom, bedObject, personObject, doorObject;
+            for (let i = 0; i < this.rooms.length; i++) { // In order to represent the eastmost walls, the map width is one column greater than the actual maze width
+                currRoom = this.rooms[i];
+                doorObject = new DoorTemplate({ modelUrl: 'models/gltf/door/door.glb' });
+
+                switch (currRoom.door) {
+                    case 'right':
+                        side = 0;
+                        break;
+                    case 'left':
+                        side = 1;
+                        break;
+                    case 'front':
+                        side = 2;
+                        break;
+                    default:
+                        side = 3;
+                        break;
                 }
 
-                // Ensure the room is within bounds before placing it
-                if (this.isRoomWithinBounds(room)) {
-                    roomBuilder.generateRoom(
-                        room.width,
-                        room.length,
-                        isOccupied,
-                        room.bedDirection,
-                        room.door,
-                        room.bedX,
-                        room.bedY
-                    );
-                    roomBuilder.setRoomPositions(room.x, room.y);
-                    this.object.add(roomBuilder.getRoom());
-                } else {
-                    console.log(`Room ${room.name} is out of bounds and won't be placed.`);
+
+                for (let j = 0; j < currRoom.width; j++) {
+
+                    if (side == 0 && j == (currRoom.width / 2 | 0)) {
+                        wallObject = this.wallDoor.object.clone();
+                        doorObject.door.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.2, currRoom.y - currRoom.length / 2.0);
+                        doorObject.door.rotation.y = Math.PI / 2;
+                        this.object.add(doorObject.door);
+                    } else {
+                        wallObject = this.wall.object.clone();
+                    }
+                    wallObject.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.5, currRoom.y - currRoom.length / 2.0);
+                    this.object.add(wallObject);
+
+                    if (side == 1 && j == (currRoom.width / 2 | 0)) {
+                        wallObject = this.wallDoor.object.clone();
+                        doorObject.door.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.2, currRoom.y + currRoom.length / 2.0);
+                        doorObject.door.rotation.y = Math.PI / 2;
+                        this.object.add(doorObject.door);
+                    } else {
+                        wallObject = this.wall.object.clone();
+                    }
+
+                    wallObject.position.set(currRoom.x - currRoom.width / 2.0 + j + .5, 1.5, currRoom.y + currRoom.length / 2.0);
+                    this.object.add(wallObject);
+
                 }
+
+
+                for (let k = 0; k < currRoom.length; k++) {
+
+                    if (side == 2 && k == (currRoom.length / 2 | 0)) {
+                        wallObject = this.wallDoor.object.clone();
+                        doorObject.door.position.set(currRoom.x - currRoom.width / 2.0, 1.2, currRoom.y - currRoom.length / 2.0 + k + .5);
+                        this.object.add(doorObject.door);
+                    } else {
+                        wallObject = this.wall.object.clone();
+                    }
+
+                    wallObject.position.set(currRoom.x - currRoom.width / 2.0, 1.5, currRoom.y - currRoom.length / 2.0 + k + .5);
+                    wallObject.rotateY(Math.PI / 2.0);
+                    this.object.add(wallObject);
+
+
+                    if (side == 3 && k == (currRoom.length / 2 | 0)) {
+                        wallObject = this.wallDoor.object.clone();
+                        doorObject.door.position.set(currRoom.x + currRoom.width / 2.0, 1.2, currRoom.y - currRoom.length / 2.0 + k + .5);
+                        this.object.add(doorObject.door);
+                    } else {
+                        wallObject = this.wall.object.clone();
+                    }
+
+                    wallObject.position.set(currRoom.x + currRoom.width / 2.0, 1.5, currRoom.y - currRoom.length / 2.0 + k + .5);
+                    wallObject.rotateY(Math.PI / 2.0);
+
+                    this.object.add(wallObject);
+
+                }
+
+                bedObject = new BedTemplate({ modelUrl: 'models/gltf/Table/surgery_table_lo_upload_test/surgery_table_lo_upload_test.glb' });
+                bedObject.bed.position.set(currRoom.x, 0.0, currRoom.y);
+                bedObject.bed.rotation.y = this.convertDegreesToRadians(currRoom.bedDirection);
+                this.object.add(bedObject.bed);
+
+                if (this.roomsStatus.rooms.includes(currRoom.name)) {
+                    personObject = new Person({ modelUrl: 'models/gltf/human/3d_scan_man_1.glb' });
+                    personObject.person.position.set(currRoom.x, .75, currRoom.y);
+                    personObject.person.rotation.z = this.convertDegreesToRadians(currRoom.bedDirection);
+                    this.object.add(personObject.person);
+                }
+
             }
 
             this.object.scale.set(this.scale.x, this.scale.y, this.scale.z);
@@ -87,59 +185,6 @@ export default class Maze {
         );
     }
 
-    generateFloorEnclosure(wallTexture) {
-        let material = new THREE.MeshStandardMaterial({ color: 0x888888 });
-        // Material that reacts to light
-        if (wallTexture) {
-            const textureLoader = new THREE.TextureLoader();
-            material = new THREE.MeshStandardMaterial({
-                map: textureLoader.load(wallTexture),
-                side: THREE.DoubleSide,  // Ensure the texture is visible from both sides
-            });
-        }
-
-        const wallThickness = .1, wallHeight = 5;
-
-        const widthWall1 = new THREE.Mesh(
-            new THREE.BoxGeometry(this.size.width, wallHeight, wallThickness),
-            material
-        );
-
-        const widthWall2 = new THREE.Mesh(
-            new THREE.BoxGeometry(this.size.width, wallHeight, wallThickness),
-            material
-        );
-
-        widthWall1.position.set(0, wallHeight / 2, -this.size.height / 2);
-        this.object.add(widthWall1);
-
-        widthWall2.position.set(0, wallHeight / 2, this.size.height / 2);
-        this.object.add(widthWall2);
-
-
-        const lengthWall1 = new THREE.Mesh(
-            new THREE.BoxGeometry(this.size.height, wallHeight, wallThickness),
-            material
-        );
-
-
-        const lengthWall2 = new THREE.Mesh(
-            new THREE.BoxGeometry(this.size.height, wallHeight, wallThickness),
-            material
-        );
-
-        lengthWall1.rotateY(Math.PI / 2);
-        lengthWall2.rotateY(Math.PI / 2);
-
-
-        lengthWall1.position.set(-this.size.width / 2, wallHeight / 2, 0);
-        lengthWall2.position.set(this.size.width / 2, wallHeight / 2, 0);
-
-        this.object.add(lengthWall1);
-        this.object.add(lengthWall2);
-
-
-    }
 
     // Define loadRoomStatus method to load the RoomStatus JSON file
     loadRoomStatus() {
@@ -153,21 +198,8 @@ export default class Maze {
             });
     }
 
-    // Check if the room is within bounds
-    isRoomWithinBounds(room) {
-        // Room's left and right boundaries
-        const left = room.x - room.width / 2;
-        const right = room.x + room.width / 2;
-
-        // Room's top and bottom boundaries
-        const top = room.y + room.length / 2;
-        const bottom = room.y - room.length / 2;
-
-        // Check if the room is within the maze's boundaries
-        if (left < -this.size.width / 2 || right > this.size.width / 2 || bottom < -this.size.height / 2 || top > this.size.height / 2) {
-            return false; // Room is out of bounds
-        }
-        return true; // Room is within bounds
+    convertDegreesToRadians(deg) {
+        return deg * Math.PI / 180;
     }
 
 }

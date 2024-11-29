@@ -26,7 +26,7 @@ export default class doorTemplate {
                 this.door.add(gltf.scene);
 
                 // Scale and position adjustments if necessary (optional)
-                this.door.scale.set(0.02, 0.02, 0.01);
+                this.door.scale.set(0.01, 0.011, 0.005);
 
                 this.doorBox = new THREE.Box3().setFromObject(this.door);
             },

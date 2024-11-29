@@ -23,18 +23,19 @@ export class PickHelper {
             this.raycaster.intersectObjects(scene.children);
 
 
-
         if (this.intersectedObjects.length) {
             // pick the first object. It's the closest one
 
             this.pickedObject = this.intersectedObjects[0].object;
-        
-            /*
-                        if (this.pickedObject.name !== bedData.bedObjectName) {
-                            this.pickedObject = undefined;
-                            return;
-                        }
-            */
+
+
+
+
+            if (this.pickedObject.name !== bedData.bedObjectName) {
+                this.pickedObject = undefined;
+                return;
+            }
+
             // save its color
             this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
             // set its emissive color to flashing red/yellow
@@ -44,21 +45,24 @@ export class PickHelper {
         }
     }
 
-    getPickedObjectParentPosition(){
-        return this.pickedObject.parent.position;
+    getPickedObjectPosition() {
+        if (!this.pickedObject)
+            return null;
+
+        return this.pickedObject.parent.parent.parent.parent.parent.parent.position;
     }
     getRoomInfo() {
         if (!this.pickedObject) {
             return null;
         }
-    
+
         // Check if the picked object belongs to a room group
         const parent = this.pickedObject.parent;
         if (parent && parent.name.startsWith("room")) {
-            return parent.userData.info; 
+            return parent.userData.info;
         }
-    
+
         return null;
     }
-    
+
 }

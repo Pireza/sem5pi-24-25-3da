@@ -1,12 +1,12 @@
 import * as THREE from "three";
-
+import DoorTemplate from "./door_template.js";
 /*
  * parameters = {
  *  textureUrl: String
  * }
  */
 
-export default class Wall {
+export default class WallDoor {
     constructor(parameters) {
         for (const [key, value] of Object.entries(parameters)) {
             this[key] = value;
@@ -16,25 +16,59 @@ export default class Wall {
         texture.colorSpace = THREE.SRGBColorSpace;
 
 
+
         texture.magFilter = THREE.LinearFilter;
         texture.minFilter = THREE.LinearMipmapLinearFilter;
 
         this.object = new THREE.Group();
 
+
+        this.door = new DoorTemplate({
+            modelUrl: 'models/gltf/door/door.glb'  // Path to your door model
+        });
+
+
+        this.door.door.position.set(0.0, -0.35, -0.025);
+        this.door.door.rotation.y = Math.PI / 2;
+        this.object.add(this.door.door);
+
         // Create the front face (a rectangle)
-        let geometry = new THREE.PlaneGeometry(1.0, 3.0);
+        let geometry = new THREE.PlaneGeometry(.25, 3.0);
 
         let material = new THREE.MeshPhongMaterial({ color: 0xffffff, map: texture });
         let face = new THREE.Mesh(geometry, material);
-        face.position.set(0.0, 0.0, 0.025);
+        face.position.set(0.375, 0.0, 0.025);
 
+        this.object.add(face);
+
+
+        face = new THREE.Mesh().copy(face, false);
+        face.position.set(-0.375, 0.0, 0.025);
         this.object.add(face);
 
         // Create the rear face (a rectangle)
         face = new THREE.Mesh().copy(face, false);
         face.rotation.y = Math.PI;
-        face.position.set(0.0, 0.0, -0.025);
+        face.position.set(0.375, 0.0, -0.025);
         this.object.add(face);
+
+
+        face = new THREE.Mesh().copy(face, false);
+        face.position.set(-0.375, 0.0, -0.025);
+        this.object.add(face);
+
+
+        let geometryDoor = new THREE.PlaneGeometry(.50, .5);
+        let faceDoor = new THREE.Mesh(geometryDoor, material);
+        faceDoor.position.set(0.0, 1.25, 0.025);
+        this.object.add(faceDoor);
+
+
+        faceDoor = new THREE.Mesh().copy(faceDoor, false);
+        faceDoor.rotation.y = Math.PI;
+        faceDoor.position.set(0.0, 1.25, -0.025);
+        this.object.add(faceDoor);
+
 
         // Create the two left faces (a four-triangle mesh)
         let points = new Float32Array([

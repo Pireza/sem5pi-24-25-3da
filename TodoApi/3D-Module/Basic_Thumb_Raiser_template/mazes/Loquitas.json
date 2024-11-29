@@ -12,7 +12,7 @@
             "length": 5,
             "x": -5,
             "y": 6,
-            "bedDirection": "east",
+            "bedDirection": 180.0,
             "door": "right"
         },
         {
@@ -21,8 +21,8 @@
             "length": 5,
             "x": -5,
             "y": -1.0,
-            "bedDirection": "east",
-            "door": "right"
+            "bedDirection": 90.0,
+            "door": "left"
         },
         {
             "name": "or3",
@@ -30,8 +30,8 @@
             "length": 5,
             "x": -5,
             "y": -8.0,
-            "bedDirection": "east",
-            "door": "right"
+            "bedDirection": 270.0,
+            "door": "front"
         },
         {
             "name": "or4",
@@ -39,8 +39,8 @@
             "length": 5,
             "x": 5,
             "y": 6,
-            "bedDirection": "east",
-            "door": "left"
+            "bedDirection": 0.0,
+            "door": "back"
         },
         {
             "name": "or5",
@@ -48,7 +48,7 @@
             "length": 5,
             "x": 5,
             "y": -1.0,
-            "bedDirection": "east",
+            "bedDirection": 90.0,
             "door": "left"
         },
         {
@@ -57,7 +57,7 @@
             "length": 5,
             "x": 5,
             "y": -8,
-            "bedDirection": "east",
+            "bedDirection": 90.0,
             "door": "left"
         }
         

@@ -121,10 +121,6 @@ export default class ThumbRaiser {
         this.directionalLightParameters = merge({}, directionalLightData, directionalLightParameters);
 
 
-
-
-
-
         this.movementKeys = {
             forward: false,
             backward: false,
@@ -237,20 +233,8 @@ export default class ThumbRaiser {
         // Register the event handler to be called on key release
         document.addEventListener("keyup", event => this.keyChange(event, false));
 
-        window.addEventListener('mousemove', event => this.setPickPosition(event));
-        window.addEventListener('mouseout', () => this.clearPickPosition);
-        window.addEventListener('mouseleave', () => this.clearPickPosition);
 
 
-        window.addEventListener('touchstart', (event) => {
-            // prevent the window from scrolling
-            event.preventDefault();
-            setPickPosition(event.touches[0]);
-        }, { passive: false });
-        window.addEventListener('touchmove', (event) => {
-            setPickPosition(event.touches[0]);
-        });
-        window.addEventListener('touchend', () => this.clearPickPosition);
         let overlayVisible = false; // To track the visibility of the overlay
 
         window.addEventListener('keydown', (event) => {
@@ -320,16 +304,6 @@ export default class ThumbRaiser {
         this.spotLight.castShadow = enabled;
         this.flashLight.castShadow = enabled;
     }
-
-    clearPickPosition() {
-        // unlike the mouse which always has a position
-        // if the user stops touching the screen we want
-        // to stop picking. For now we just pick a value
-        // unlikely to pick something
-        this.pickPosition.x = -100000;
-        this.pickPosition.y = -100000;
-    }
-
 
 
     setPickPosition(event) {
@@ -456,12 +430,6 @@ export default class ThumbRaiser {
                 event.preventDefault();
             }
 
-            switch (event.code) {
-                case "KeyW": this.movementKeys.forward = state; break;
-                case "KeyS": this.movementKeys.backward = state; break;
-                case "KeyA": this.movementKeys.left = state; break;
-                case "KeyD": this.movementKeys.right = state; break;
-            }
         }
     }
 
@@ -477,20 +445,11 @@ export default class ThumbRaiser {
                     this.changeCameraOrientation = true;
                 }
                 if (event.buttons == 1) {
+                    this.setPickPosition(event);
                     this.pickHelper.pick(this.pickPosition, this.scene3D, this.activeViewCamera.object);
 
-
-                    this.activeViewCamera.setTarget
-                        (
-                            new THREE.Vector3
-                                (
-                                    this.pickHelper.getPickedObjectParentPosition().x,
-                                    0.0,
-                                    this.pickHelper.getPickedObjectParentPosition().z
-                                )
-                        );
-
-
+                    if (this.pickHelper.pickedObject)
+                        this.activeViewCamera.setTarget(new THREE.Vector3(this.pickHelper.getPickedObjectPosition().x, 0.0, this.pickHelper.getPickedObjectPosition().z));
                 }
             }
         }
@@ -558,7 +517,7 @@ export default class ThumbRaiser {
     elementChange(event) {
         switch (event.target.id) {
             case "view":
-                
+
                 this.setActiveViewCamera([this.fixedViewCamera, this.topViewCamera][this.view.options.selectedIndex]);
                 break;
             case "projection":
@@ -633,10 +592,9 @@ export default class ThumbRaiser {
         }
         else {
             // Update the model animations
-            const deltaT = this.clock.getDelta(); // Time elapsed since the last frame
 
-            // Movement speed
-            const speed = 5 * deltaT;
+
+
 
             // Calculate direction vectors
             const forward = new THREE.Vector3();
@@ -647,21 +605,6 @@ export default class ThumbRaiser {
 
             // Calculate the right direction (perpendicular to forward and up)
             right.crossVectors(forward, this.activeViewCamera.object.up).normalize();
-
-            // Update the camera's position based on key states
-            if (this.movementKeys.forward) {
-                this.activeViewCamera.object.position.add(forward.multiplyScalar(speed));
-            }
-            if (this.movementKeys.backward) {
-                this.activeViewCamera.object.position.add(forward.multiplyScalar(-speed));
-            }
-            if (this.movementKeys.left) {
-                this.activeViewCamera.object.position.add(right.multiplyScalar(-speed));
-            }
-            if (this.movementKeys.right) {
-                this.activeViewCamera.object.position.add(right.multiplyScalar(speed));
-            }
-
 
             // Update statistics
             this.statistics.update();
