@@ -12,6 +12,7 @@ import { Patient } from '../Models/Patient';
 import { Staff } from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
+import { Specialization } from '../Models/Specialization'; // Import the Specialization model
 import { map } from 'rxjs/operators';
 import { UpdateOperationType } from '../Models/UpdateOperationType';
 
@@ -324,6 +325,29 @@ export class AuthService {
     });
     return this.http.delete<any>(url, { headers });
   }
+
+  createSpecialization(specialization: Specialization): Observable<Specialization> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Authorization header
+      'Content-Type': 'application/json' // Content-Type for POST
+    });
+
+    // Make a POST request to the API to create a new specialization
+    return this.http.post<Specialization>(this.specsFuncsEP, specialization, { headers });
+
+  }
+
+  updateSpecialization(id: number, specialization: Specialization): Observable<Specialization> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.specsFuncsEP}/${id}`;
+
+    return this.http.put<Specialization>(url, specialization, { headers }); // Sending the PUT request
+  }
+
 
   getAllRequests(): Observable<any> {
     const headers = new HttpHeaders({

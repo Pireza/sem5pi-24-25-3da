@@ -58,12 +58,53 @@ export class SpecializationsComponent {
   }
 
   onSave(): void {
+    const formValue = this.specializationForm.value;
+
     if (this.isEditing) {
-      console.log('Saving edited specialization:', this.specializationForm.value);
+      if (this.selectedSpecialization) {
+
+        const index = this.allSpecializations.findIndex(spec => spec.specDescription === this.selectedSpecialization.specDescription);
+        const updatedSpecialization = {
+          ...this.selectedSpecialization,
+          specDescription: formValue.specDescription,
+          specLongDescription: formValue.specLongDescription
+        };
+
+        this.authService.updateSpecialization(this.selectedSpecialization.specId, updatedSpecialization).subscribe(
+          (updatedSpec) => {
+
+            this.allSpecializations.splice(index, 1);
+            this.allSpecializations.push(updatedSpec);
+
+            alert('Specialization updated successfully!');
+            this.onCancel();
+          },
+          (error) => {
+            console.error('Error updating specialization:', error);
+            alert('Failed to update specialization. Please try again later.');
+          }
+        );
+      }
     } else if (this.isAdding) {
-      console.log("lmao");
+      const newSpecialization = {
+        specDescription: formValue.specDescription,
+        specLongDescription: formValue.specLongDescription
+      };
+
+      this.authService.createSpecialization(newSpecialization).subscribe(
+        (addedSpec) => {
+          this.allSpecializations.push(addedSpec);
+          alert('Specialization added successfully!');
+          this.onCancel();
+        },
+        (error) => {
+          console.error('Error adding specialization:', error);
+          alert('Failed to add specialization. Please try again later.');
+        }
+      );
     }
   }
+
 
   onCancel(): void {
     this.isEditing = false;
