@@ -9,7 +9,7 @@ import { OperationRequestSearch } from '../Models/OperationRequestSearch';
 import { RegisterStaffRequest } from '../Models/RegisterStaffRequest';
 import { OperationTypeSearch } from '../Models/OperationTypeSearch';
 import { Patient } from '../Models/Patient';
-import {Staff} from '../Models/Staff';
+import { Staff } from '../Models/Staff';
 import { CreateStaffRequest } from '../Models/CreateStaffRequest';
 import { OperationType } from '../Models/OperationType';
 import { map } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export interface DecodedToken {
   providedIn: 'root',
 })
 export class AuthService {
- 
+
   public apiUrl = 'http://localhost:5174/api/Patients/authenticate';
   public registerUrl = 'http://localhost:5174/api/Patients/registerPatientViaAuth0';
   public deletePatientUrl = 'http://localhost:5174/api/Patients/deleteUserByEmail';
@@ -55,6 +55,9 @@ export class AuthService {
   public getAllSpecsNamesEP = 'http://localhost:5174/api/Specialization/names';
   public createOperationRequestUrl = 'http://localhost:5174/api/OperationRequests/CreateOperationRequest'
   public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin'
+
+  public specsFuncsEP = 'http://localhost:5174/api/Specialization';
+
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -144,13 +147,13 @@ export class AuthService {
       `${this.deletePatientProfile}/${email}/delete`, { headers }
     );
   }
-  
+
 
   deactivateStaffByIdAsAdmin(id: number): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}` // Set the Authorization header
     });
-  
+
     return this.http.put<void>(`${this.deactivateStaffProfile}/${id}`, {}, { headers, observe: 'response' }).pipe(
       map(response => {
         if (response.status === 200) {
@@ -160,7 +163,7 @@ export class AuthService {
       })
     );
   }
-  
+
 
 
 
@@ -179,11 +182,11 @@ export class AuthService {
   }
 
 
-  getOperationTypesNames(){
+  getOperationTypesNames() {
     return this.http.get<any>(this.getAllTypesNamesEP);
   }
 
-  getSpecsNames(){
+  getSpecsNames() {
     return this.http.get<any>(this.getAllSpecsNamesEP);
   }
 
@@ -221,9 +224,9 @@ export class AuthService {
     const requestUrl = `${this.updateOperationTypeUrl}/${operation.id}`;
 
     return this.http.put<void>(requestUrl, operation, { headers });
-  }  
+  }
 
-  
+
   searchPatientProfiles(
     name?: string,
     email?: string,
@@ -256,7 +259,7 @@ export class AuthService {
 
     return this.http.post(this.createPatientProfileAsAdmin, patientData, { headers });
   }
-  
+
   createOperationRequestAsDoctor(request: {
     patientId: number;
     operationTypeId: number;
@@ -267,14 +270,14 @@ export class AuthService {
       Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json',
     });
-  
+
     // Adjusting responseType to 'text' for plain text responses from the backend
     return this.http.post<string>(this.createOperationRequestUrl, request, {
       headers,
       responseType: 'text' as 'json', // Expecting a plain text response
     });
   }
-  
+
 
 
 
@@ -337,42 +340,42 @@ export class AuthService {
       Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json'
     });
-  
+
     // Ensure that email is provided
     if (!patient.email) {
       throw new Error('Patient email is required.');
     }
-  
+
     // Construct query parameters
     const params = new URLSearchParams();
     if (patient.firstName) params.append('firstName', patient.firstName);
     if (patient.lastName) params.append('lastName', patient.lastName);
     if (patient.phone) params.append('phone', patient.phone);
     if (patient.emergencyContact) params.append('emergencyContact', patient.emergencyContact);
-  
+
     // Only append medicalConditions as individual parameters for each condition (not a single JSON string)
     if (patient.medicalConditions && patient.medicalConditions.length > 0) {
       patient.medicalConditions.forEach(condition => {
         params.append('medicalConditions', condition);
       });
     }
-  
+
     // Ensure that the URL is correctly formatted:
     const requestUrl = `${this.editPatientProfileAdmin}/${patient.email}?${params.toString()}`;
-  
+
     console.log("Request URL:", requestUrl);  // Log for debugging
-  
+
     // Send the PUT request with query parameters and no body (empty object as body)
     return this.http.put<void>(requestUrl, {}, { headers });
   }
-  
+
 
   createStaffAsAdmin(request: CreateStaffRequest): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json'
     });
-  
+
     return this.http.post<void>(this.createStaffAdmin, request, { headers });
   }
 
@@ -390,21 +393,21 @@ export class AuthService {
       Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json'
     });
-  
+
     let queryParams = '';
-  
+
     if (staffUpdateRequest.firstName) queryParams += `firstName=${encodeURIComponent(staffUpdateRequest.firstName)}`;
     if (staffUpdateRequest.lastName) queryParams += `${queryParams ? '&' : '?'}lastName=${encodeURIComponent(staffUpdateRequest.lastName)}`;
     if (staffUpdateRequest.phone) queryParams += `${queryParams ? '&' : '?'}phone=${encodeURIComponent(staffUpdateRequest.phone)}`;
     if (staffUpdateRequest.specializationId != null) queryParams += `${queryParams ? '&' : '?'}specializationId=${staffUpdateRequest.specializationId}`;
     if (staffUpdateRequest.role) queryParams += `${queryParams ? '&' : '?'}role=${encodeURIComponent(staffUpdateRequest.role)}`;
     if (staffUpdateRequest.availabilitySlots) queryParams += `${queryParams ? '&' : '?'}availabilitySlots=${encodeURIComponent(JSON.stringify(staffUpdateRequest.availabilitySlots))}`;
-  
+
     const url = `${this.editStaffAdmin}/${staffUpdateRequest.email}?${queryParams.toString()}`;
-  
+
     return this.http.put<void>(url, queryParams, { headers });
   }
-  
+
 
   deleteOperationRequestAsDoctor(id: number): Observable<void> {
     const headers = new HttpHeaders({
@@ -432,23 +435,23 @@ export class AuthService {
   getPatientEmails(): Observable<string[]> {
     return this.http.get<string[]>(`http://localhost:5174/api/Patients/emails`);
   }
-  
+
   getPatientByEmail(email: string): Observable<Patient> {
     const url = `http://localhost:5174/api/Patients/email/${encodeURIComponent(email)}`;
     return this.http.get<Patient>(url);
   }
 
-  getStaffEmails() : Observable<string[]> {
+  getStaffEmails(): Observable<string[]> {
     return this.http.get<string[]>('http://localhost:5174/api/StaffUser/all-staff-emails');
   }
 
   getStaffByEmail(email: string): Observable<Staff> {
     const url = `http://localhost:5174/api/StaffUser/staff-by-email/${encodeURIComponent(email)}`;
     return this.http.get<Staff>(url);
-  
-}
 
-  getActiveTypes(): Observable<OperationType[]>{
+  }
+
+  getActiveTypes(): Observable<OperationType[]> {
     const url = ' http://localhost:5174/api/OperationType/active';
     return this.http.get<OperationType[]>(url);
   }
@@ -463,7 +466,7 @@ export class AuthService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`  // Set the Authorization header
     });
-  
+
     // Construct the URL with query parameters
     const params = new URLSearchParams();
     if (name) params.append('name', name);
@@ -471,12 +474,12 @@ export class AuthService {
     if (specialization) params.append('specialization', specialization.toString());
     params.append('page', page.toString());
     params.append('pageSize', pageSize.toString());
-  
+
     // Log the final URL for debugging
     const url = `${this.searchStaffProfilesUrl}?${params.toString()}`;
     console.log('Final search URL:', url);  // Log the full URL for inspection
-    
-  
+
+
     return this.http.get<any>(url, { headers });
   }
 

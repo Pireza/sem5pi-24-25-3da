@@ -23,9 +23,10 @@ import { DeleteOperationRequestComponent } from './components/remove-operation-d
 import { RemoveOperationTypeAdminComponent } from './components/remove-operation-type-admin/remove-operation-type-admin.component';
 import { DeletePatientProfileAdminComponent } from './components/delete-patient-profile-admin/delete-patient-profile-admin.component';
 import { DeactivateStaffProfileAdminComponent } from './components/deactivate-staff-profile-admin/deactivate-staff-profile-admin.component';
-import { SearchStaffProfileAdminComponent} from './components/filter-staff-admin/filter-staff-admin.component';
-import { CreateOperationDoctorComponent} from './components/create-operation-doctor/create-operation-doctor.component'
-import { UpdateOperationTypeComponent} from './components/update-operation-type/update-operation-type.component'
+import { SearchStaffProfileAdminComponent } from './components/filter-staff-admin/filter-staff-admin.component';
+import { CreateOperationDoctorComponent } from './components/create-operation-doctor/create-operation-doctor.component'
+import { UpdateOperationTypeComponent } from './components/update-operation-type/update-operation-type.component'
+import { SpecializationsComponent } from './components/specializations/specializations.component';
 
 
 export const routes: Routes = [
@@ -48,15 +49,16 @@ export const routes: Routes = [
   { path: 'create-staff-admin', component: CreateStaffAdminComponent },
   { path: 'edit-staff-admin', component: EditStaffAdminComponent },
   { path: 'planning', component: PlanningComponent },
-  {path: 'create-staff-admin', component: CreateStaffAdminComponent},
-  {path: 'edit-staff-admin', component : EditStaffAdminComponent},
-  {path: 'remove-operation-doctor', component :DeleteOperationRequestComponent },
-  {path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent},
-  {path: 'delete-patient-profile-admin', component: DeletePatientProfileAdminComponent},
-  {path: 'deactivate-staff-profile-admin', component: DeactivateStaffProfileAdminComponent},
-  {path: 'filter-staff-admin', component: SearchStaffProfileAdminComponent},
-  {path: 'create-operation-doctor', component: CreateOperationDoctorComponent},
-  {path: 'update-operation-type', component: UpdateOperationTypeComponent},
+  { path: 'create-staff-admin', component: CreateStaffAdminComponent },
+  { path: 'edit-staff-admin', component: EditStaffAdminComponent },
+  { path: 'remove-operation-doctor', component: DeleteOperationRequestComponent },
+  { path: 'remove-operation-type-admin', component: RemoveOperationTypeAdminComponent },
+  { path: 'delete-patient-profile-admin', component: DeletePatientProfileAdminComponent },
+  { path: 'deactivate-staff-profile-admin', component: DeactivateStaffProfileAdminComponent },
+  { path: 'filter-staff-admin', component: SearchStaffProfileAdminComponent },
+  { path: 'create-operation-doctor', component: CreateOperationDoctorComponent },
+  { path: 'update-operation-type', component: UpdateOperationTypeComponent },
+  { path: 'specs', component: SpecializationsComponent },
 
 
 
