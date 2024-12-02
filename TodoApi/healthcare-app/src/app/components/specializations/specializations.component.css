@@ -2,27 +2,121 @@
         padding: 40px 60px;
         border: 1px solid #ddd;
         border-radius: 20px;
-        /* Keep same border radius */
         background-color: rgba(255, 255, 255, 0.9);
-        /* Slight transparency */
         max-width: 800px;
-        /* Limit width for better layout */
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        /* Center content vertically inside the container */
-        align-items: center;
-        /* Align items in the center horizontally */
-        text-align: center;
+        justify-content: flex-start;
+        /* Prevent centering from messing up layout */
+        align-items: stretch;
+        /* Allow children to stretch fully */
         width: 100%;
-        /* Allow it to scale */
         margin: 0 auto;
-        /* Center horizontally */
         box-sizing: border-box;
-        /* Include padding in width/height */
     }
+
+    /* Form group styles */
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+        width: 100%;
+    }
+
+    /* Label styles */
+    label {
+        font-weight: 500;
+        color: #555;
+        display: block;
+        margin-bottom: 8px;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Text input styles */
+    input.form-control {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease-in-out;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Focus styles for text inputs */
+    input.form-control:focus {
+        outline: none;
+        border-color: #98d478;
+        /* Green border on focus */
+        background-color: #fff;
+    }
+
+    /* Textarea styles (Specialization Description) */
+    textarea.form-control {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease-in-out;
+        font-family: 'Roboto', sans-serif;
+        resize: vertical;
+    }
+
+    /* Focus styles for textarea */
+    textarea.form-control:focus {
+        outline: none;
+        border-color: #98d478;
+        /* Green border on focus */
+        background-color: #fff;
+    }
+
+    /* Button styles */
+    button {
+        width: 100%;
+        padding: 12px 0;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        background-color: #98d478;
+        /* Light green background */
+        color: white;
+        transition: all 0.3s ease-in-out;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Button hover effect */
+    button:hover {
+        background-color: #86ba6a;
+        transform: translateY(-2px);
+    }
+
+    /* Button focus effect */
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 3px 3px rgba(0, 120, 255, 0.4);
+        /* Blue glow on focus */
+    }
+
+    /* Cancel button (secondary) */
+    button.btn-secondary {
+        background-color: #f0f0f0;
+        color: #333;
+        margin-top: 10px;
+    }
+
+    /* Cancel button hover effect */
+    button.btn-secondary:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-2px);
+    }
+
+
 
     /* Table styles inside the component */
     table {
@@ -111,4 +205,18 @@
     .btn-delete:hover {
         background-color: #dc3545;
         font-family: 'Roboto', sans-serif;
+    }
+
+    .edit-form {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        display: block;
+        /* Make sure it's set to display */
+        opacity: 1;
+        /* Ensure it's visible */
+        visibility: visible;
+        /* Make sure it's not hidden */
     }

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-specializations',
   templateUrl: './specializations.component.html',
   styleUrl: './specializations.component.css'
@@ -13,8 +14,19 @@ export class SpecializationsComponent {
 
   allSpecializations: any[] = [];
   isLoading: boolean = true;
+  selectedSpecialization: any = null; // To store selected specialization
+  specializationForm: FormGroup;
+  isEditing: boolean = false; // To toggle edit form
+  isAdding: boolean = false; // To toggle add form
 
-  constructor(private authService: AuthService) { }
+
+
+  constructor(private authService: AuthService, private fb: FormBuilder) {
+    this.specializationForm = this.fb.group({
+      specDescription: ['', Validators.required],
+      specLongDescription: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.authService.getAllSpecializations().subscribe(
@@ -29,8 +41,33 @@ export class SpecializationsComponent {
     );
   }
 
-  onEdit(): void {
-    console.log("edit");
+  onEdit(spec: any): void {
+    this.selectedSpecialization = spec;
+    this.specializationForm.setValue({
+      specDescription: spec.specDescription,
+      specLongDescription: spec.specLongDescription
+    });
+    this.isEditing = true;
+    this.isAdding = false;
+  }
+
+  onAdd(): void {
+    this.specializationForm.reset();
+    this.isAdding = true;
+    this.isEditing = false;
+  }
+
+  onSave(): void {
+    if (this.isEditing) {
+      console.log('Saving edited specialization:', this.specializationForm.value);
+    } else if (this.isAdding) {
+      console.log("lmao");
+    }
+  }
+
+  onCancel(): void {
+    this.isEditing = false;
+    this.isAdding = false;
   }
 
   onDelete(spec: any): void {
