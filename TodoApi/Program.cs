@@ -207,9 +207,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<OperationService>();
 builder.Services.AddTransient<Auth0UserService>();
 builder.Services.AddTransient<PasswordGeneratorService>();
+builder.Services.AddTransient<SpecializationService>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<OperationRequestRepository>();
 builder.Services.AddScoped<OperationTypeRepository>();
+builder.Services.AddScoped<SpecializationRepository>();
 
 var app = builder.Build();
 

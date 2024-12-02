@@ -6,10 +6,12 @@ using TodoApi.Models;
 [ApiController]
 public class SpecializationController : ControllerBase
 {
+    private readonly SpecializationService _service;
     private readonly UserContext _context;
 
-    public SpecializationController(UserContext context)
+    public SpecializationController(SpecializationService service, UserContext context)
     {
+        _service = service;
         _context = context;
     }
 
@@ -17,28 +19,16 @@ public class SpecializationController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Specialization>>> GetSpecialization()
     {
-        return await _context.Specializations.ToListAsync();
+        return await _service.GetAllSpecializationAsync();
     }
 
-
-    [HttpGet("names")]
-    public async Task<ActionResult<IEnumerable<string>>> GetSpecializationsNames()
-    {
-        return await _context.Specializations.Select(s => s.SpecDescription).ToListAsync();
-    }
-
-    // GET: api/Specialization/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<Specialization>> GetSpecialization(long id)
+    public async Task<ActionResult<Specialization>> GetById(long id)
     {
-        var specialization = await _context.Specializations.FindAsync(id);
-
-        if (specialization == null)
-        {
+        var spec = await _service.GetByIdAsync(id);
+        if (spec == null)
             return NotFound();
-        }
-
-        return specialization;
+        return spec;
     }
 
 
@@ -47,11 +37,91 @@ public class SpecializationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Specialization>> PostSpecialization(Specialization specialization)
     {
-        _context.Specializations.Add(specialization);
-        await _context.SaveChangesAsync();
-
+        var spec = await _service.AddSpecializationAsync(specialization);
         return CreatedAtAction("GetSpecialization", new { id = specialization.SpecId }, specialization);
     }
+
+    [HttpDelete("{id}")]
+
+    public async Task<ActionResult<Specialization>> DeleteSpecialization(long id)
+    {
+        try
+        {
+            var spec = await _service.DeleteSpecializationAsync(id);
+            if (spec == null)
+                return NotFound();
+
+            return Ok(spec);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPut("{id}")]
+
+    public async Task<ActionResult<Specialization>> PutSpecialization(long id, Specialization specialization)
+    {
+        if (id != specialization.SpecId)
+            return BadRequest();
+
+        try
+        {
+            var spec = await _service.ChangeSpecializationAsync(specialization);
+            if (spec == null)
+                return NotFound();
+            return Ok(spec);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // |===============================================|
     // | Following methods regarding Specialized Staff |
@@ -114,6 +184,11 @@ public class SpecializationController : ControllerBase
         return CreatedAtAction("GetSpecializedStaff", new { id = staff.Id }, staff);
     }
 
+    [HttpGet("names")]
+    public async Task<ActionResult<IEnumerable<string>>> GetSpecializationsNames()
+    {
+        return await _context.Specializations.Select(s => s.SpecDescription).ToListAsync();
+    }
 
 
 }
