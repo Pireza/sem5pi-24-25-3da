@@ -1,1 +1,30 @@
-<p>specializations works!</p>
+<div class="container">
+    <h2>Specializations</h2>
+
+    <div *ngIf="isLoading" class="text-center">
+        <p>Fecthing specializations...</p>
+        <div class="spinner"></div>
+    </div>
+
+
+    <div *ngIf="!isLoading && allSpecializations && allSpecializations.length">
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Specialization Name</th>
+                    <th>Specialization Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let spec of allSpecializations">
+                    <td>{{ spec.specDescription }}</td>
+                    <td>{{ spec.specLongDescription }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!isLoading && (!allSpecializations || allSpecializations.length === 0)" class="text-center">
+        <p>No specializations available.</p>
+    </div>
+</div>

@@ -310,6 +310,13 @@ export class AuthService {
     return this.http.get<any>(this.listPrioritiesEP, { headers });
   }
 
+  getAllSpecializations(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
+    });
+    return this.http.get<any>(this.specsFuncsEP, { headers });
+  }
+
   getAllRequests(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
