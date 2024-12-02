@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
@@ -16,12 +17,15 @@ public class SpecializationController : ControllerBase
     }
 
     // GET: api/Specialization
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet]
+
     public async Task<ActionResult<IEnumerable<Specialization>>> GetSpecialization()
     {
         return await _service.GetAllSpecializationAsync();
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Specialization>> GetById(long id)
     {
@@ -34,6 +38,7 @@ public class SpecializationController : ControllerBase
 
     //POST: api/Specialization
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
     public async Task<ActionResult<Specialization>> PostSpecialization(Specialization specialization)
     {
@@ -41,6 +46,7 @@ public class SpecializationController : ControllerBase
         return CreatedAtAction("GetSpecialization", new { id = specialization.SpecId }, specialization);
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id}")]
 
     public async Task<ActionResult<Specialization>> DeleteSpecialization(long id)
@@ -59,6 +65,7 @@ public class SpecializationController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id}")]
 
     public async Task<ActionResult<Specialization>> PutSpecialization(long id, Specialization specialization)
