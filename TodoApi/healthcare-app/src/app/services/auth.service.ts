@@ -317,6 +317,14 @@ export class AuthService {
     return this.http.get<any>(this.specsFuncsEP, { headers });
   }
 
+  deleteSpecialization(id: number): Observable<any> {
+    const url = `${this.specsFuncsEP}/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
+    });
+    return this.http.delete<any>(url, { headers });
+  }
+
   getAllRequests(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header

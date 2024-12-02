@@ -1,64 +1,114 @@
-.container {
-    padding: 40px 60px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    /* Keep same border radius */
-    background-color: rgba(255, 255, 255, 0.9);
-    /* Slight transparency */
-    max-width: 800px;
-    /* Limit width for better layout */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for depth */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* Center content vertically inside the container */
-    align-items: center;
-    /* Align items in the center horizontally */
-    text-align: center;
-    width: 100%;
-    /* Allow it to scale */
-    margin: 0 auto;
-    /* Center horizontally */
-    box-sizing: border-box;
-    /* Include padding in width/height */
-}
+    .container {
+        padding: 40px 60px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        /* Keep same border radius */
+        background-color: rgba(255, 255, 255, 0.9);
+        /* Slight transparency */
+        max-width: 800px;
+        /* Limit width for better layout */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        /* Subtle shadow for depth */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* Center content vertically inside the container */
+        align-items: center;
+        /* Align items in the center horizontally */
+        text-align: center;
+        width: 100%;
+        /* Allow it to scale */
+        margin: 0 auto;
+        /* Center horizontally */
+        box-sizing: border-box;
+        /* Include padding in width/height */
+    }
 
-/* Table styles inside the component */
-table {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-    font-family: 'Roboto', sans-serif;
-}
+    /* Table styles inside the component */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        font-family: 'Roboto', sans-serif;
+    }
 
-table th,
-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
+    table th,
+    table td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
 
-table th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    color: #555;
-}
+    table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #555;
+    }
 
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
-table tr:hover {
-    background-color: #e9ecef;
-}
+    table tr:hover {
+        background-color: #e9ecef;
+    }
 
-/* Centered heading */
-h2 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 30px;
-    font-weight: 600;
-    text-align: center;
-    font-family: 'Roboto', sans-serif;
-}
+    /* Centered heading */
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 30px;
+        font-weight: 600;
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    td>.btn {
+        display: block;
+        margin-bottom: 8px;
+        width: 80px;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        text-align: center;
+    }
+
+    td>.btn:last-child {
+        margin-bottom: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Edit button styles */
+    .btn-edit {
+        background-color: #bbeca1;
+        border: 2px solid #a7e784;
+        color: white;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .btn-edit:hover {
+        background-color: #86ba6a;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Delete button styles */
+    .btn-delete {
+        background-color: #fb7e8b;
+        border: 2px solid #f25a69;
+        color: white;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .btn-delete:hover {
+        background-color: #dc3545;
+        font-family: 'Roboto', sans-serif;
+    }

@@ -13,12 +13,17 @@
                 <tr>
                     <th>Specialization Name</th>
                     <th>Specialization Description</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let spec of allSpecializations">
                     <td>{{ spec.specDescription }}</td>
                     <td>{{ spec.specLongDescription }}</td>
+                    <td>
+                        <button class="btn btn-edit" (click)="onEdit()">Edit</button>
+                        <button class="btn btn-delete" (click)="onDelete(spec)">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>

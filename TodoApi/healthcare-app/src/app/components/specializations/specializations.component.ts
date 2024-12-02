@@ -29,6 +29,31 @@ export class SpecializationsComponent {
     );
   }
 
+  onEdit(): void {
+    console.log("edit");
+  }
+
+  onDelete(spec: any): void {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the specialization: ${spec.specDescription}?`
+    );
+
+    if (confirmDelete) {
+      this.authService.deleteSpecialization(spec.specId).subscribe(
+        () => {
+          // Remove the deleted specialization from the list after successful API call
+          this.allSpecializations = this.allSpecializations.filter(item => item.specId !== spec.specId);
+          alert('Specialization deleted successfully!');
+        },
+        (error) => {
+          console.error('Error deleting specialization:', error);
+          alert('Failed to delete specialization. Please try again later.');
+        }
+      );
+    }
+  }
+
+
 
 
 }
