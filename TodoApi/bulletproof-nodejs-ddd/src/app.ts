@@ -1,31 +1,18 @@
-import 'reflect-metadata'; // We need this in order to use @Decorators
-
-import config from '../config';
-
 import express from 'express';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import connectDB from './config/db';
+import allergyRoutes from './api/routes/allergyRoute';
 
-import Logger from './loaders/logger';
+dotenv.config();
+connectDB();
 
-async function startServer() {
-  const app = express();
+const app = express();
 
-  await require('./loaders').default({ expressApp: app });
+app.use(bodyParser.json());
+app.use(allergyRoutes);
 
-  app.listen(config.port, () => {
-
-    console.log("Server listening on port: " + config.port);
-
-    Logger.info(`
-      ################################################
-      🛡️  Server listening on port: ${config.port} 🛡️ 
-      ################################################
-    `);
-    })
-    .on('error', (err) => {      
-      Logger.error(err);
-      process.exit(1);
-      return;
-  });
-}
-
-startServer();
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
