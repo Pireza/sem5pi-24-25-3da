@@ -58,7 +58,7 @@ export class AuthService {
   public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin'
 
   public specsFuncsEP = 'http://localhost:5174/api/Specialization';
-
+  public createAllergy = 'http://localhost:3000/api/createAllergy';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -522,5 +522,14 @@ export class AuthService {
     return this.http.get<any>(url, { headers });
   }
 
+  createAllergies(name: string, description: string, patientId: number): Observable<any> {
+    const allergyData = {
+      name: name,
+      description: description,
+      patientId: patientId,
+    };
+
+    return this.http.post<any>(this.createAllergy, allergyData, {  });
+  }
 
 }

@@ -1,0 +1,32 @@
+<div class="create-allergy-container">
+    <h2>Create Allergy</h2>
+  
+    <!-- Success or Error Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Allergy Form -->
+    <form (ngSubmit)="createNewAllergy()">
+      <div class="form-group">
+        <label for="name">Allergy Name</label>
+        <input type="text" id="name" [(ngModel)]="name" name="name" required class="form-control" />
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" [(ngModel)]="description" name="description" required class="form-control"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="patientId">Patient ID</label>
+        <input type="number" id="patientId" [(ngModel)]="patientId" name="patientId" required class="form-control" />
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Create Allergy</button>
+    </form>
+  </div>
+  
