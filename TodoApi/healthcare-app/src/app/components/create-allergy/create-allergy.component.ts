@@ -15,9 +15,21 @@ export class CreateAllergyComponent {
   patientId: number | null = null;
   errorMessage: string = '';
   successMessage: string = '';
+  patients: any[] = []; // Array to hold patient data
 
   constructor(private allergyService: AuthService) {}
-
+  ngOnInit() {
+    // Fetch all patients when the component is initialized
+    this.allergyService.getAllPatientsInfo().subscribe(
+      (response: any) => {
+        this.patients = response; // Assuming the response contains the list of patients
+      },
+      (error: any) => {
+        this.errorMessage = 'Error fetching patients. Please try again.';
+        console.error('Error:', error);
+      }
+    );
+  }
   createNewAllergy() {
     if (this.name && this.description && this.patientId !== null) {
       this.allergyService.createAllergies(this.name, this.description, this.patientId).subscribe(
