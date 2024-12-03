@@ -21,7 +21,43 @@ describe('Admin page testing', () => {
         cy.contains('.sidebar-menu li', 'Search Operation Types').click();
 
         cy.get('#submit').click();
-        
+
+        cy.contains('.sidebar-menu li', 'Manage Specializations').click();
+
+        cy.get('table.table').should('be.visible');
+
+        // Add a new specialization
+        cy.contains('button', 'Add Specialization').click();
+        cy.get('.edit-form').should('be.visible');
+        cy.get('#specDescription').type('Test Specialization');
+        cy.get('#specLongDescription').type('This is a test specialization');
+        cy.get('.edit-form button[type="submit"]').click();
+
+        cy.contains('table.table tbody tr', 'Test Specialization')
+            .should('contain', 'This is a test specialization');
+
+        cy.contains('table.table tbody tr', 'Test Specialization')
+            .within(() => {
+                cy.get('.btn-edit').click();
+            });
+
+        cy.get('.edit-form').should('be.visible');
+        cy.get('#specDescription').clear().type('Updated Specialization');
+        cy.get('#specLongDescription').clear().type('Updated test specialization');
+        cy.get('.edit-form button[type="submit"]').click();
+
+        cy.contains('table.table tbody tr', 'Updated Specialization')
+            .should('contain', 'Updated test specialization');
+
+        cy.contains('table.table tbody tr', 'Updated Specialization')
+            .within(() => {
+                cy.get('.btn-delete').click();
+            });
+
+        cy.on('window:confirm', () => true);
+
+        cy.contains('table.table tbody tr', 'Updated Specialization').should('not.exist');
+
     });
 
 })
