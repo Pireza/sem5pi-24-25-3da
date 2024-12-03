@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 });
 
 // Define the middleware to get patient info
-const getPatientInfo = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+const getPatientInfo = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void|Response> => {
     const { patientId } = req.body; // Patient ID from request body
 
     try {
@@ -24,7 +24,7 @@ const getPatientInfo = async (req: CustomRequest, res: Response, next: NextFunct
         const [rows] = await connection.promise().query<RowDataPacket[]>('SELECT * FROM Patients WHERE id = ?', [patientId]);
 
         if (rows.length === 0) {
-             res.status(404).json({ message: 'Patient not found in database' });
+            return res.status(404).json({ message: 'Patient not found in database' });
         }
 
         // Assign the patient data from the database to req.patient

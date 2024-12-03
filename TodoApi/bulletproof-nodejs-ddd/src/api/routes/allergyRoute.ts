@@ -1,10 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { addAllergy } from '../../controllers/allergyController';
 import { getPatientInfo } from '../middlewares/patientMiddleware'; // Import the middleware
+import { AllergyController } from '../../controllers/allergyController';
+import { AllergyService } from '../../services/AllergyService';
+import { AllergyRepository } from '../../repos/AllergyRepository';
 
 const router = express.Router();
 
+const allergyRepository = new AllergyRepository();
+const allergyService = new AllergyService(allergyRepository);
+const allergyController = new AllergyController(allergyService);
+
 // Route to add new allergy, ensures patient info is validated before adding the allergy
-router.post('/api/createAllergy', getPatientInfo, addAllergy);
+router.post('/api/createAllergy', getPatientInfo, allergyController.addAllergy);
 
 export default router;
