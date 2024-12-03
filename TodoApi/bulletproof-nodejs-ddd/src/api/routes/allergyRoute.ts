@@ -12,5 +12,6 @@ const allergyController = new AllergyController(allergyService);
 
 // Route to add new allergy, ensures patient info is validated before adding the allergy
 router.post('/api/createAllergy', getPatientInfo, allergyController.addAllergy);
+router.get('/api/getAllAllergies', (req, res) => allergyController.listAllergies(req, res));
 
 export default router;

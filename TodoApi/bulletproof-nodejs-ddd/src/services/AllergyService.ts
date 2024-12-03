@@ -12,6 +12,9 @@ class AllergyService {
         const allergyData = { name, description, patientId };
         return await this.allergyRepository.createAllergy(allergyData);
     }
+    public async getAllAllergies(): Promise<{ name: string; description: string; patientId: number }[]> {
+        return await this.allergyRepository.findAllAllergies();
+    }
 }
 
 export { AllergyService };

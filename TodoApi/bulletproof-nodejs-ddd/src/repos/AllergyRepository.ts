@@ -11,6 +11,9 @@ class AllergyRepository {
         const allergy = new Allergy(allergyData);
         return await allergy.save();
     }
+    public async findAllAllergies(): Promise<Pick<IAllergy, 'name' | 'description' | 'patientId'>[]> {
+        return await Allergy.find({}, 'name description patientId -_id').exec();
+    }
 }
 
 export { AllergyRepository };
