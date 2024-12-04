@@ -13,8 +13,8 @@ export class CreateAllergyComponent {
   name: string = '';
   description: string = '';
   patientId: number | null = null;
-  errorMessage: string = '';
-  successMessage: string = '';
+  code: string='';
+  codeSystem: string='';
   patients: any[] = []; // Array to hold patient data
 
   constructor(private allergyService: AuthService) {}
@@ -25,28 +25,33 @@ export class CreateAllergyComponent {
         this.patients = response; // Assuming the response contains the list of patients
       },
       (error: any) => {
-        this.errorMessage = 'Error fetching patients. Please try again.';
         console.error('Error:', error);
       }
     );
   }
   createNewAllergy() {
-    if (this.name && this.description && this.patientId !== null) {
-      this.allergyService.createAllergies(this.name, this.description, this.patientId).subscribe(
+    if (this.name && this.code && this.codeSystem && this.patientId !== null) {
+      this.allergyService.createAllergies(this.name,this.code, this.codeSystem, this.description, this.patientId).subscribe(
         (response: any) => {
-          this.successMessage = 'Allergy created successfully!';
-          this.errorMessage = '';
+          
           console.log('Response:', response);
+          alert('Allergy created successfully!');
+          this.name = '';
+          this.description = '';
+          this.code = '';
+          this.codeSystem = '';
+          this.patientId = null;
         },
         (error: any) => {
-          this.errorMessage = 'Error creating allergy. Please try again.';
-          this.successMessage = '';
           console.error('Error:', error);
+          alert('There was an error while trying to add the allergy! That allergy may already be added to that patient.');
+          this.name = '';
+          this.description = '';
+          this.code = '';
+          this.codeSystem = '';
+          this.patientId = null;
         }
       );
-    } else {
-      this.errorMessage = 'Please fill in all fields.';
-      this.successMessage = '';
-    }
+    } 
   }
 }

@@ -29,7 +29,32 @@ body {
     color: #333;
     font-weight: bold;
   }
-  
+  /* Input, textarea, and select styles */
+/* Input, textarea, and select styles */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  box-sizing: border-box; /* Ensures the padding is included in the width */
+}
+
+/* Focus styles for input, textarea, and select */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  outline: none;
+}
+
+
   /* Form group styles */
   .form-group {
     margin-bottom: 20px;

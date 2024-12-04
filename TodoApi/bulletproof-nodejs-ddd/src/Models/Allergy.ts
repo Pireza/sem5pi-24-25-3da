@@ -3,6 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 // Define an interface for the Allergy document
 interface IAllergy extends Document {
     name: string;
+    code: string;
+    codeSystem: string;
     description: string;
     createdAt: Date;
     patientId: number;
@@ -12,7 +14,9 @@ interface IAllergy extends Document {
 const AllergySchema: Schema<IAllergy> = new mongoose.Schema(
     {
         name: { type: String, required: true },
-        description: { type: String, required: true },
+        code: { type: String, required: true},
+        codeSystem: {type: String, required:true},
+        description: { type: String },
         createdAt: { type: Date, default: Date.now },
         patientId: { type: Number, required: true },
     },
@@ -20,7 +24,7 @@ const AllergySchema: Schema<IAllergy> = new mongoose.Schema(
 );
 
 // Create a compound index for patientId and name to enforce uniqueness
-AllergySchema.index({ patientId: 1, name: 1 }, { unique: true });
+AllergySchema.index({ patientId: 1, code: 1 }, { unique: true });
 
 // Create and export the Allergy model
 const Allergy = mongoose.model<IAllergy>('Allergy', AllergySchema);

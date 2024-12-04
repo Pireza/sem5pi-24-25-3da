@@ -18,14 +18,14 @@ class AllergyController {
 
     public addAllergy = async (req: CustomRequest, res: Response): Promise<void | Response> => {
         try {
-            const { name, description } = req.body;
+            const { name,code, codeSystem, description } = req.body;
             const patientId = req.patient?.Id;
 
             if (!patientId) {
                 return res.status(400).json({ message: 'Patient ID is missing or invalid' });
             }
 
-            const allergy = await this.allergyService.addAllergy(name, description, patientId);
+            const allergy = await this.allergyService.addAllergy(name, code, codeSystem, description, patientId);
 
             res.status(201).json({ message: 'Allergy added successfully', data: allergy });
         } catch (error) {

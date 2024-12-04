@@ -523,9 +523,11 @@ export class AuthService {
     return this.http.get<any>(url, { headers });
   }
 
-  createAllergies(name: string, description: string, patientId: number): Observable<any> {
+  createAllergies(name: string,code: string, codeSystem:string, description: string, patientId: number): Observable<any> {
     const allergyData = {
       name: name,
+      code: code,
+      codeSystem:codeSystem,
       description: description,
       patientId: patientId,
     };
