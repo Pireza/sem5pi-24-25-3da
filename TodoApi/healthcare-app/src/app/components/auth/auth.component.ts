@@ -21,7 +21,7 @@ import { DeactivateStaffProfileAdminComponent } from '../deactivate-staff-profil
 import { SearchStaffProfileAdminComponent } from '../filter-staff-admin/filter-staff-admin.component';
 import { CreateOperationDoctorComponent } from '../create-operation-doctor/create-operation-doctor.component';
 import { UpdateOperationTypeComponent } from '../update-operation-type/update-operation-type.component';
-
+import { GetAllergiesComponent } from '../get-allergies/get-allergies.component';
 
 import { CommonModule } from '@angular/common';
 import { SpecializationsComponent } from '../specializations/specializations.component';
@@ -99,6 +99,7 @@ export class AuthComponent {
     } else if (this.userRole === 'Doctor') {
       return [
         { label: 'Manage Operation Requests' },
+        {label: 'Manage Patient'},
         { label: '3D Visualization of the Floor' },
         { label: 'Logout', isAction: true },
       ];
@@ -166,6 +167,8 @@ export class AuthComponent {
       this.activeComponent = RemoveOperationTypeAdminComponent;
     } else if (action === 'Manage Specializations') {
       this.activeComponent = SpecializationsComponent;
+    }else if(action==='Search Allergies'){
+      this.activeComponent=GetAllergiesComponent;
     }
     else if (action === 'Logout') {
       this.isAuthenticated = false; // Reset authentication state
@@ -181,14 +184,14 @@ export class AuthComponent {
       });
     } else if (action === 'Look at the 3D Visualization model') {
       window.open('http://192.168.56.1:5500/TodoApi/3D-Module/Basic_Thumb_Raiser_template/Thumb_Raiser.html', '_blank');
-    }else if(action==='Add Patient Allergy'){
+    }else if(action==='Add Allergy'){
       this.activeComponent= CreateAllergyComponent;
     }
   }
 
   getSubmenuItems(menuItem: string) {
     if (menuItem === 'Manage Patients') {
-      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile', 'Delete Patient Profile', 'Add Patient Allergy'];
+      return ['Search Patients', 'Edit Patient Profiles', 'Create Patient Profile', 'Delete Patient Profile', 'Add Allergy'];
     } else if (menuItem === 'Manage Staff') {
       return ['Search Staff Profile', 'Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile', 'Deactivate Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
@@ -199,6 +202,8 @@ export class AuthComponent {
       return ['Update Profile', 'Delete Account'];
     } else if (menuItem === '3D Visualization of the Floor') {
       return ['Look at the 3D Visualization model'];
+    }else if(menuItem==='Manage Patient'){
+      return ['Search Allergies'];
     }
     return [];
   }

@@ -538,4 +538,9 @@ export class AuthService {
   getAllPatientsInfo(): Observable<any> {
     return this.http.get<any>(this.getAllPatients, {  });
   }
+  getAllergies(): Observable<any> {
+    return this.http.get<any>(this.getAllAllergies, {  });
+  }
+  
+
 }
