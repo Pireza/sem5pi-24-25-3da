@@ -60,6 +60,7 @@ export class AuthService {
   public specsFuncsEP = 'http://localhost:5174/api/Specialization';
   public createAllergy = 'http://localhost:3000/api/createAllergy';
   public getAllPatients= 'http://localhost:5174/api/Patients/all';
+  public getAllAllergies= 'http://localhost:3000/api/getAllAllergies';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -523,13 +524,12 @@ export class AuthService {
     return this.http.get<any>(url, { headers });
   }
 
-  createAllergies(name: string,code: string, codeSystem:string, description: string, patientId: number): Observable<any> {
+  createAllergies(name: string,code: string, codeSystem:string, description: string): Observable<any> {
     const allergyData = {
       name: name,
       code: code,
       codeSystem:codeSystem,
       description: description,
-      patientId: patientId,
     };
 
     return this.http.post<any>(this.createAllergy, allergyData, {  });

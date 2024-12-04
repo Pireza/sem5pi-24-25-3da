@@ -8,11 +8,13 @@ class AllergyService {
         this.allergyRepository = allergyRepository;
     }
 
-    public async addAllergy(name: string,code:string, codeSystem: string, description: string, patientId: number): Promise<IAllergy> {
-        const allergyData = { name,code,codeSystem, description, patientId };
-        return await this.allergyRepository.createAllergy(allergyData);
+    public async addAllergy(name: string, code: string, codeSystem: string, description: string): Promise<IAllergy> {
+        
+        const allergyData = { name, code, codeSystem, description };
+        return await this.allergyRepository.createAllergy(allergyData); // Create the allergy without patientId
     }
-    public async getAllAllergies(): Promise<{ name: string; description: string; patientId: number }[]> {
+    
+    public async getAllAllergies(): Promise<{ name: string; code: string; codeSystem: string; description: string }[]> {
         return await this.allergyRepository.findAllAllergies();
     }
 }

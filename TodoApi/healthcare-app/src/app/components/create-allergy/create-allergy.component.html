@@ -21,16 +21,6 @@
         <textarea id="description" [(ngModel)]="description" name="description" class="form-control"></textarea>
       </div>
       
-      <!-- Patient Dropdown -->
-      <div class="form-group">
-        <label for="patientId">Select Patient</label>
-        <select id="patientId" [(ngModel)]="patientId" name="patientId" required class="form-control">
-          <option value="" disabled>Select a patient</option>
-          <option *ngFor="let patient of patients" [value]="patient.id">
-           Name: {{ patient.firstName }} {{ patient.lastName }} - Birthday: {{ patient.birthday | date:'shortDate' }} - Gender: {{ patient.gender }} - Medical Number: {{ patient.medicalNumber }}
-          </option>
-        </select>
-      </div>
   
       <button type="submit" class="btn btn-primary">Create Allergy</button>
     </form>

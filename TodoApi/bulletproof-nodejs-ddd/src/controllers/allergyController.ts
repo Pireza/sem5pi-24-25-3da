@@ -19,18 +19,19 @@ class AllergyController {
     public addAllergy = async (req: CustomRequest, res: Response): Promise<void | Response> => {
         try {
             const { name,code, codeSystem, description } = req.body;
-            const patientId = req.patient?.Id;
+           
 
-            if (!patientId) {
-                return res.status(400).json({ message: 'Patient ID is missing or invalid' });
-            }
-
-            const allergy = await this.allergyService.addAllergy(name, code, codeSystem, description, patientId);
+            const allergy = await this.allergyService.addAllergy(name, code, codeSystem, description);
 
             res.status(201).json({ message: 'Allergy added successfully', data: allergy });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Error adding allergy', error });
+            
+            if (error.message === 'An allergy with this code already exists') {
+                res.status(400).json({ error: error.message });
+            } else {
+                // Handle other unexpected errors
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
         }
     };
     public async listAllergies(req: Request, res: Response): Promise<Response> {

@@ -15,23 +15,12 @@ export class CreateAllergyComponent {
   patientId: number | null = null;
   code: string='';
   codeSystem: string='';
-  patients: any[] = []; // Array to hold patient data
 
   constructor(private allergyService: AuthService) {}
-  ngOnInit() {
-    // Fetch all patients when the component is initialized
-    this.allergyService.getAllPatientsInfo().subscribe(
-      (response: any) => {
-        this.patients = response; // Assuming the response contains the list of patients
-      },
-      (error: any) => {
-        console.error('Error:', error);
-      }
-    );
-  }
+ 
   createNewAllergy() {
-    if (this.name && this.code && this.codeSystem && this.patientId !== null) {
-      this.allergyService.createAllergies(this.name,this.code, this.codeSystem, this.description, this.patientId).subscribe(
+    if (this.name && this.code && this.codeSystem !== null) {
+      this.allergyService.createAllergies(this.name,this.code, this.codeSystem, this.description).subscribe(
         (response: any) => {
           
           console.log('Response:', response);
@@ -40,16 +29,14 @@ export class CreateAllergyComponent {
           this.description = '';
           this.code = '';
           this.codeSystem = '';
-          this.patientId = null;
         },
         (error: any) => {
           console.error('Error:', error);
-          alert('There was an error while trying to add the allergy! That allergy may already be added to that patient.');
+          alert('There was an error while trying to add the allergy! The code of that allergy may already been added.');
           this.name = '';
           this.description = '';
           this.code = '';
           this.codeSystem = '';
-          this.patientId = null;
         }
       );
     } 
