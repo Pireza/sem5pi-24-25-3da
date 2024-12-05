@@ -29,6 +29,8 @@ import { UpdateOperationTypeComponent } from './components/update-operation-type
 import { SpecializationsComponent } from './components/specializations/specializations.component';
 import { CreateAllergyComponent } from './components/create-allergy/create-allergy.component';
 import { GetAllergiesComponent } from './components/get-allergies/get-allergies.component';
+import { CreateMedicalConditionComponent } from './components/create-medical-condition/create-medical-condition.component';
+import { GetAllMedicalConditionComponent } from './components/get-all-medical-condition/get-all-medical-condition.component';
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   { path: 'patient-ui', component: PatientUIComponent },
@@ -60,7 +62,9 @@ export const routes: Routes = [
   { path: 'update-operation-type', component: UpdateOperationTypeComponent },
   { path: 'specs', component: SpecializationsComponent },
   { path: 'get-allergies', component: GetAllergiesComponent },
-  { path: 'create.allergy', component: CreateAllergyComponent },
+  { path: 'create-allergy', component: CreateAllergyComponent },
+  { path: 'create-medical-condition', component: CreateMedicalConditionComponent },
+  { path: 'get-all-medical-condition', component: GetAllMedicalConditionComponent },
 
 
 
