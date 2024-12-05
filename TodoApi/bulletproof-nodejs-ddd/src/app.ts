@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import allergyRoutes from './api/routes/allergyRoute';
+import medicalConditionsRoutes from './api/routes/medicalConditionsRoute';
 const cors = require('cors');
 
 dotenv.config();
@@ -16,7 +17,7 @@ app.use(cors({
   }));
 app.use(bodyParser.json());
 app.use(allergyRoutes);
-
+app.use(medicalConditionsRoutes);
   
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

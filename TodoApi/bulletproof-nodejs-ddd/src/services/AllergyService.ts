@@ -1,5 +1,5 @@
 import { AllergyRepository } from '../repos/AllergyRepository';
-import { IAllergy } from '../Models/Allergy'; // Import the type, not the model.
+import { IAllergy } from '../Models/Interfaces/AllergyInterface';
 
 class AllergyService {
     private allergyRepository: AllergyRepository;

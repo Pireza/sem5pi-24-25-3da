@@ -1,5 +1,5 @@
-import Allergy, {IAllergy} from '../Models/Allergy';
-
+import {IAllergy} from '../Models/Interfaces/AllergyInterface';
+import Allergy from '../Models/Allergy';
 interface AllergyData {
     name: string;
     description: string;

@@ -1,13 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, {  Schema } from 'mongoose';
+import { IAllergy } from './Interfaces/AllergyInterface';
 
-// Define an interface for the Allergy document
-interface IAllergy extends Document {
-    name: string;
-    code: string;
-    codeSystem: string;
-    description: string;
-    createdAt: Date;
-}
+
 
 // Define the Allergy schema
 const AllergySchema: Schema<IAllergy> = new mongoose.Schema(
@@ -25,5 +19,4 @@ const AllergySchema: Schema<IAllergy> = new mongoose.Schema(
 // Create and export the Allergy model
 const Allergy = mongoose.model<IAllergy>('Allergy', AllergySchema);
 
-export { IAllergy }; // Explicitly export the interface for use elsewhere
 export default Allergy;
