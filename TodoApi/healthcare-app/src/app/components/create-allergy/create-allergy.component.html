@@ -1,0 +1,28 @@
+<div class="create-allergy-container">
+    <h2>Create Allergy</h2>
+  
+    <!-- Allergy Form -->
+    <form (ngSubmit)="createNewAllergy()">
+      <div class="form-group">
+        <label for="name">Allergy Name</label>
+        <input type="text" id="name" [(ngModel)]="name" name="name" required class="form-control" />
+      </div>
+  
+      <div class="form-group">
+        <label for="code">Allergy Code</label>
+        <input id="code" [(ngModel)]="code" name="code" required class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label for="codeSystem">Code System</label>
+        <input id="codeSystem" [(ngModel)]="codeSystem" name="codeSystem" required class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" [(ngModel)]="description" name="description" class="form-control"></textarea>
+      </div>
+      
+  
+      <button type="submit" class="btn btn-primary">Create Allergy</button>
+    </form>
+  </div>
+  

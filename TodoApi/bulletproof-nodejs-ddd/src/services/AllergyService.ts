@@ -1,5 +1,5 @@
 import { AllergyRepository } from '../repos/AllergyRepository';
-import { IAllergy } from '../Models/Allergy'; // Import the type, not the model.
+import { IAllergy } from '../Models/Interfaces/AllergyInterface';
 
 class AllergyService {
     private allergyRepository: AllergyRepository;
@@ -8,9 +8,14 @@ class AllergyService {
         this.allergyRepository = allergyRepository;
     }
 
-    public async addAllergy(name: string, description: string, patientId: number): Promise<IAllergy> {
-        const allergyData = { name, description, patientId };
-        return await this.allergyRepository.createAllergy(allergyData);
+    public async addAllergy(name: string, code: string, codeSystem: string, description: string): Promise<IAllergy> {
+        
+        const allergyData = { name, code, codeSystem, description };
+        return await this.allergyRepository.createAllergy(allergyData); // Create the allergy without patientId
+    }
+    
+    public async getAllAllergies(): Promise<{ name: string; code: string; codeSystem: string; description: string }[]> {
+        return await this.allergyRepository.findAllAllergies();
     }
 }
 

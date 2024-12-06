@@ -58,7 +58,11 @@ export class AuthService {
   public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin'
 
   public specsFuncsEP = 'http://localhost:5174/api/Specialization';
-
+  public createAllergy = 'http://localhost:3000/api/createAllergy';
+  public getAllPatients= 'http://localhost:5174/api/Patients/all';
+  public getAllAllergies= 'http://localhost:3000/api/getAllAllergies';
+  public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
+  public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -521,6 +525,46 @@ export class AuthService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  createAllergies(name: string,code: string, codeSystem:string, description: string): Observable<any> {
+    const allergyData = {
+      name: name,
+      code: code,
+      codeSystem:codeSystem,
+      description: description,
+    };
+
+    return this.http.post<any>(this.createAllergy, allergyData, {  });
+  }
+  
+  getAllPatientsInfo(): Observable<any> {
+    return this.http.get<any>(this.getAllPatients, {  });
+  }
+  getAllergies(): Observable<any> {
+    return this.http.get<any>(this.getAllAllergies, {  });
+  }
+
+  createMedicalCondition(
+    code: string,
+    codeSystem: string,
+    designation: string,
+    description: string,
+    commonSymptoms: string[]
+  ): Observable<any> {
+    const medicalConditionData = {
+      code: code,
+      codeSystem: codeSystem,
+      designation: designation,
+      description: description,
+      commonSymptoms: commonSymptoms
+    };
+  
+    return this.http.post<any>(this.createMedicalConditon, medicalConditionData, {});
+  }
+  
+  getMedicalConditions(): Observable<any> {
+  return this.http.get<any>(this.getAllMedicalConditions, {});
+}
 
 
 }

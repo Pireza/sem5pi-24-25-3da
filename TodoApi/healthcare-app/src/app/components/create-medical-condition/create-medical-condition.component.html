@@ -1,0 +1,47 @@
+<div class="create-medical-condition-container">
+    <h2>Create Medical Condition</h2>
+  
+    <!-- Medical Condition Form -->
+    <form (ngSubmit)="createNewMedicalCondition()">
+      <div class="form-group">
+        <label for="code">Condition Code</label>
+        <input id="code" type="text" [(ngModel)]="code" name="code" required class="form-control"/>
+      </div>
+  
+      <div class="form-group">
+        <label for="codeSystem">Code System</label>
+        <input id="codeSystem" type="text" [(ngModel)]="codeSystem" name="codeSystem" required class="form-control"/>
+      </div>
+  
+      <div class="form-group">
+        <label for="designation">Designation</label>
+        <input id="designation" type="text" [(ngModel)]="designation" name="designation" required class="form-control"/>
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" [(ngModel)]="description" name="description" rows="3" class="form-control"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="symptoms">Symptoms</label>
+        <div class="input-group symptoms-input-group">
+          <input id="symptoms" type="text" [(ngModel)]="symptomInput" name="symptomInput" class="form-control" placeholder="Enter a symptom" />
+          <button type="button" class="btn btn-secondary add-symptom-btn" (click)="addSymptom()">Add</button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <ul class="symptoms-list">
+          <li *ngFor="let symptom of symptoms; let i = index" class="symptom-item">
+            {{ symptom }}
+            <button type="button" class="btn btn-danger btn-sm remove-symptom-btn" (click)="removeSymptom(i)">Remove</button>
+          </li>
+        </ul>
+      </div>
+      
+  
+      <button type="submit" class="btn btn-primary">Create Medical Condition</button>
+    </form>
+  </div>
+  

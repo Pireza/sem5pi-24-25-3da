@@ -1,0 +1,36 @@
+<div class="container">
+    <h2 class="text-center">Medical Conditions List</h2>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">Designation</th>
+          <th class="text-center">Code</th>
+          <th class="text-center">Code System</th>
+          <th class="text-center">Description</th>
+          <th>Common Symptoms</th> <!-- No text-center for common symptoms list -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let condition of medicalConditions">
+          <td class="text-center">{{ condition.designation }}</td>
+          <td class="text-center">{{ condition.code }}</td>
+          <td class="text-center">{{ condition.codeSystem }}</td>
+          <td class="text-center description-cell">
+            {{ condition.description || '----' }}
+          </td>
+          <td>
+            <ng-container *ngIf="condition.commonSymptoms.length > 0; else noSymptoms">
+              <ul>
+                <li *ngFor="let symptom of condition.commonSymptoms">{{ symptom }}</li>
+              </ul>
+            </ng-container>
+            <ng-template #noSymptoms>
+              <span class="text-center">----</span> <!-- Center only when no symptoms -->
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

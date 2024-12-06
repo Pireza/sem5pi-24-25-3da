@@ -1,0 +1,26 @@
+<div class="container">
+  <h2 class="text-center">Allergies List</h2>
+  
+  <table class="table text-center">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Code System</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let allergy of allergies">
+        <td>{{ allergy.name }}</td>
+        <td>{{ allergy.code }}</td>
+        <td>{{ allergy.codeSystem }}</td>
+        <td>
+          <div class="description">
+            {{ allergy.description || '----' }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

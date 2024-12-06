@@ -1,0 +1,54 @@
+/* Container styling */
+.container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;  /* Light background for the container */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;  /* Center content of container */
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;  /* Solid background for the table */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: center;  /* Center everything in the table */
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #28a745;
+    color: white;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.description {
+    white-space: pre-wrap; /* Ensures the text wraps */
+    text-align: center;    /* Centers the content */
+    word-wrap: break-word; /* Allows words to break and wrap */
+    max-width: 250px;      /* Limits the width to prevent massive lines */
+    margin: 0 auto;        /* Center the text block */
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+}
