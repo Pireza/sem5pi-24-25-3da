@@ -11,6 +11,11 @@ public class SpecializationService
     {
         return await _repo.GetAllAsync();
     }
+
+    public async Task<IEnumerable<Specialization>> GetFilteredSpecializationAsync(SpecializationSearchDTO search)
+    {
+        return await _repo.GetAsync(search);
+    }
     public async Task<Specialization?> GetByIdAsync(long id)
     {
         var spec = await _repo.GetByIdAsync(id);

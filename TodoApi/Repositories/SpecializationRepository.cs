@@ -13,7 +13,18 @@ public class SpecializationRepository
     {
         return await _context.Specializations.ToListAsync();
     }
+    public async Task<IEnumerable<Specialization>> GetAsync(SpecializationSearchDTO search)
+    {
+        var allSpecializations = await _context.Specializations.ToListAsync();
 
+        var filteredSpecs = allSpecializations.Where(spec =>
+            (string.IsNullOrEmpty(search.SpecCode) || spec.SpecCode == search.SpecCode) &&
+            (string.IsNullOrEmpty(search.SpecDescription) || spec.SpecDescription.Contains(search.SpecDescription, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(search.SpecLongDescription) || (spec.SpecLongDescription?.Contains(search.SpecLongDescription, StringComparison.OrdinalIgnoreCase) ?? false))
+        );
+
+        return filteredSpecs;
+    }
     public async Task<Specialization> GetByIdAsync(long id)
     {
 #pragma warning disable CS8603 // Possible null reference return.
@@ -24,13 +35,15 @@ public class SpecializationRepository
     {
         var tmp = await _context.Specializations.AddAsync(specialization);
         await _context.SaveChangesAsync();
+        tmp.Entity.SpecCode = "S" + tmp.Entity.SpecId;
+        await _context.SaveChangesAsync();
         return tmp.Entity;
     }
 
     public async Task<Specialization> ChangeAsync(Specialization specialization)
     {
-        _context.Entry(specialization).State = EntityState.Modified; 
-        await _context.SaveChangesAsync(); 
+        _context.Entry(specialization).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
         return specialization;
     }
 

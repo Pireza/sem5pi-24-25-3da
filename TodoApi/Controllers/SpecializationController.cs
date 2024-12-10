@@ -22,7 +22,15 @@ public class SpecializationController : ControllerBase
 
     public async Task<ActionResult<IEnumerable<Specialization>>> GetSpecialization()
     {
-        return await _service.GetAllSpecializationAsync();
+        var list = await _service.GetAllSpecializationAsync();
+        return Ok(list);
+    }
+
+    [HttpGet("filter")]
+    public async Task<ActionResult<IEnumerable<Specialization>>> GetFilteredSpecializations([FromQuery] SpecializationSearchDTO search)
+    {
+        var filteredList = await _service.GetFilteredSpecializationAsync(search);
+        return Ok(filteredList);
     }
 
     [Authorize(Policy = "AdminOnly")]

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, Form } from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -16,15 +16,22 @@ export class SpecializationsComponent {
   isLoading: boolean = true;
   selectedSpecialization: any = null; // To store selected specialization
   specializationForm: FormGroup;
+  filterForm: FormGroup;
   isEditing: boolean = false; // To toggle edit form
   isAdding: boolean = false; // To toggle add form
-
+  isFiltering: boolean = false;
 
 
   constructor(private authService: AuthService, private fb: FormBuilder) {
     this.specializationForm = this.fb.group({
       specDescription: ['', Validators.required],
       specLongDescription: ['', Validators.required]
+    });
+
+    this.filterForm = this.fb.group({
+      specCode: [''],
+      specDescription: [''],
+      specLongDescription: ['']
     });
   }
 
@@ -49,12 +56,37 @@ export class SpecializationsComponent {
     });
     this.isEditing = true;
     this.isAdding = false;
+    this.isFiltering = false;
   }
 
   onAdd(): void {
     this.specializationForm.reset();
     this.isAdding = true;
     this.isEditing = false;
+    this.isFiltering = false;
+  }
+
+  onSearch(): void {
+    this.filterForm.reset();
+    this.isAdding = false;
+    this.isEditing = false;
+    this.isFiltering = true;
+  }
+
+  onFilter(): void {
+
+    this.isLoading = true;
+    const formValue = this.filterForm.value;
+    this.authService.filterSpecializations(formValue).subscribe(
+      (specs) => {
+        this.allSpecializations = specs;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching specializations');
+        this.isLoading = false;
+      }
+    );
   }
 
   onSave(): void {
@@ -109,6 +141,27 @@ export class SpecializationsComponent {
   onCancel(): void {
     this.isEditing = false;
     this.isAdding = false;
+    this.isFiltering = false;
+
+  }
+
+  onCancelFilter(): void {
+    this.isEditing = false;
+    this.isAdding = false;
+    this.isFiltering = false;
+
+    this.isLoading = true;
+    
+    this.authService.getAllSpecializations().subscribe(
+      (specs) => {
+        this.allSpecializations = specs;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching specializations');
+        this.isLoading = false;
+      }
+    );
   }
 
   onDelete(spec: any): void {

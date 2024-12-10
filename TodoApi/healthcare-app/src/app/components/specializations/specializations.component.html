@@ -8,8 +8,9 @@
     </div>
 
     <!-- Add Specialization Button -->
-    <div *ngIf="!isLoading && !isEditing && !isAdding" class="text-center mb-4">
+    <div *ngIf="!isLoading && !isEditing && !isAdding && !isFiltering" class="text-center mb-4">
         <button class="btn btn-primary" (click)="onAdd()">Add Specialization</button>
+        <button class="btn btn-primary" (click)="onSearch()">Filter Specializations</button>
     </div>
 
     <!-- Show Add/Edit Form -->
@@ -23,12 +24,38 @@
 
             <div class="form-group">
                 <label for="specLongDescription">Specialization Description</label>
-                <input type="text" id="specLongDescription" formControlName="specLongDescription" class="form-control" />
+                <input type="text" id="specLongDescription" formControlName="specLongDescription"
+                    class="form-control" />
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" [disabled]="!specializationForm.valid">{{ isEditing ? 'Save' : 'Add' }}</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!specializationForm.valid">{{ isEditing ?
+                    'Save' : 'Add' }}</button>
                 <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="isFiltering" class="search-form">
+        <h3>Filter Specializations</h3>
+        <form [formGroup]="filterForm" (ngSubmit)="onFilter()">
+            <div class="form-group">
+                <label for="specCode">Specialization Name</label>
+                <input type="text" id="specCode" formControlName="specCode" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="specDescription">Specialization Designation</label>
+                <input type="text" id="specDescription" formControlName="specDescription" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="specLongDescription">Specialization Description</label>
+                <input type="text" id="specLongDescription" formControlName="specLongDescription"
+                    class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" [disabled]="!filterForm.valid">Search</button>
+                <button type="button" class="btn btn-secondary" (click)="onCancelFilter()">Cancel</button>
             </div>
         </form>
     </div>
@@ -38,6 +65,7 @@
         <table class="table mt-4">
             <thead>
                 <tr>
+                    <th>Specialization Code</th>
                     <th>Specialization Name</th>
                     <th>Specialization Description</th>
                     <th>Actions</th>
@@ -45,6 +73,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let spec of allSpecializations">
+                    <td>{{spec.specCode}}</td>
                     <td>{{ spec.specDescription }}</td>
                     <td>{{ spec.specLongDescription }}</td>
                     <td>
@@ -57,7 +86,8 @@
     </div>
 
     <!-- Show message when no specializations are available -->
-    <div *ngIf="!isLoading && !isEditing && !isAdding && (!allSpecializations || allSpecializations.length === 0)" class="text-center">
+    <div *ngIf="!isLoading && !isEditing && !isAdding && (!allSpecializations || allSpecializations.length === 0)"
+        class="text-center">
         <p>No specializations available.</p>
     </div>
 </div>

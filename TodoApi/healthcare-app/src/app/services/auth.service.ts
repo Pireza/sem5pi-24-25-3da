@@ -15,6 +15,7 @@ import { OperationType } from '../Models/OperationType';
 import { Specialization } from '../Models/Specialization'; // Import the Specialization model
 import { map } from 'rxjs/operators';
 import { UpdateOperationType } from '../Models/UpdateOperationType';
+import { SpecializationSearch } from '../Models/SpecializationSearch';
 
 
 // Update the DecodedToken interface to include the roles property
@@ -59,8 +60,8 @@ export class AuthService {
 
   public specsFuncsEP = 'http://localhost:5174/api/Specialization';
   public createAllergy = 'http://localhost:3000/api/createAllergy';
-  public getAllPatients= 'http://localhost:5174/api/Patients/all';
-  public getAllAllergies= 'http://localhost:3000/api/getAllAllergies';
+  public getAllPatients = 'http://localhost:5174/api/Patients/all';
+  public getAllAllergies = 'http://localhost:3000/api/getAllAllergies';
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
 
@@ -341,6 +342,30 @@ export class AuthService {
 
   }
 
+  filterSpecializations(search: SpecializationSearch): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
+
+    let params = new HttpParams();
+    if (search.specCode) {
+      params = params.set('specCode', search.specCode);
+    }
+    if (search.specDescription) {
+      params = params.set('specDescription', search.specDescription);
+    }
+    if (search.specLongDescription) {
+      params = params.set('specLongDescription', search.specLongDescription);
+    }
+
+    return this.http.get(`${this.specsFuncsEP}/filter`, {
+      headers,
+      params,
+    });
+
+  }
+
   updateSpecialization(id: number, specialization: Specialization): Observable<Specialization> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`,
@@ -526,22 +551,22 @@ export class AuthService {
     return this.http.get<any>(url, { headers });
   }
 
-  createAllergies(name: string,code: string, codeSystem:string, description: string): Observable<any> {
+  createAllergies(name: string, code: string, codeSystem: string, description: string): Observable<any> {
     const allergyData = {
       name: name,
       code: code,
-      codeSystem:codeSystem,
+      codeSystem: codeSystem,
       description: description,
     };
 
-    return this.http.post<any>(this.createAllergy, allergyData, {  });
+    return this.http.post<any>(this.createAllergy, allergyData, {});
   }
-  
+
   getAllPatientsInfo(): Observable<any> {
-    return this.http.get<any>(this.getAllPatients, {  });
+    return this.http.get<any>(this.getAllPatients, {});
   }
   getAllergies(): Observable<any> {
-    return this.http.get<any>(this.getAllAllergies, {  });
+    return this.http.get<any>(this.getAllAllergies, {});
   }
 
   createMedicalCondition(
@@ -558,13 +583,13 @@ export class AuthService {
       description: description,
       commonSymptoms: commonSymptoms
     };
-  
+
     return this.http.post<any>(this.createMedicalConditon, medicalConditionData, {});
   }
-  
+
   getMedicalConditions(): Observable<any> {
-  return this.http.get<any>(this.getAllMedicalConditions, {});
-}
+    return this.http.get<any>(this.getAllMedicalConditions, {});
+  }
 
 
 }
