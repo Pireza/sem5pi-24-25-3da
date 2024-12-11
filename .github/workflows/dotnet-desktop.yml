@@ -14,6 +14,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Test Server
+        run: touch ./test.txt
+        
       - name: Install dependencies
         run: PATH=$PATH:$HOME/.dotnet dotnet restore ./TodoApi
 
