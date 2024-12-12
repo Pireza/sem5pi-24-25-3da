@@ -1,5 +1,4 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { getPatientInfo } from '../middlewares/patientMiddleware'; // Import the middleware
 import { AllergyController } from '../../controllers/allergyController';
 import { AllergyService } from '../../services/AllergyService';
 import { AllergyRepository } from '../../repos/AllergyRepository';
