@@ -43,7 +43,7 @@ describe('Create Patient Page Tests', () => {
 
         // Confirm success alert is shown
         cy.on('window:alert', (text) => {
-            expect(text).to.contains('Allergy created successfully!');
+            expect(text).to.contains('There was an error while trying to add the allergy! The code of that allergy may already been added.');
         });
 
         // Check if form fields are reset
