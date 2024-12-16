@@ -35,6 +35,7 @@
     "acorn-jsx": "^5.1.0",
     "agenda": "^2.0.2",
     "agendash": "^4.0.0",
+    "archiver": "^7.0.1",
     "argon2": "^0.21.0",
     "axios": "^1.7.8",
     "bcrypt-nodejs": "0.0.3",
