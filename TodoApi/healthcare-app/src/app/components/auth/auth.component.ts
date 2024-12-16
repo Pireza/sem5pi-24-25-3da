@@ -101,7 +101,7 @@ export class AuthComponent {
     } else if (this.userRole === 'Doctor') {
       return [
         { label: 'Manage Operation Requests' },
-        {label: 'Manage Patient'},
+        { label: 'Manage Patient' },
         { label: '3D Visualization of the Floor' },
         { label: 'Logout', isAction: true },
       ];
@@ -169,15 +169,36 @@ export class AuthComponent {
       this.activeComponent = RemoveOperationTypeAdminComponent;
     } else if (action === 'Manage Specializations') {
       this.activeComponent = SpecializationsComponent;
-    }else if(action==='Add Allergy'){
-      this.activeComponent= CreateAllergyComponent;
-    }else if(action==='Search Allergies'){
-      this.activeComponent=GetAllergiesComponent;
-    }else if(action==='Add Medical Condition'){
-      this.activeComponent=CreateMedicalConditionComponent;
-    }else if(action==='Search Medical Conditions'){
-      this.activeComponent=GetAllMedicalConditionComponent;
+    } else if (action === 'Add Allergy') {
+      this.activeComponent = CreateAllergyComponent;
+    } else if (action === 'Search Allergies') {
+      this.activeComponent = GetAllergiesComponent;
+    } else if (action === 'Add Medical Condition') {
+      this.activeComponent = CreateMedicalConditionComponent;
+    } else if (action === 'Search Medical Conditions') {
+      this.activeComponent = GetAllMedicalConditionComponent;
+    } else if (action === 'Download Medical History') {
+      this.authService.getMedicalHistory().subscribe(
+        (response) => {
+          const jsonString = JSON.stringify(response, null, 2); // Pretty print with 2 spaces
+          const blob = new Blob([jsonString], { type: 'application/json' }); // Specify the MIME type
+          const url = window.URL.createObjectURL(blob);
+
+          // Create a temporary <a> element for downloading
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = 'medical-history.json'; // Specify the default file name
+          anchor.click(); // Trigger the download
+
+          // Cleanup
+          window.URL.revokeObjectURL(url);
+        },
+        (error) => {
+          console.error('Error fetching medical conditions:', error);
+        }
+      );
     }
+
     else if (action === 'Logout') {
       this.isAuthenticated = false; // Reset authentication state
       this.userEmail = null; // Clear user information
@@ -205,10 +226,10 @@ export class AuthComponent {
     } else if (menuItem === 'Manage Operation Requests') {
       return ['Search Operation Requests', 'Create Operation Request', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {
-      return ['Update Profile', 'Delete Account'];
+      return ['Update Profile', 'Delete Account', 'Download Medical History'];
     } else if (menuItem === '3D Visualization of the Floor') {
       return ['Look at the 3D Visualization model'];
-    }else if(menuItem==='Manage Patient'){
+    } else if (menuItem === 'Manage Patient') {
       return ['Search Allergies', 'Search Medical Conditions'];
     }
     return [];

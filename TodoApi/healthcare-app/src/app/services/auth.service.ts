@@ -64,6 +64,7 @@ export class AuthService {
   public getAllAllergies = 'http://localhost:3000/api/getAllAllergies';
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
+  public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -384,6 +385,14 @@ export class AuthService {
     });
 
     return this.http.get<any>(this.listAllRequestsEP, { headers });
+  }
+
+  getMedicalHistory(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
+    });
+
+    return this.http.get<any>(this.getMedicalHistoryEP, { headers ,});
   }
   /**
    * This methods is responsible for sending the request to the Web API
