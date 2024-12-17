@@ -68,8 +68,30 @@
       {{ errorMessage }}
     </div>
   
-    <button type="submit" class="submit-btn">Register</button>
-    <button type="button" class="back-btn" (click)="goBack()">Back to the Login Menu</button>
+    <form (ngSubmit)="onSubmit()">
+      <!-- Other form fields here -->
+      <div class="form-group terms-group">
+        <input 
+          type="checkbox" 
+          id="terms" 
+          [(ngModel)]="termsAccepted" 
+          name="termsAccepted" 
+          required 
+        />
+        <label for="terms">
+          I accept the 
+          <a href="../../../assets/terms-and-services.pdf" target="_blank">Terms and Services</a>
+        </label>
+      </div>
+    
+      <button 
+        type="submit" 
+        class="submit-btn" 
+        [disabled]="!termsAccepted">
+        Submit
+      </button>
+    </form>
+        <button type="button" class="back-btn" (click)="goBack()">Back to the Login Menu</button>
 
   </form>
 </div>

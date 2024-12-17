@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./register-patient.component.css'],
 })
 export class RegisterPatientComponent {
+  termsAccepted: boolean = false;
+
   patient: CreatePatientRequest = {
     username: '',
     firstName: '',
@@ -56,7 +58,7 @@ export class RegisterPatientComponent {
 
     // Format the birthday to dd/MM/yyyy
     this.patient.birthday = this.formatDateToDDMMYYYY(date); // Update the birthday in the client object
-
+    if (this.termsAccepted) {
     this.authService.registerPatient(this.patient).subscribe({
       next: () => {
         this.errorMessage = '';
@@ -87,7 +89,7 @@ export class RegisterPatientComponent {
         }
       }
     });
-  }
+  }}
   goBack(): void {
     this.router.navigate(['/auth']);
   }
