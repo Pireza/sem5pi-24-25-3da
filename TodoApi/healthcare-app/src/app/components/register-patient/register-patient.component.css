@@ -155,3 +155,43 @@ button.back-btn:hover {
   width: 100%;
   text-align: center;
 }
+.terms-group {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.terms-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.terms-group a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.terms-group a:hover {
+  text-decoration: underline;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px; /* Makes the button rounded */
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3; /* Slightly darker on hover */
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
