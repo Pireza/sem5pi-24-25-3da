@@ -3,6 +3,16 @@ import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, Form } from '@angular/forms';
 
+
+/**
+ * Component for managing specializations.
+ * 
+ * @component
+ * @selector app-specializations
+ * @templateUrl ./specializations.component.html
+ * @styleUrl ./specializations.component.css
+ */
+
 @Component({
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
@@ -11,17 +21,45 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, Form } from '@
   styleUrl: './specializations.component.css'
 })
 export class SpecializationsComponent {
-
+  /**
+     * List of all specializations.
+     */
   allSpecializations: any[] = [];
+  /**
+   * Indicates if the data is loading.
+   */
   isLoading: boolean = true;
+  /**
+   * Stores the selected specialization for editing.
+   */
   selectedSpecialization: any = null; // To store selected specialization
+  /**
+   * Form group for specialization details.
+   */
   specializationForm: FormGroup;
+  /**
+   * Form group for filtering specializations.
+   */
   filterForm: FormGroup;
+  /**
+  * Indicates if the edit form is active.
+  */
   isEditing: boolean = false; // To toggle edit form
+  /**
+  * Indicates if the add form is active.
+  */
   isAdding: boolean = false; // To toggle add form
+  /**
+   * Indicates if the filter form is active.
+   */
   isFiltering: boolean = false;
 
-
+  /**
+    * Constructor to initialize forms and inject services.
+    * 
+    * @param authService - Service for handling specialization data.
+    * @param fb - FormBuilder for creating form groups.
+    */
   constructor(private authService: AuthService, private fb: FormBuilder) {
     this.specializationForm = this.fb.group({
       specDescription: ['', Validators.required],
@@ -34,6 +72,11 @@ export class SpecializationsComponent {
       specLongDescription: ['']
     });
   }
+
+  /**
+     * Lifecycle hook that is called after data-bound properties are initialized.
+     * Fetches all specializations.
+     */
 
   ngOnInit(): void {
     this.authService.getAllSpecializations().subscribe(
@@ -48,6 +91,12 @@ export class SpecializationsComponent {
     );
   }
 
+  /**
+     * Handles the edit action for a specialization.
+     * 
+     * @param spec - The specialization to be edited.
+     */
+
   onEdit(spec: any): void {
     this.selectedSpecialization = spec;
     this.specializationForm.setValue({
@@ -59,6 +108,10 @@ export class SpecializationsComponent {
     this.isFiltering = false;
   }
 
+  /**
+     * Handles the add action to create a new specialization.
+     */
+
   onAdd(): void {
     this.specializationForm.reset();
     this.isAdding = true;
@@ -66,12 +119,20 @@ export class SpecializationsComponent {
     this.isFiltering = false;
   }
 
+  /**
+     * Handles the search action to filter specializations.
+     */
+
   onSearch(): void {
     this.filterForm.reset();
     this.isAdding = false;
     this.isEditing = false;
     this.isFiltering = true;
   }
+
+  /**
+     * Filters the specializations based on the filter form values.
+     */
 
   onFilter(): void {
 
@@ -88,6 +149,10 @@ export class SpecializationsComponent {
       }
     );
   }
+
+  /**
+     * Saves the specialization, either by updating an existing one or adding a new one.
+     */
 
   onSave(): void {
     const formValue = this.specializationForm.value;
@@ -137,6 +202,9 @@ export class SpecializationsComponent {
     }
   }
 
+  /**
+     * Cancels the current action (edit, add, or filter).
+     */
 
   onCancel(): void {
     this.isEditing = false;
@@ -145,13 +213,17 @@ export class SpecializationsComponent {
 
   }
 
+  /**
+    * Cancels the filter action and reloads all specializations.
+    */
+
   onCancelFilter(): void {
     this.isEditing = false;
     this.isAdding = false;
     this.isFiltering = false;
 
     this.isLoading = true;
-    
+
     this.authService.getAllSpecializations().subscribe(
       (specs) => {
         this.allSpecializations = specs;
@@ -163,6 +235,12 @@ export class SpecializationsComponent {
       }
     );
   }
+
+  /**
+     * Deletes a specialization.
+     * 
+     * @param spec - The specialization to be deleted.
+     */
 
   onDelete(spec: any): void {
     const confirmDelete = window.confirm(
