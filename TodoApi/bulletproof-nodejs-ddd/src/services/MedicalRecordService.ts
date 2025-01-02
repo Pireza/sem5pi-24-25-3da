@@ -5,11 +5,13 @@ import MedicalConditionModel from "../Models/MedicalCondition";
 import AllergyModel from "../Models/Allergy";
 
 class MedicalRecordService {
+    // Create a new medical record
     async createRecord(medicalRecord: IMedicalRecord): Promise<IMedicalRecord> {
         await this.validateIds(medicalRecord);
         return await MedicalRecordRepository.create(medicalRecord);
     }
 
+    // Validate if the MedicalConditionId and AllergyId exist in the database
     private async validateIds(medicalRecord: IMedicalRecord): Promise<void> {
         const { MedicalConditionId, AllergyId } = medicalRecord;
 
@@ -22,6 +24,11 @@ class MedicalRecordService {
         if (!allergyExists) {
             throw new Error("AllergyId does not exist");
         }
+    }
+
+    // Fetch all medical records from the database
+    async getAllMedicalRecords(): Promise<IMedicalRecord[]> {
+        return await MedicalRecordRepository.find();  // Assuming `find()` fetches all records
     }
 }
 
