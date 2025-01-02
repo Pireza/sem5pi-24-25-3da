@@ -25,6 +25,8 @@ import { CreateAllergyComponent } from '../create-allergy/create-allergy.compone
 import { GetAllergiesComponent } from '../get-allergies/get-allergies.component';
 import { CreateMedicalConditionComponent } from '../create-medical-condition/create-medical-condition.component';
 import { GetAllMedicalConditionComponent } from '../get-all-medical-condition/get-all-medical-condition.component';
+import { CreateRoomComponent } from '../create-type-room/create-type-room.component';
+import { GetAllRoomsComponent } from '../get-all-rooms/get-all-rooms.component';
 
 import { CommonModule } from '@angular/common';
 import { SpecializationsComponent } from '../specializations/specializations.component';
@@ -35,7 +37,7 @@ import { SpecializationsComponent } from '../specializations/specializations.com
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent, CreateRoomComponent, GetAllRoomsComponent]
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -94,6 +96,7 @@ export class AuthComponent {
         { label: 'Manage Patients' },
         { label: 'Manage Staff' },
         { label: 'Manage Operation Types' },
+        { label: 'Manage Rooms' },
         { label: 'Manage Specializations', isAction: true },
         { label: 'Schedule Surgeries', isAction: true },
         { label: 'Logout', isAction: true },
@@ -177,6 +180,10 @@ export class AuthComponent {
       this.activeComponent = CreateMedicalConditionComponent;
     } else if (action === 'Search Medical Conditions') {
       this.activeComponent = GetAllMedicalConditionComponent;
+    } else if (action === 'Add Room') {
+      this.activeComponent = CreateRoomComponent;
+    } else if (action === 'Search Rooms') {
+      this.activeComponent = GetAllRoomsComponent;  
     } else if (action === 'Download Medical History') {
       this.authService.getMedicalHistory().subscribe(
         (response) => {
@@ -223,7 +230,9 @@ export class AuthComponent {
       return ['Search Staff Profile', 'Register New Staff User', 'Create a New Staff User', 'Edit Staff Profile', 'Deactivate Staff Profile'];
     } else if (menuItem === 'Manage Operation Types') {
       return ['Add New Operation Type', 'Edit Operation Type', 'Search Operation Types', 'Delete Operation Type'];
-    } else if (menuItem === 'Manage Operation Requests') {
+    } else if (menuItem === 'Manage Rooms') {
+      return ['Add Room', 'Search Rooms'];
+    } else if (menuItem === 'Manage Operation Requests') { 
       return ['Search Operation Requests', 'Create Operation Request', 'Update Operation Request', 'Remove Operation Request'];
     } else if (menuItem === 'Manage Profile') {
       return ['Update Profile', 'Delete Account', 'Download Medical History'];

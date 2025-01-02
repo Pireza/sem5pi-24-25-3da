@@ -1,0 +1,38 @@
+<div class="create-room-container">
+  <h2>Create Room</h2>
+
+  <!-- Room creation form -->
+  <form (ngSubmit)="createNewRoom()">
+    <div class="form-group">
+      <label for="name">Room Name</label>
+      <input id="name" type="text" [(ngModel)]="name" name="name" required class="form-control"/>
+    </div>
+
+    <div class="form-group">
+      <label for="type">Room Type</label>
+      <input id="type" type="text" [(ngModel)]="type" name="type" required class="form-control"/>
+    </div>
+
+    <div class="form-group">
+      <label for="capacity">Capacity</label>
+      <input id="capacity" type="number" [(ngModel)]="capacity" name="capacity" required class="form-control"/>
+    </div>
+
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input id="location" type="text" [(ngModel)]="location" name="location" required class="form-control"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!name || !type || !capacity || !location">Create Room</button>
+  </form>
+
+  <!-- Room list -->
+  <div *ngIf="rooms.length > 0">
+    <h3>Created Rooms</h3>
+    <ul class="room-list">
+      <li *ngFor="let room of rooms">
+        <span>{{ room.name }} - {{ room.type }} - Capacity: {{ room.capacity }} - Location: {{ room.location }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

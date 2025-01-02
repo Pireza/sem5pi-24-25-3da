@@ -1,0 +1,106 @@
+/* Container for the form */
+.create-room-container {
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 30px;
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Heading */
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Form group styles */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Label styles */
+label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Input styles */
+input {
+    width: calc(100% - 20px); /* Accounts for padding */
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Button styles */
+button {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* List of rooms */
+.room-list {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.room-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* No delete button as requested */
+.room-list li button {
+    display: none;
+}
+
+/* Styles for room list items */
+.room-list li {
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+.room-list li span {
+    font-weight: bold;
+    color: #333;
+}

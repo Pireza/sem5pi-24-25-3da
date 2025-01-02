@@ -31,6 +31,9 @@ import { CreateAllergyComponent } from './components/create-allergy/create-aller
 import { GetAllergiesComponent } from './components/get-allergies/get-allergies.component';
 import { CreateMedicalConditionComponent } from './components/create-medical-condition/create-medical-condition.component';
 import { GetAllMedicalConditionComponent } from './components/get-all-medical-condition/get-all-medical-condition.component';
+import { CreateRoomComponent } from './components/create-type-room/create-type-room.component';
+import { GetAllRoomsComponent } from './components/get-all-rooms/get-all-rooms.component';
+
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
   { path: 'patient-ui', component: PatientUIComponent },
@@ -65,6 +68,8 @@ export const routes: Routes = [
   { path: 'create-allergy', component: CreateAllergyComponent },
   { path: 'create-medical-condition', component: CreateMedicalConditionComponent },
   { path: 'get-all-medical-condition', component: GetAllMedicalConditionComponent },
+  { path: 'create-type-room', component: CreateRoomComponent },
+  { path: 'get-all-rooms', component: GetAllRoomsComponent },
 
 
 
