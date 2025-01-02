@@ -1,0 +1,23 @@
+<div class="container">
+    <h2 class="text-center">Rooms List</h2>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">Room Name</th>
+          <th class="text-center">Room Type</th>
+          <th class="text-center">Room Capacity</th>
+          <th class="text-center">Room Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let room of rooms">
+          <td class="text-center">{{ room.name }}</td>
+          <td class="text-center">{{ room.type }}</td>
+          <td class="text-center">{{ room.capacity }}</td>
+          <td class="text-center">{{ room.location }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

@@ -1,0 +1,51 @@
+.container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;  /* Center the content of the container */
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px;
+    text-align: center;  /* Center everything in the table by default */
+    border: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Ensure text in description breaks every 4-5 words */
+  .description-cell {
+    white-space: pre-wrap;   /* Allow the text to wrap */
+    word-wrap: break-word;   /* Break the words when necessary */
+    max-width: 200px;        /* Control max width to ensure wrapping */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .table {
+      font-size: 14px;
+    }
+  }
+  

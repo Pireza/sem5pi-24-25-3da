@@ -64,7 +64,9 @@ export class AuthService {
   public getAllAllergies = 'http://localhost:3000/api/getAllAllergies';
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
-  public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history'
+  public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
+  public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom'
+  public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -599,6 +601,27 @@ export class AuthService {
   getMedicalConditions(): Observable<any> {
     return this.http.get<any>(this.getAllMedicalConditions, {});
   }
+
+  createRoom(
+    name: string,
+    type: string,
+    capacity: number,
+    location: string
+  ): Observable<any> {
+    const roomData = {
+      name: name,
+      type: type,
+      capacity: capacity,
+      location: location
+    };
+  
+    return this.http.post<any>(this.createRoomUrl, roomData, {});
+  }
+
+  getAllRooms(): Observable<any> {
+    return this.http.get<any>(this.getAllRoomsUrl, {});
+  }
+  
 
 
 }
