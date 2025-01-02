@@ -34,7 +34,9 @@ fdescribe('RegisterPatientComponent', () => {
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as unknown as MockAuthService;
     router = TestBed.inject(Router) as unknown as MockRouter;
-    fixture.detectChanges();
+    fixture.detectChanges();   
+     component.termsAccepted = true; // Make sure termsAccepted is true
+
   });
 
   // Test Initialization
