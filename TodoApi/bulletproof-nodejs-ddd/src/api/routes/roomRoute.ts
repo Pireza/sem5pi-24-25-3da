@@ -11,7 +11,10 @@ const roomService = new RoomService(roomRepository);
 const roomController = new RoomController(roomService);
 
 // Define the routes for room management
-router.post('/api/Admin/createRoom', roomController.addRoom);
-router.get('/api/Admin/getAllRooms', (req, res) => roomController.listRooms(req, res));
+router.post('/api/createRoom', roomController.addRoom);
+router.get('/api/getAllRooms', (req, res) => roomController.listRooms(req, res));
+
+console.log('Room routes loaded');
+
 
 export default router;

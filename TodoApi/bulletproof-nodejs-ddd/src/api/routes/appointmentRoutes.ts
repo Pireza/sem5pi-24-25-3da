@@ -13,4 +13,8 @@ router.get("/api/appointments", AppointmentController.list);
 // Route to get an appointment by ID
 router.get("/api/appointments/:id", AppointmentController.getById);
 
+// Route to update an appointment by ID
+router.put("/api/appointments/:id", AppointmentController.update);
+
+
 export default router;

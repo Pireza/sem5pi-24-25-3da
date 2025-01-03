@@ -68,10 +68,6 @@ export class AuthService {
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
   public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom';
   public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms';
-  public getMedicalRecords = 'http://localhost:3000/api/get-medical-records';
-  public getPatientByIdUrl= 'http://localhost:5174/api/Patients/';
-  public getAllergyByIdUrl = 'http://localhost:3000/api/getAllergiesById';
-  public getMedicalConditionByIdUrl='http://localhost:3000/api/getMedicalConditionById/';
 
   public createMedicalRecordUrl = 'http://localhost:3000/api/medical-records';
 

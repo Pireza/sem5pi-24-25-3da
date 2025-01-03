@@ -1,0 +1,50 @@
+<div class="patient-profile-container">
+    <h2>Manage Patient Profiles</h2>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Patient Table -->
+    <div *ngIf="patients.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Medical Records</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of patients">
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.email }}</td>
+            <td>
+              <!-- Check if the patient has medical records -->
+              <div *ngIf="patient.medicalRecords && patient.medicalRecords.length > 0">
+                <ul>
+                  <li *ngFor="let record of patient.medicalRecords">
+                    <strong>Condition:</strong> {{ record.medicalCondition }}<br>
+                    <strong>Allergy:</strong> {{ record.allergy }}<br>
+                    <strong>Notes:</strong> {{ record.notes }}
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="!patient.medicalRecords || patient.medicalRecords.length === 0">
+                <p>No medical records available</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- If no patients available -->
+    <div *ngIf="patients.length === 0">
+      <p>No patients found.</p>
+    </div>
+  </div>
+  
