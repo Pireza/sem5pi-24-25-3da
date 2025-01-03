@@ -448,14 +448,14 @@ export default class ThumbRaiser {
                 }
                 if (event.buttons == 1) {
                     this.setPickPosition(event);
-                    this.pickHelper.pick(this.pickPosition, this.scene3D, this.activeViewCamera.object);
-
-                    if (this.pickHelper.pickedObject)
-                        this.activeViewCamera.setTarget(new THREE.Vector3(this.pickHelper.getPickedObjectPosition().x, 0.0, this.pickHelper.getPickedObjectPosition().z));
+                     this.pickHelper.pick(this.pickPosition, this.scene3D, this.activeViewCamera.object, this.controls);
+    
+                 
                 }
             }
         }
     }
+    
 
 
     mouseMove(event) {
@@ -465,29 +465,17 @@ export default class ThumbRaiser {
                 const newMousePosition = new THREE.Vector2(event.clientX, window.innerHeight - event.clientY - 1);
                 const mouseIncrement = newMousePosition.clone().sub(this.mousePosition);
                 this.mousePosition = newMousePosition;
-                if (event.buttons == 1) { // Primary button down
-                    if (this.changeCameraDistance) {
-                        this.activeViewCamera.updateDistance(-0.05 * (mouseIncrement.x + mouseIncrement.y));
-                        this.displayPanel();
-                    }
-                    else if (this.dragMiniMap) {
-                        const windowMinSize = Math.min(window.innerWidth, window.innerHeight);
-                        const width = this.miniMapCamera.viewport.width * windowMinSize;
-                        const height = this.miniMapCamera.viewport.height * windowMinSize;
-                        this.miniMapCamera.viewport.x += mouseIncrement.x / (window.innerWidth - width);
-                        this.miniMapCamera.viewport.y += mouseIncrement.y / (window.innerHeight - height);
-                    }
-                }
-                else { // Secondary button down
+                
                     if (this.changeCameraOrientation) {
+                        
                         this.activeViewCamera.updateOrientation(mouseIncrement.multiply(new THREE.Vector2(-0.5, 0.5)));
                         this.displayPanel();
                     }
-                }
+                
             }
         }
     }
-
+    
     mouseUp(event) {
         // Reset mouse move action
         this.dragMiniMap = false;
