@@ -65,8 +65,8 @@ export class AuthService {
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
-  public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom'
-  public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms'
+  public createRoomUrl = 'http://localhost:3000/api/createRoom'
+  public getAllRoomsUrl = 'http://localhost:3000/api/getAllRooms'
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
