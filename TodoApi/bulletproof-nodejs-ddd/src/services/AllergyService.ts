@@ -1,7 +1,9 @@
 import { AllergyRepository } from '../repos/AllergyRepository';
 import { IAllergy } from '../Models/Interfaces/AllergyInterface';
+import Allergy from '../Models/Allergy';
 
 class AllergyService {
+
   
     private allergyRepository: AllergyRepository;
 
@@ -21,6 +23,20 @@ class AllergyService {
     public async getAllIdAllergies() : Promise<{ name: string; code: string; codeSystem: string; description: string }[]> {
         return await this.allergyRepository.findAllIdAllergies();
     } 
+
+    public async getAllergyById(allergyId: string): Promise<{ name: string; code: string; codeSystem: string; description: string } | null> {
+        try {
+            // Buscando a alergia pelo ID
+            const allergy = await this.allergyRepository.getAllergyById(allergyId);
+            if (!allergy) return null;
+            return allergy;
+        } catch (error) {
+            console.error('Error fetching allergy in service:', error);
+            throw error;  // Lançando erro para ser tratado no controlador
+        }
+    }
+
+    
 }
 
 export { AllergyService };

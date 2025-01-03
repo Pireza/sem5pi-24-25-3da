@@ -48,6 +48,21 @@ class MedicalConditionController {
             return res.status(500).json({ message: 'Failed to list medical conditions.', error });
         }
     }
+    public async getMedicalConditionById(req: Request, res: Response): Promise<Response> {
+        try {
+            const { conditionId } = req.params;  // Extract the conditionId from URL parameters
+            const condition = await this.medicalConditionService.getMedicalConditionById(conditionId);  // Call the service method
+    
+            if (!condition) {
+                return res.status(404).json({ message: 'Medical condition not found.' });
+            }
+    
+            return res.status(200).json({ data: condition });
+        } catch (error) {
+            console.error('Error fetching medical condition:', error);
+            return res.status(500).json({ message: 'Failed to fetch medical condition.', error });
+        }
+    }
 }
 
 export { MedicalConditionController };

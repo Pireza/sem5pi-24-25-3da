@@ -9,6 +9,7 @@ interface AllergyData {
 
 class AllergyRepository {
 
+
     public async createAllergy(allergyData: AllergyData): Promise<IAllergy> {
         const existingAllergy = await Allergy.findOne({ code: allergyData.code });
         if (existingAllergy) {
@@ -25,6 +26,22 @@ class AllergyRepository {
     public async  findAllIdAllergies(): Promise<Pick<IAllergy, 'name' | 'code' | 'codeSystem' | 'description' >[]> {
         return await Allergy.find({}, 'name description code codeSystem').exec();
     }    
-}
+
+    public async getAllergyById(allergyId: string): Promise<{ name: string; code: string; codeSystem: string; description: string } | null> {
+        try {
+            // Consulta no banco de dados usando o allergyId
+            const allergy = await Allergy.findOne({ _id: allergyId }, 'name description code codeSystem').exec();
+            
+            // Se a alergia não for encontrada, retorna null
+            if (!allergy) {
+                return null;
+            }
+
+            return allergy;
+        } catch (error) {
+            console.error('Error fetching allergy in repository:', error);
+            throw error; // Lançando o erro para ser tratado em camadas superiores (como no serviço)
+        }
+    }}
 
 export { AllergyRepository };

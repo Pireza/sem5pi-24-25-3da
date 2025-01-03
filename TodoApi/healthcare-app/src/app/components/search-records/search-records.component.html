@@ -1,0 +1,24 @@
+<div class="search-medical-records-container">
+  <h2>Medical Records</h2>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <!-- Medical Records Table -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Medical Condition</th>
+        <th>Allergy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let record of medicalRecords">
+        <td>{{ record.patientName }}</td>
+        <td>{{ record.conditionName }}</td>
+        <td>{{ record.allergyName }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

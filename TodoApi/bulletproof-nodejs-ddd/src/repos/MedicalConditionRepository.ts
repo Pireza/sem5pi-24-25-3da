@@ -26,6 +26,13 @@ class MedicalConditionRepository {
     public async findAllMedicalConditionsId(): Promise<Pick<IMedicalCondition, 'code' | 'codeSystem' | 'designation' | 'description' | 'commonSymptoms'>[]> {
         return await MedicalCondition.find({}, 'code codeSystem designation description commonSymptoms').exec();
     } 
+
+    // MedicalConditionRepository.ts
+
+public async findMedicalConditionById(conditionId: string): Promise<Pick<IMedicalCondition, 'code' | 'codeSystem' | 'designation' | 'description' | 'commonSymptoms'> | null> {
+    return await MedicalCondition.findOne({ _id: conditionId }, 'code codeSystem designation description commonSymptoms -_id').exec();  // Query by conditionId
+}
+
 }
 
 export { MedicalConditionRepository };

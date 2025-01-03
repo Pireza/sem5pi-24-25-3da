@@ -68,6 +68,10 @@ export class AuthService {
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
   public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom';
   public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms';
+  public getMedicalRecords = 'http://localhost:3000/api/get-medical-records';
+  public getPatientByIdUrl= 'http://localhost:5174/api/Patients/';
+  public getAllergyByIdUrl = 'http://localhost:3000/api/getAllergiesById';
+  public getMedicalConditionByIdUrl='http://localhost:3000/api/getMedicalConditionById/';
 
   public createMedicalRecordUrl = 'http://localhost:3000/api/medical-records';
 
@@ -642,6 +646,24 @@ export class AuthService {
     return this.http.post(this.createMedicalRecordUrl, body);  // POST with body
   }
   
+  searchMedicalRecords(): Observable<any> {
+    return this.http.get<any>(this.getMedicalRecords);
+  }
+
+  getPatientById(patientId: number): Observable<any> {
+    const url = `${this.getPatientByIdUrl}${patientId}`; 
+    return this.http.get<any>(url); 
+  }
   
+  getMedicalConditionById(conditionId: string): Observable<any> {
+    const url = `${this.getMedicalConditionByIdUrl}${conditionId}`; 
+    console.log(url);
+    return this.http.get<any>(url); 
+  }
   
-}
+  getAllergyById(allergyId: string): Observable<any> {
+    const url = `${this.getAllergyByIdUrl}/${allergyId}`; 
+    console.log(url);
+    return this.http.get<any>(url); 
+  
+}}

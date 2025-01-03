@@ -12,4 +12,6 @@ const medicalConditionController = new MedicalConditionController(medicalConditi
 router.post('/api/createMedicalCondition', medicalConditionController.addMedicalCondition);
 router.get('/api/getAllMedicalConditions', (req, res) => medicalConditionController.listMedicalConditions(req, res));
 router.get('/api/getAllMedicalConditionsId', (req, res) => medicalConditionController.listMedicalConditionsId(req, res));
+router.get('/api/getMedicalConditionById/:conditionId', (req, res) => medicalConditionController.getMedicalConditionById(req, res));
+
 export default router;

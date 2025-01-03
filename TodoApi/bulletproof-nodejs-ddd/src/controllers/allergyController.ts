@@ -61,6 +61,26 @@ class AllergyController {
             return res.status(500).json({ message: 'Failed to list allergies.', error });
         }
     }
-}
+
+    public async getAllergyById(req: Request, res: Response): Promise<Response> {
+        try {
+            const { allergyId } = req.params;
+            if (!allergyId) {
+                return res.status(400).json({ message: 'Allergy ID is required.' });
+            }
+
+            // Acessando o serviço para buscar a alergia
+            const allergy = await this.allergyService.getAllergyById(allergyId);
+            if (!allergy) {
+                return res.status(404).json({ message: 'Allergy not found.' });
+            }
+
+            return res.status(200).json({ data: allergy });
+        } catch (error) {
+            console.error('Error fetching allergy:', error);
+            return res.status(500).json({ message: 'Failed to fetch allergy.', error });
+        }
+    }}
+
 
 export { AllergyController };

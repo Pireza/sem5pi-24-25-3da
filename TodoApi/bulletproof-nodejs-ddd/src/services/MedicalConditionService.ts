@@ -20,6 +20,12 @@ class MedicalConditionService {
     public async getAllMedicalConditionsId(): Promise<{ code: string; codeSystem: string; designation: string; description: string; commonSymptoms: string[] }[]> {
         return await this.medicalConditionRepository.findAllMedicalConditionsId();
     }
+    // MedicalConditionService.ts
+
+public async getMedicalConditionById(conditionId: string): Promise<{ code: string; codeSystem: string; designation: string; description: string; commonSymptoms: string[] } | null> {
+    return await this.medicalConditionRepository.findMedicalConditionById(conditionId);  // Call the repository method
+}
+
 }
 
 export { MedicalConditionService };

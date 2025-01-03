@@ -31,6 +31,7 @@ import { UpdateMedicalRecordComponent } from '../update-medical-record/update-me
 import { CommonModule } from '@angular/common';
 import { SpecializationsComponent } from '../specializations/specializations.component';
 import { GetAllRoomsComponent } from '../get-all-rooms/get-all-rooms.component';
+import { SearchRecordsComponent } from '../search-records/search-records.component';
 
 
 
@@ -188,7 +189,9 @@ export class AuthComponent {
     } else if (action === 'Search Rooms') {
       this.activeComponent = GetAllRoomsComponent;  
     }else if (action === 'Update Medical Record'){
-      this.activeComponent = UpdateMedicalRecordComponent;
+      this.activeComponent = UpdateMedicalRecordComponent
+    }else if(action === 'Search Medical Records'){
+      this.activeComponent = SearchRecordsComponent
     }else if (action === 'Download Medical History') {
       this.authService.getMedicalHistory().subscribe(
         (response) => {
@@ -244,7 +247,7 @@ export class AuthComponent {
     } else if (menuItem === '3D Visualization of the Floor') {
       return ['Look at the 3D Visualization model'];
     } else if (menuItem === 'Manage Patient') {
-      return ['Search Allergies', 'Search Medical Conditions', 'Update Medical Record'];
+      return ['Search Allergies', 'Search Medical Conditions', 'Update Medical Record', 'Search Medical Records'];
     }
     return [];
   }

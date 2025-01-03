@@ -34,6 +34,7 @@ import { GetAllMedicalConditionComponent } from './components/get-all-medical-co
 import { CreateRoomComponent } from './components/create-type-room/create-type-room.component';
 import { GetAllRoomsComponent } from './components/get-all-rooms/get-all-rooms.component';
 import { UpdateMedicalRecordComponent } from './components/update-medical-record/update-medical-record.component';
+import { SearchRecordsComponent } from './components/search-records/search-records.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -72,6 +73,7 @@ export const routes: Routes = [
   { path: 'create-type-room', component: CreateRoomComponent },
   { path: 'get-all-rooms', component: GetAllRoomsComponent },
   { path: 'update-medical-record', component: UpdateMedicalRecordComponent },
+  { path: 'search-record', component: SearchRecordsComponent },
 
 
   { path: '', redirectTo: '/auth', pathMatch: 'full' }, // Redirect to auth on app load
