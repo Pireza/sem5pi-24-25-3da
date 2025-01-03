@@ -26,10 +26,12 @@ import { GetAllergiesComponent } from '../get-allergies/get-allergies.component'
 import { CreateMedicalConditionComponent } from '../create-medical-condition/create-medical-condition.component';
 import { GetAllMedicalConditionComponent } from '../get-all-medical-condition/get-all-medical-condition.component';
 import { CreateRoomComponent } from '../create-type-room/create-type-room.component';
-import { GetAllRoomsComponent } from '../get-all-rooms/get-all-rooms.component';
+import { UpdateMedicalRecordComponent } from '../update-medical-record/update-medical-record.component';
 
 import { CommonModule } from '@angular/common';
 import { SpecializationsComponent } from '../specializations/specializations.component';
+import { GetAllRoomsComponent } from '../get-all-rooms/get-all-rooms.component';
+
 
 
 @Component({
@@ -37,7 +39,7 @@ import { SpecializationsComponent } from '../specializations/specializations.com
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent, CreateRoomComponent, GetAllRoomsComponent]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent, CreateRoomComponent, GetAllRoomsComponent, UpdateMedicalRecordComponent]
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -107,6 +109,7 @@ export class AuthComponent {
         { label: 'Manage Patient' },
         { label: '3D Visualization of the Floor' },
         { label: 'Logout', isAction: true },
+        
       ];
     } else if (this.userRole === 'Patient') {
       return [
@@ -184,7 +187,9 @@ export class AuthComponent {
       this.activeComponent = CreateRoomComponent;
     } else if (action === 'Search Rooms') {
       this.activeComponent = GetAllRoomsComponent;  
-    } else if (action === 'Download Medical History') {
+    }else if (action === 'Update Medical Record'){
+      this.activeComponent = UpdateMedicalRecordComponent;
+    }else if (action === 'Download Medical History') {
       this.authService.getMedicalHistory().subscribe(
         (response) => {
           const jsonString = JSON.stringify(response, null, 2); // Pretty print with 2 spaces
@@ -239,7 +244,7 @@ export class AuthComponent {
     } else if (menuItem === '3D Visualization of the Floor') {
       return ['Look at the 3D Visualization model'];
     } else if (menuItem === 'Manage Patient') {
-      return ['Search Allergies', 'Search Medical Conditions'];
+      return ['Search Allergies', 'Search Medical Conditions', 'Update Medical Record'];
     }
     return [];
   }

@@ -35,6 +35,19 @@ class MedicalConditionController {
             return res.status(500).json({ message: 'Failed to list medical conditions.', error });
         }
     }
+
+    public async listMedicalConditionsId(req: Request, res: Response): Promise<Response> {
+        try {
+            const conditions = await this.medicalConditionService.getAllMedicalConditionsId();
+            if (conditions.length === 0) {
+                return res.status(404).json({ message: 'No medical conditions found.' });
+            }
+            return res.status(200).json({ data: conditions });
+        } catch (error) {
+            console.error('Error listing medical conditions:', error);
+            return res.status(500).json({ message: 'Failed to list medical conditions.', error });
+        }
+    }
 }
 
 export { MedicalConditionController };

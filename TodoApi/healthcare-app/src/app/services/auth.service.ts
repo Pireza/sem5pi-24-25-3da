@@ -55,18 +55,20 @@ export class AuthService {
   public searchStaffProfilesUrl = 'http://localhost:5174/api/StaffUser/search';
   public getAllTypesNamesEP = 'http://localhost:5174/api/Operation/type-names';
   public getAllSpecsNamesEP = 'http://localhost:5174/api/Specialization/names';
-  public createOperationRequestUrl = 'http://localhost:5174/api/OperationRequests/CreateOperationRequest'
-  public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin'
-
+  public createOperationRequestUrl = 'http://localhost:5174/api/OperationRequests/CreateOperationRequest';
+  public updateOperationTypeUrl = 'http://localhost:5174/api/Operation/UpdateOperationTypeAsAdmin';
+  public getAllMedicalConditionsId = 'http://localhost:3000/api/getAllMedicalConditionsId';
   public specsFuncsEP = 'http://localhost:5174/api/Specialization';
   public createAllergy = 'http://localhost:3000/api/createAllergy';
   public getAllPatients = 'http://localhost:5174/api/Patients/all';
   public getAllAllergies = 'http://localhost:3000/api/getAllAllergies';
+  public getAllIdAllgeries = 'http://localhost:3000/api/getAllIdAllergies';
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
   public createRoomUrl = 'http://localhost:3000/api/createRoom'
   public getAllRoomsUrl = 'http://localhost:3000/api/getAllRooms'
+  public createMedicalRecordUrl = 'http://localhost:3000/api/medical-records';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -580,6 +582,10 @@ export class AuthService {
     return this.http.get<any>(this.getAllAllergies, {});
   }
 
+  getIdAllergies(): Observable<any> {
+    return this.http.get<any>(this.getAllIdAllgeries, {});
+  }
+
   createMedicalCondition(
     code: string,
     codeSystem: string,
@@ -601,7 +607,9 @@ export class AuthService {
   getMedicalConditions(): Observable<any> {
     return this.http.get<any>(this.getAllMedicalConditions, {});
   }
-
+  getMedicalConditionsId(): Observable<any> {
+    return this.http.get<any>(this.getAllMedicalConditionsId, {});
+  }
   createRoom(
     name: string,
     type: string,
@@ -622,6 +630,17 @@ export class AuthService {
     return this.http.get<any>(this.getAllRoomsUrl, {});
   }
   
-
-
+  createMedicalRecord(updatedData: any): Observable<any> {
+    const body = {
+      PatientId: updatedData.PatientId,
+      MedicalConditionId: updatedData.MedicalConditionId,
+      AllergyId: updatedData.AllergyId
+    };
+  
+    // Make the POST request with the body to create a new record
+    return this.http.post(this.createMedicalRecordUrl, body);  // POST with body
+  }
+  
+  
+  
 }
