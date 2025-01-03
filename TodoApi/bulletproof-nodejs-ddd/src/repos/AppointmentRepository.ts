@@ -18,6 +18,12 @@ class AppointmentRepository {
     async findById(id: string): Promise<ISurgeryAppointment | null> {
         return await Appointment.findById(id);
     }
+
+    // Update an appointment by ID
+    async updateById(id: string, updateData: Partial<ISurgeryAppointment>): Promise<ISurgeryAppointment | null> {
+        return await Appointment.findByIdAndUpdate(id, updateData, { new: true });
+}
+
 }
 
 export default new AppointmentRepository();

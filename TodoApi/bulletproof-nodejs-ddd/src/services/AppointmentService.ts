@@ -17,6 +17,11 @@ class AppointmentService {
     async getAppointmentById(id: string): Promise<ISurgeryAppointment | null> {
         return await AppointmentRepository.findById(id);
     }
+
+    async updateAppointment(id: string, updateData: Partial<ISurgeryAppointment>): Promise<ISurgeryAppointment | null> {
+        return await AppointmentRepository.updateById(id, updateData);
+    }
+    
 }
 
 export default new AppointmentService();
