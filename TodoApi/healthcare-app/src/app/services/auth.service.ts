@@ -66,9 +66,18 @@ export class AuthService {
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
+<<<<<<< HEAD
   public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom';
   public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms';
+  public getMedicalRecords = 'http://localhost:3000/api/get-medical-records';
+  public getPatientByIdUrl= 'http://localhost:5174/api/Patients/';
+  public getAllergyByIdUrl = 'http://localhost:3000/api/getAllergiesById';
+  public getMedicalConditionByIdUrl='http://localhost:3000/api/getMedicalConditionById/';
 
+=======
+  public createRoomUrl = 'http://localhost:3000/api/createRoom'
+  public getAllRoomsUrl = 'http://localhost:3000/api/getAllRooms'
+>>>>>>> a6f9013247321bbf43a6bdc2e282fb8e34a11a49
   public createMedicalRecordUrl = 'http://localhost:3000/api/medical-records';
 
   public isAuthenticated: boolean = false;
