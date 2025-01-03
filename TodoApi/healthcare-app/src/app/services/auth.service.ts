@@ -66,19 +66,14 @@ export class AuthService {
   public createMedicalConditon = 'http://localhost:3000/api/createMedicalCondition';
   public getAllMedicalConditions = 'http://localhost:3000/api/getAllMedicalConditions';
   public getMedicalHistoryEP = 'http://localhost:3000/api/download-medical-history';
-<<<<<<< HEAD
   public createRoomUrl = 'http://localhost:3000/api/Admin/createRoom';
   public getAllRoomsUrl = 'http://localhost:3000/api/Admin/getAllRooms';
   public getMedicalRecords = 'http://localhost:3000/api/get-medical-records';
   public getPatientByIdUrl= 'http://localhost:5174/api/Patients/';
   public getAllergyByIdUrl = 'http://localhost:3000/api/getAllergiesById';
   public getMedicalConditionByIdUrl='http://localhost:3000/api/getMedicalConditionById/';
-
-=======
-  public createRoomUrl = 'http://localhost:3000/api/createRoom'
-  public getAllRoomsUrl = 'http://localhost:3000/api/getAllRooms'
->>>>>>> a6f9013247321bbf43a6bdc2e282fb8e34a11a49
   public createMedicalRecordUrl = 'http://localhost:3000/api/medical-records';
+  public createAppointmentsUrl = 'http://localhost:3000/api/appointments';
 
   public isAuthenticated: boolean = false;
   public userEmail: string | null = null; // To store the decoded email
@@ -397,7 +392,6 @@ export class AuthService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.accessToken}`, // Set the Authorization header
     });
-
     return this.http.get<any>(this.listAllRequestsEP, { headers });
   }
 
@@ -670,5 +664,22 @@ export class AuthService {
     const url = `${this.getAllergyByIdUrl}/${allergyId}`; 
     console.log(url);
     return this.http.get<any>(url); 
-  
-}}
+}
+
+createAppointments(data: any): Observable<any> {
+  const body = {
+    RequestId: data.RequestId,
+    RoomId: data.RoomId,
+    Date: data.Date,
+    Status:data.Status
+  };
+
+  // Make the POST request with the body to create a new record
+  return this.http.post(this.createAppointmentsUrl, body);  // POST with body
+}
+
+getAllOPRequests(): Observable<any> {
+  return this.http.get<any>(this.listAllRequestsEP);
+}
+
+}

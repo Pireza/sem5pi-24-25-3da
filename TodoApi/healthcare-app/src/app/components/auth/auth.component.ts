@@ -27,6 +27,7 @@ import { CreateMedicalConditionComponent } from '../create-medical-condition/cre
 import { GetAllMedicalConditionComponent } from '../get-all-medical-condition/get-all-medical-condition.component';
 import { CreateRoomComponent } from '../create-type-room/create-type-room.component';
 import { UpdateMedicalRecordComponent } from '../update-medical-record/update-medical-record.component';
+import { AppointmentsComponent } from '../appointments/appointments.component';
 
 import { CommonModule } from '@angular/common';
 import { SpecializationsComponent } from '../specializations/specializations.component';
@@ -40,7 +41,7 @@ import { SearchRecordsComponent } from '../search-records/search-records.compone
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
   standalone: true,
-  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent, CreateRoomComponent, GetAllRoomsComponent, UpdateMedicalRecordComponent]
+  imports: [ResetPasswordComponent, CommonModule, AddOperationTypeComponent, AppointmentsComponent, FilterRequestsComponent, CreateStaffAdminComponent, CreatePatientAdminComponent, EditPatientProfileAdminComponent, DeletePatientProfileAdminComponent, EditStaffAdminComponent, DeactivateStaffProfileAdminComponent, SearchStaffProfileAdminComponent, CreateOperationDoctorComponent, UpdateOperationTypeComponent, CreateRoomComponent, GetAllRoomsComponent, UpdateMedicalRecordComponent]
 })
 export class AuthComponent {
   userEmail: string | null = null;
@@ -148,7 +149,9 @@ export class AuthComponent {
       this.activeComponent = CreatePatientAdminComponent;
     } else if (action === 'Edit Patient Profiles') {
       this.activeComponent = EditPatientProfileAdminComponent;
-    } else if (action === 'Delete Patient Profile') {
+    }else if(action === 'Create a surgery appointment') {
+      this.activeComponent = AppointmentsComponent;
+    }else if (action === 'Delete Patient Profile') {
       this.activeComponent = DeletePatientProfileAdminComponent;
     } else if (action === 'Deactivate Staff Profile') {
       this.activeComponent = DeactivateStaffProfileAdminComponent;
@@ -247,7 +250,7 @@ export class AuthComponent {
     } else if (menuItem === '3D Visualization of the Floor') {
       return ['Look at the 3D Visualization model'];
     } else if (menuItem === 'Manage Patient') {
-      return ['Search Allergies', 'Search Medical Conditions', 'Update Medical Record', 'Search Medical Records'];
+      return ['Search Allergies', 'Search Medical Conditions', 'Update Medical Record', 'Search Medical Records', 'Create a surgery appointment'];
     }
     return [];
   }

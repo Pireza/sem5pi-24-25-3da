@@ -1,0 +1,32 @@
+<div class="appointments-container">
+    <h2>Create Appointment</h2>
+  
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  
+    <form (ngSubmit)="createAppointment()">
+      <label for="request">Request:</label>
+      <select id="request" [(ngModel)]="appointment.RequestId" name="request" required>
+        <option value="" disabled selected>Select an Appointment Request</option>
+        <option *ngFor="let request of requests" [value]="request.id">
+          {{ request.patientName }} - Doctor: {{ request.doctor.fullName }} - Status: {{ request.status }} - Deadline: {{ request.deadline }}
+        </option>
+      </select>
+  
+      <label for="room">Room:</label>
+      <input type="text" id="room" [(ngModel)]="appointment.RoomId" name="room" required>
+  
+      <label for="date">Date:</label>
+      <input type="date" id="date" [(ngModel)]="appointment.Date" name="date" required>
+  
+      <label for="status">Status:</label>
+      <select id="status" [(ngModel)]="appointment.Status" name="status" required>
+        <option value="Accepted">Accepted</option>
+        <option value="Pending">Pending</option>
+        <option value="Declined">Declined</option>
+      </select>
+  
+      <button type="submit">Create Appointment</button>
+    </form>
+  </div>
+  
