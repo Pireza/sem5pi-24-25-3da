@@ -1,0 +1,34 @@
+<div class="create-medical-record-container">
+    <h2>Update Medical Record</h2>
+  
+    <!-- Medical Record Form -->
+    <form (ngSubmit)="createMedicalRecord()">
+      <div class="form-group">
+        <label for="patient">Patient</label>
+        <select id="patient" [(ngModel)]="patientId" name="patient" required class="form-control">
+          <option *ngFor="let patient of patients" [value]="patient.id">Name: {{ patient.firstName }} {{ patient.lastName }}, Medical Number: {{ patient.medicalNumber }}</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="medicalCondition">Medical Condition</label>
+        <select id="medicalCondition" [(ngModel)]="medicalConditionId" name="medicalCondition" required class="form-control">
+          <option *ngFor="let condition of medicalConditions" [value]="condition._id">{{ condition.designation }}</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="allergy">Allergy</label>
+        <select id="allergy" [(ngModel)]="allergyId" name="allergy" required class="form-control">
+          <option *ngFor="let allergy of allergies" [value]="allergy._id">{{ allergy.name }}</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Update Medical Record</button>
+    </form>
+  
+    <!-- Success and error messages -->
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </div>
+  

@@ -47,6 +47,20 @@ class AllergyController {
             return res.status(500).json({ message: 'Failed to list allergies.', error });
         }
     }
+
+    public async listIdAllergies(req: Request, res: Response): Promise<Response> {
+        try {
+            const allergies = await this.allergyService.getAllIdAllergies();
+            if (allergies.length === 0) {
+                return res.status(404).json({ message: 'No allergies found.' });
+            }
+
+            return res.status(200).json({ data: allergies });
+        } catch (error) {
+            console.error('Error listing allergies:', error);
+            return res.status(500).json({ message: 'Failed to list allergies.', error });
+        }
+    }
 }
 
 export { AllergyController };

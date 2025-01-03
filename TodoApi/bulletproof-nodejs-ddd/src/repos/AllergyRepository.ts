@@ -8,6 +8,7 @@ interface AllergyData {
 }
 
 class AllergyRepository {
+
     public async createAllergy(allergyData: AllergyData): Promise<IAllergy> {
         const existingAllergy = await Allergy.findOne({ code: allergyData.code });
         if (existingAllergy) {
@@ -19,7 +20,11 @@ class AllergyRepository {
     
     public async findAllAllergies(): Promise<Pick<IAllergy, 'name' | 'code' | 'codeSystem' | 'description' >[]> {
         return await Allergy.find({}, 'name description code codeSystem  -_id').exec();
-    }
+    }    
+    
+    public async  findAllIdAllergies(): Promise<Pick<IAllergy, 'name' | 'code' | 'codeSystem' | 'description' >[]> {
+        return await Allergy.find({}, 'name description code codeSystem').exec();
+    }    
 }
 
 export { AllergyRepository };

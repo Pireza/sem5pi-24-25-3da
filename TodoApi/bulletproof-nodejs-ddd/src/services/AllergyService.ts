@@ -2,6 +2,7 @@ import { AllergyRepository } from '../repos/AllergyRepository';
 import { IAllergy } from '../Models/Interfaces/AllergyInterface';
 
 class AllergyService {
+  
     private allergyRepository: AllergyRepository;
 
     constructor(allergyRepository: AllergyRepository) {
@@ -16,7 +17,10 @@ class AllergyService {
     
     public async getAllAllergies(): Promise<{ name: string; code: string; codeSystem: string; description: string }[]> {
         return await this.allergyRepository.findAllAllergies();
-    }
+    } 
+    public async getAllIdAllergies() : Promise<{ name: string; code: string; codeSystem: string; description: string }[]> {
+        return await this.allergyRepository.findAllIdAllergies();
+    } 
 }
 
 export { AllergyService };

@@ -9,6 +9,7 @@ interface MedicalConditionData {
 }
 
 class MedicalConditionRepository {
+   
     public async createMedicalCondition(data: MedicalConditionData): Promise<IMedicalCondition> {
         const existingCondition = await MedicalCondition.findOne({ code: data.code });
         if (existingCondition) {
@@ -20,7 +21,11 @@ class MedicalConditionRepository {
 
     public async findAllMedicalConditions(): Promise<Pick<IMedicalCondition, 'code' | 'codeSystem' | 'designation' | 'description' | 'commonSymptoms'>[]> {
         return await MedicalCondition.find({}, 'code codeSystem designation description commonSymptoms -_id').exec();
-    }
+    } 
+    
+    public async findAllMedicalConditionsId(): Promise<Pick<IMedicalCondition, 'code' | 'codeSystem' | 'designation' | 'description' | 'commonSymptoms'>[]> {
+        return await MedicalCondition.find({}, 'code codeSystem designation description commonSymptoms').exec();
+    } 
 }
 
 export { MedicalConditionRepository };
